@@ -1,10 +1,11 @@
 # Fdb version 3
-["lualatex"] 1677258271 "main.tex" "out/main.pdf" "main" 1677258273
+["lualatex"] 1677638067 "main.tex" "out/main.pdf" "main" 1677638069
   "/home/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1675205125 127314 486b301f9004f60a51f79815ca3a591d ""
   "/home/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-regular.luc" 1675205125 127657 ae8f5c4898d88226657f3efdeaba15c7 ""
   "/home/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmsans10-bold.luc" 1675205694 128091 b7bab1425213ee2d32166b5e8418e241 ""
   "/home/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmsans10-regular.luc" 1677258247 127633 c534e209d9b27186684b67e6004a8858 ""
   "/home/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1675205125 253740 372f4991e51b7cb78e79f71a2f08abde ""
+  "/home/caio/texmf/tex/latex/packages/academic-dissertation.sty" 1677256372 109 b0b65e70a11ee5df5cf0d7c581bf5faa ""
   "/home/caio/texmf/tex/latex/packages/global-macros.sty" 1669512451 1922 97db02e9d34271cb95df82df65705587 ""
   "/usr/share/texmf-dist/fonts/opentype/public/lm/lmroman12-regular.otf" 1650183167 110400 d844cffffa1af59f9d2bb1bfdb6f1a2c ""
   "/usr/share/texmf-dist/fonts/opentype/public/lm/lmsans10-bold.otf" 1650183167 107448 a9e5b7aaaf5f74194deee407f2fd1552 ""
@@ -113,12 +114,11 @@
   "/usr/share/texmf-dist/tex/luatex/luaotfload/luaotfload-tounicode.lua" 1650183167 7528 fb7b0f47a74b414177bea5f982abf1de ""
   "/usr/share/texmf-dist/tex/luatex/luaotfload/luaotfload-unicode.lua" 1650183167 7589 65c7651d19fe06ec17196c22c533f768 ""
   "/usr/share/texmf-dist/tex/luatex/luaotfload/luaotfload.lua" 1650183167 13565 30cc2d8cecf79afb1abb4d5c12eb919a ""
-  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1675200744 4278762 af3ac1370db81a450c1118eabf1fe718 ""
-  "/var/lib/texmf/web2c/luahbtex/lualatex.fmt" 1675200730 4561209 b149c0cd7ac98d9be86c78f4ac4e48ab ""
-  "aux/main.aux" 1677258273 68 f8ba15957365ec050d31f376f5d6c85c "lualatex"
+  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1677604382 4278762 af3ac1370db81a450c1118eabf1fe718 ""
+  "/var/lib/texmf/web2c/luahbtex/lualatex.fmt" 1677604369 4561208 d2e10c4afb8940ffaf696485e58cc1be ""
+  "aux/main.aux" 1677638069 68 f8ba15957365ec050d31f376f5d6c85c "lualatex"
   "main.tex" 1677258270 91 98c63625a59802d1c509eca6506a1061 ""
-  "preamble.tex" 1677256375 124 479d9db4683422cf10b2b2fc64e1d1d9 ""
-  "undergraduate-thesis.sty" 1677256372 109 b0b65e70a11ee5df5cf0d7c581bf5faa ""
+  "preamble.tex" 1677638063 125 0ed3a69bf16c0c3c7efaf4bafb58abfa ""
   (generated)
   "aux/main.aux"
   "aux/main.log"

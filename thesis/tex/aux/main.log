@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.15.0 (TeX Live 2022/Arch Linux)  (format=lualatex 2023.1.31)  24 FEB 2023 14:04
+This is LuaHBTeX, Version 1.15.0 (TeX Live 2022/Arch Linux)  (format=lualatex 2023.2.28)  28 FEB 2023 23:34
  restricted system commands enabled.
  file:line:error style messages enabled.
 **main.tex
@@ -140,7 +140,11 @@ Package tocbasic Info: babel extension for `lot' omitted
 \c@table=\count192
 Class scrreprt Info: Redefining `\numberline' on input line 7142.
 \bibindent=\dimen137
-) (./preamble.tex (./undergraduate-thesis.sty
+) (./preamble.tex (/home/caio/texmf/tex/latex/packages/academic-dissertation.sty
+
+LaTeX Warning: You have requested package `academic-dissertation',
+               but the package provides `undergraduate-thesis'.
+
 Package: undergraduate-thesis 
 ) (/usr/share/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2021/10/15 v2.17l AMS math features
@@ -351,7 +355,7 @@ Here is how much of LuaTeX's memory you used:
  40 fonts using 2504495 bytes
  108i,6n,100p,10598b,272s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/opentype/public/lm/lmroman12-regular.otf></usr/share/texmf-dist/fonts/opentype/public/lm/lmsans10-bold.otf>
-Output written on main.pdf (1 page, 7288 bytes).
+Output written on main.pdf (1 page, 7352 bytes).
 
 PDF statistics: 22 PDF objects out of 1000 (max. 8388607)
  12 compressed objects within 1 object stream
