@@ -31,24 +31,38 @@ class SGDIVProjectedLoss:
         X: np.ndarray,
         step: float = 1E-1
     ) -> np.ndarray:
-        """Creates a grid domain with the same dimensionality as X.
-
-        This function returns an array of points which are the discretized
-        version of the smallest hyperparallelepiped which contains the data in X.
+        """Create a regular grid of points covering the domain of the input
+        array X.
 
         Parameters
         ----------
-        X: np.ndarray
-            A `(n, p)` dimensional array. In case `p` is 1, we also accept a
-            `(n,)` dimensional array.
+        X : array_like
+            Input array with shape (n_samples, n_features).
+        step : float, optional
+            The step size for the grid. Defaults to 1E-1.
 
         Returns
         -------
-        np.ndarray
-            A `(N, p)` array, where N is the number of points of the
-            discretization.
+        ndarray
+            A 2D array with shape (n_grid_points, n_features), where
+            n_grid_points is the total number of points in the grid and
+            n_features is the number of features in X.
+
+        Raises
+        ------
+        ValueError
+            If X is not a 2D array.
+
+        Notes
+        -----
+        This function creates a regular grid of points covering the domain of 
+        the input array X. It treats the 1-dimensional case separately, using
+        numpy.linspace to create the grid. For higher dimensions, it creates a
+        meshgrid of intervals for each feature of X, then reshapes and stacks
+        the resulting arrays to create the final grid.
 
         """
+        assert len(X.shape) == 2
         if len(X.shape) == 1:
             X = X[:, None]
         # dimension
