@@ -51,13 +51,19 @@ class SGDIVProjectedLoss:
         """
         if len(X.shape) == 1:
             X = X[:, None]
-        # For now, we only treat the case where the covariates have a single
         # dimension
         dim = X.shape[1]
-        # assert dim == 1
         lower_bound = X.min(axis=0)
         upper_bound = X.max(axis=0)
         amplitude = upper_bound - lower_bound
+        # Treat the 1 dimensional case separately, as it is cheaper
+        if dim == 1:
+            return np.linspace(
+                lower_bound,
+                upper_bound,
+                int(amplitude/step),
+            ).flatten()
+
         intervals = (
             np.linspace(lower_bound[i], upper_bound[i],
                         num=int(amplitude[i]/step))
@@ -89,6 +95,6 @@ if __name__ == "__main__":
     assert (domain.min(axis=0) == sample.min(axis=0)).all()
     assert (domain.max(axis=0) == sample.max(axis=0)).all()
 
-    plt.scatter(domain[:, 0], domain[:, 1], c="b")
-    plt.scatter(sample[:, 0], sample[:, 1], c="r")
+    plt.scatter(domain[:, 0], domain[:, 1], c="b", s=.2)
+    plt.scatter(sample[:, 0], sample[:, 1], c="r", s=5)
     plt.show()
