@@ -10,10 +10,10 @@ import numpy as np
 
 @dataclass
 class InstrumentalVariableDataset:
-    endogenous_covariate: np.ndarray
-    exogenous_covariate: np.ndarray
-    noisy_response: np.ndarray
-    exact_response: np.ndarray
+    X: np.ndarray
+    Z: np.ndarray
+    Y: np.ndarray
+    Y_denoised: np.ndarray
 
 
 def make_low_dimensional_regression(

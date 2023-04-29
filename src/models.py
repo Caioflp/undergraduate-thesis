@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 import numpy as np
-from sklearn.neighbours import KNeighborsRegressor
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.base import BaseEstimator
 
 
@@ -20,7 +20,7 @@ class Estimates:
 
     """
     on_grid_points: np.ndarray
-    on_observed_poins: np.ndarray
+    on_observed_points: np.ndarray
 
 
 class FunctionalGradientDescentIV(BaseEstimator):
@@ -56,9 +56,9 @@ class FunctionalGradientDescentIV(BaseEstimator):
         regressor_grad: BaseEstimator = DEFAULT_REGRESSOR,
     ):
         self.lr = lr
-        self.projector_y = projector_y,
-        self.projector_estimate = projector_estimate,
-        self.regressor_grad = regressor_grad,
+        self.projector_y = projector_y
+        self.projector_estimate = projector_estimate
+        self.regressor_grad = regressor_grad
 
 
     def create_discretized_domain(
@@ -83,11 +83,6 @@ class FunctionalGradientDescentIV(BaseEstimator):
             n_grid_points is the total number of points in the grid and
             n_features is the number of features in X.
 
-        Raises
-        ------
-        ValueError
-            If X is not a 2D array.
-
         Notes
         -----
         This function creates a regular grid of points covering the domain of 
@@ -97,7 +92,6 @@ class FunctionalGradientDescentIV(BaseEstimator):
         the resulting arrays to create the final grid.
 
         """
-        assert len(X.shape) == 2
         if len(X.shape) == 1:
             X = X[:, None]
         dim = X.shape[1]
@@ -127,6 +121,10 @@ class FunctionalGradientDescentIV(BaseEstimator):
         """Fits the estimator to iid data.
 
         """
+        # Take care of dimensions
+        if len(X.shape) == 1:
+            X = X.reshape(-1, 1)
+
         n_samples = X.shape[0]
         n_iter = n_samples
 
@@ -137,26 +135,26 @@ class FunctionalGradientDescentIV(BaseEstimator):
         lr = lr_dict[self.lr]
 
         # Create domain for estimates.
-        x_domain = self.create_discretized_domain(X)
+        x_domain = self.create_discretized_domain(X).reshape(-1, 1)
         n_grid_points = x_domain.shape[0]
 
         # Create object which will store the sequence of estimates evaluated on
         # unobserved grid points and on observed random points.
         estimates = Estimates(
-            on_grid_points=np.empty(n_iter+1, n_grid_points, dtype=np.float64),
-            on_observed_points=np.empty(n_iter+1, n_samples, dtype=np.float64)
+            on_grid_points=np.empty((n_iter+1, n_grid_points), dtype=np.float64),
+            on_observed_points=np.empty((n_iter+1, n_samples), dtype=np.float64)
         )
         estimates.on_grid_points[0, :] = np.zeros(n_grid_points)
         estimates.on_observed_points[0, :] = np.zeros(n_samples)
 
         # Compute the projected values of Y onto Z.
-        projected_y = projector_y.fit(Z, Y).predict(Z)
+        projected_y = self.projector_y.fit(Z, Y).predict(Z)
 
         for i in range(1, n_iter+1):
             # Project current estimate on Z, i.e., compute E [Th(X) | Z]
             current_estimate = estimates.on_observed_points[i-1]
             projected_current_estimate = \
-                    projector_estimate.fit(Z, current_estimate).predict(Z)
+                    self.projector_estimate.fit(Z, current_estimate).predict(Z)
 
             # Compute gradient of loss function.
             # We are assuming that the loss function is quadratic, which makes
@@ -167,17 +165,17 @@ class FunctionalGradientDescentIV(BaseEstimator):
             # Compute actual functional gradient, which is the regression of
             # the loss gradient on X, i.e.,
             # E [\partial_2 l (r_0(Z), Th(Z)) | X]
-            regressor_grad.fit(X, loss_grad)
-            functional_grad_grid = regressor_grad.predict(x_domain)
-            functional_grad_observed = regressor_grad.predict(X)
+            self.regressor_grad.fit(X, loss_grad)
+            functional_grad_grid = self.regressor_grad.predict(x_domain)
+            functional_grad_observed = self.regressor_grad.predict(X)
 
             # Take one step in the negative gradient direction
-            estimates.on_grid_poins[i, :] =  (
-                estimates.on_grid_poins[i-1, :]
+            estimates.on_grid_points[i, :] =  (
+                estimates.on_grid_points[i-1, :]
                 - lr(i) * functional_grad_grid
             )
-            estimates.on_observed_poins[i, :] =  (
-                estimates.on_observed_poins[i-1, :]
+            estimates.on_observed_points[i, :] =  (
+                estimates.on_observed_points[i-1, :]
                 - lr(i) * functional_grad_observed
             )
 
@@ -186,7 +184,7 @@ class FunctionalGradientDescentIV(BaseEstimator):
         mean_estimate_on_observed = estimates.on_observed_points.mean(axis=0)
         self.estimate_domain = np.concatenate((x_domain, X), axis=0)
         self.estimate = np.concatenate(
-            mean_estimate_on_grid, mean_estimate_on_observed,
+            (mean_estimate_on_grid, mean_estimate_on_observed),
             axis=None
         )
 
