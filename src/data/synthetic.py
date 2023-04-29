@@ -19,7 +19,7 @@ class InstrumentalVariableDataset:
 def make_low_dimensional_regression(
     n_samples: int = 1000, 
     response: Literal["sin", "step", "abs", "linear"] = "sin",
-    seed: int = 42,
+    seed: int = None,
 ) -> InstrumentalVariableDataset:
     """Creates a dataset for a low dimensional regression problem.
 
@@ -67,13 +67,13 @@ if __name__ == "__main__":
 
     dataset = make_low_dimensional_regression(5000, response="abs")
     plt.scatter(
-        dataset.endogenous_covariate,
-        dataset.noisy_response,
+        dataset.X,
+        dataset.Y,
         s=.2
     )
     plt.scatter(
-        dataset.endogenous_covariate,
-        dataset.exact_response,
+        dataset.X,
+        dataset.Y_denoised,
         s=.3
     )
     plt.show()
