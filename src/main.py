@@ -8,7 +8,7 @@ import numpy as np
 from sklearn.neighbors import KNeighborsRegressor as KNN
 
 from src.data.synthetic import make_low_dimensional_regression
-from src.models import FunctionalGradientDescentIV
+from src.models import FunctionalGD
 
 
 if __name__ == "__main__":
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     projector_estimate = KNN(n_neighbors=5, weights="distance")
     regressor_grad = KNN(n_neighbors=5, weights="distance")
 
-    model = FunctionalGradientDescentIV(
+    model = FunctionalGD(
         "inv_sqrt",
         projector_y,
         projector_estimate,
