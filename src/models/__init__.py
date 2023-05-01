@@ -1,1 +1,1 @@
-from .fgdiv import FunctionalGradientDescentIV
+from .functional_gd import FunctionalGD
