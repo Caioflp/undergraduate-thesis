@@ -6,9 +6,10 @@ Author: @Caioflp
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.neighbors import KNeighborsRegressor as KNN
+from sklearn.neighbors import KernelDensity as KDE
 
 from src.data.synthetic import make_low_dimensional_regression
-from src.models import FunctionalGD
+from src.models import FunctionalGD, FunctionalSGD
 
 
 if __name__ == "__main__":
@@ -17,12 +18,23 @@ if __name__ == "__main__":
     projector_y = KNN(n_neighbors=1, weights="distance")
     projector_estimate = KNN(n_neighbors=5, weights="distance")
     regressor_grad = KNN(n_neighbors=5, weights="distance")
+    density_estimator_x = KDE()
+    density_estimator_xz = KDE()
+    density_estimator_z = KDE()
 
-    model = FunctionalGD(
-        "inv_sqrt",
+    # model = FunctionalGD(
+    #     "inv_sqrt",
+    #     projector_y,
+    #     projector_estimate,
+    #     regressor_grad
+    # )
+    model = FunctionalSGD(
+        "inv_n_samples",
         projector_y,
         projector_estimate,
-        regressor_grad
+        density_estimator_x,
+        density_estimator_z,
+        density_estimator_xz,
     )
     model.fit(dataset.X, dataset.Z, dataset.Y)
 

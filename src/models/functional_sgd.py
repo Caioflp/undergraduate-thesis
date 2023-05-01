@@ -9,16 +9,17 @@ from typing import Literal
 
 import numpy as np
 from sklearn.base import BaseEstimator
-from sklearn.neighbors import KernelDensity
+from sklearn.neighbors import KernelDensity as KDE
 
 from .utils import (
     DEFAULT_REGRESSOR,
     Estimates,
     create_discretized_domain,
+    ensure_two_dimensional,
 )
 
 
-DEFAULT_DENSITY_ESTIMATOR = KernelDensity()
+DEFAULT_DENSITY_ESTIMATOR = KDE()
 
 
 class FunctionalSGD(BaseEstimator):
@@ -27,9 +28,9 @@ class FunctionalSGD(BaseEstimator):
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
         projector_y: BaseEstimator = DEFAULT_REGRESSOR,
         projector_estimate: BaseEstimator = DEFAULT_REGRESSOR,
-        density_estimator_x: BaseEstimator = DEFAULT_DENSITY_ESTIMATOR
-        density_estimator_z: BaseEstimator = DEFAULT_DENSITY_ESTIMATOR
-        density_estimator_xz: BaseEstimator = DEFAULT_DENSITY_ESTIMATOR
+        density_estimator_x: BaseEstimator = DEFAULT_DENSITY_ESTIMATOR,
+        density_estimator_z: BaseEstimator = DEFAULT_DENSITY_ESTIMATOR,
+        density_estimator_xz: BaseEstimator = DEFAULT_DENSITY_ESTIMATOR,
     ):
         self.lr = lr
         self.projector_y = projector_y
@@ -37,63 +38,6 @@ class FunctionalSGD(BaseEstimator):
         self.density_estimator_x = density_estimator_x
         self.density_estimator_z = density_estimator_z
         self.density_estimator_xz = density_estimator_xz
-
-
-    def create_discretized_domain(
-        self,
-        X: np.ndarray,
-        step: float = 1E-1
-    ) -> np.ndarray:
-        """Create a regular grid of points covering the domain of the input
-        array X.
-
-        Parameters
-        ----------
-        X : array_like
-            Input array with shape (n_samples, n_features).
-        step : float, optional
-            The step size for the grid. Defaults to 1E-1.
-
-        Returns
-        -------
-        ndarray
-            A 2D array with shape (n_grid_points, n_features), where
-            n_grid_points is the total number of points in the grid and
-            n_features is the number of features in X.
-
-        Notes
-        -----
-        This function creates a regular grid of points covering the domain of 
-        the input array X. It treats the 1-dimensional case separately, using
-        numpy.linspace to create the grid. For higher dimensions, it creates a
-        meshgrid of intervals for each feature of X, then reshapes and stacks
-        the resulting arrays to create the final grid.
-
-        """
-        if len(X.shape) == 1:
-            X = X[:, None]
-        dim = X.shape[1]
-        lower_bound = X.min(axis=0)
-        upper_bound = X.max(axis=0)
-        amplitude = upper_bound - lower_bound
-        # Treat the 1 dimensional case separately, as it is cheaper.
-        if dim == 1:
-            return np.linspace(
-                lower_bound,
-                upper_bound,
-                int(amplitude/step),
-            ).flatten()
-
-        intervals = (
-            np.linspace(lower_bound[i], upper_bound[i],
-                        num=int(amplitude[i]/step))
-            for i in range(dim)
-        )
-        separate_coordinates = np.meshgrid(*intervals)
-        squished_separate_coordinates = [
-            np.reshape(x, (-1, 1)) for x in separate_coordinates
-        ]
-        return np.hstack(squished_separate_coordinates)
 
     def fit(self, X: np.ndarray, Z: np.ndarray, Y: np.ndarray):
         X = ensure_two_dimensional(X)
@@ -129,9 +73,9 @@ class FunctionalSGD(BaseEstimator):
                                                        .score_samples(X)
         densities_x_grid = self.density_estimator_x.score_samples(x_domain)
         densities_z = self.density_estimator_z.fit(Z).score_samples(Z)
-        self.density_estimator_xz.fit(np.hstack(X, Z))
+        self.density_estimator_xz.fit(np.hstack((X, Z)))
 
-        for i, in range(n_iter):
+        for i in range(n_iter):
             # Project current estimate on Z, i.e., compute E [Th(X) | Z]
             current_estimate = estimates.on_observed_points[i]
             projected_current_estimate = self.projector_estimate \
@@ -149,14 +93,19 @@ class FunctionalSGD(BaseEstimator):
             # appears in the functional gradient expression
             ratio_of_densities_grid = np.exp(
                 self.density_estimator_xz.score_samples(
-                    np.hstack(x_domain, np.full_like(x_domain, Z[i]))
+                    np.hstack((
+                        x_domain,
+                        np.full((n_grid_points, Z.shape[1]), Z[i])
+                    ))
                 )
                 - densities_x_grid
                 - densities_z[i]
             )
             ratio_of_densities_observed = np.exp(
                 self.density_estimator_xz.score_samples(
-                    np.hstack(X, np.full_like(X, Z[i]))
+                    np.hstack((
+                        X, np.full((n_samples, Z.shape[1]), Z[i])
+                    ))
                 )
                 - densities_x_observed
                 - densities_z[i]
@@ -173,11 +122,11 @@ class FunctionalSGD(BaseEstimator):
             # Take one step in the negative gradient direction
             estimates.on_grid_points[i, :] = (
                 estimates.on_grid_points[i-1, :]
-                - lr(i) * functional_grad_grid
+                - lr(i+1) * functional_grad_grid
             )
             estimates.on_observed_points[i, :] =  (
                 estimates.on_observed_points[i-1, :]
-                - lr(i) * functional_grad_observed
+                - lr(i+1) * functional_grad_observed
             )
 
         # Construct final estimate as average of sequence of estimates
