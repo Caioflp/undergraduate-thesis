@@ -120,12 +120,12 @@ class FunctionalSGD(BaseEstimator):
             )
 
             # Take one step in the negative gradient direction
-            estimates.on_grid_points[i, :] = (
-                estimates.on_grid_points[i-1, :]
+            estimates.on_grid_points[i+1, :] = (
+                estimates.on_grid_points[i, :]
                 - lr(i+1) * functional_grad_grid
             )
-            estimates.on_observed_points[i, :] =  (
-                estimates.on_observed_points[i-1, :]
+            estimates.on_observed_points[i+1, :] =  (
+                estimates.on_observed_points[i, :]
                 - lr(i+1) * functional_grad_observed
             )
 
