@@ -1,4 +1,4 @@
-"""Implementations of different models for IV regression.
+"""Implements functional gradient descent for IV problems.
 
 Author: @Caioflp
 """
@@ -159,6 +159,18 @@ class FunctionalGradientDescentIV(BaseEstimator):
 
     def fit(self, X: np.ndarray, Z: np.ndarray, Y: np.ndarray):
         """Fits the estimator to iid data.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            Array of shape `(n_samples, x_dim)` with samples from the
+            endogenous covariate.
+        Z : np.ndarray
+            Array of shape `(n_samples, z_dim)` with samples from the exogenous
+            covariate.
+        Y : np.ndarray
+            Array of shape `(n_samples,)` with samples from the response
+            variable.
 
         """
         # Take care of dimensions
