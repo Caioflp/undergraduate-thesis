@@ -8,5 +8,5 @@
 
 * Implemented simple synthetic DGP.
 * Implement our estimator with the projected loss
-    - Ways to estimate $ E [h(X)|Z = z] $: KNN, linear regression with
+    - Ways to estimate $E [h(X)|Z = z]$: KNN, linear regression with
       basis expansion, 

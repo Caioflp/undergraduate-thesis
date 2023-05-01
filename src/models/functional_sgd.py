@@ -140,5 +140,3 @@ class FunctionalSGD(BaseEstimator):
         self.grid_domain = x_domain
         self.estimate_on_grid = mean_estimate_on_grid
         self.estimate_on_obs = mean_estimate_on_observed
-
-
