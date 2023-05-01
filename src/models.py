@@ -18,6 +18,15 @@ class Estimates:
     """Holds sequence of estimates evaluated on grid points and on observed
     points.
 
+    Attributes
+    ----------
+    on_grid_points : np.ndarray
+        Array of shape (n_estimates, n_grid_points) which contains the values
+        of the estimate function on each of the grid points.
+    on_observed_points : np.ndarray
+        Array of shape (n_estimates, n_samples) which contains the values
+        of the estimate function on each of the observed (sample) points
+
     """
     on_grid_points: np.ndarray
     on_observed_points: np.ndarray
@@ -34,9 +43,40 @@ class FunctionalGradientDescentIV(BaseEstimator):
         means `alpha_i = 1/sqrt(i)`. `"inv_n_samples"` means that the learning
         rate is constant and equal to the inverse square root of the number of
         training samples.
+    projector_y : BaseEstimator, default KNN(n_neighbors=5)
+        Algorithm used to project `Y` onto `Z`, i.e., to compute E [Y | Z = z]
+        for the observed values of `z`.
+    projector_estimate : BaseEstimator, default KNN(n_neighbors=5)
+        Algorithm used to project `h(X)` onto `Z`, i.e., to compute
+        E [h(X) | Z = z] for the observed values of `z`.
+    regressor_grad : BaseEstimator, default KNN(n_neighbors=5)
+        Algorithm used to regress the loss's gradient onto `Z`, i.e., to
+        compute E [\partial_2 l (E[Y|Z], E[h(X)|Z]) | X = x], for the observed
+        and grid values of `x`.
 
     Attributes
     ----------
+    lr : str
+        Type of learning rate for the fitting algorithm.
+    projector_y : BaseEstimator
+    projector_estimate : BaseEstimator
+    projector_grad : BaseEstimator
+    estimate_domain : np.ndarray
+        An array of shape (n_samples + n_grid_points,) containing the points
+        on which our estimate for the solution is being computed.
+    estimate : np.ndarray
+        An array of shape (n_samples + n_grid_points,) containing the values of
+        our estimate computed on the points in `self.estimate_domain`.
+    grid_domain : np.ndarray
+        An array of shape (n_grid_points,) containg the values of
+        `self.estimate_domain` which are grid points.
+    estimate_on_grid : np.ndarray
+        An array of shape (n_grid_points,) containing the the values of our
+        estimate computed on the points in `self.grid_domain`.
+    estimate_on_obs : np.ndarray
+        An array of shape (n_samples,) containing the the values of our
+        estimate computed on the points supplied as samples for the `fit`
+        method.
 
     Notes
     -----
@@ -190,12 +230,6 @@ class FunctionalGradientDescentIV(BaseEstimator):
         self.grid_domain = x_domain
         self.estimate_on_grid = mean_estimate_on_grid
         self.estimate_on_obs = mean_estimate_on_observed
-
-
-    def predict(self, X: np.ndarray):
-        """Applies the fitted function to given inputs.
-
-        """
 
 
 if __name__ == "__main__":
