@@ -13,7 +13,7 @@ from src.models import FunctionalGD, FunctionalSGD
 
 
 if __name__ == "__main__":
-    dataset = make_low_dimensional_regression(200, response="sin")
+    dataset = make_low_dimensional_regression(1000, response="sin")
 
     projector_y = KNN(n_neighbors=1, weights="distance")
     projector_estimate = KNN(n_neighbors=5, weights="distance")
@@ -38,8 +38,8 @@ if __name__ == "__main__":
     )
 
     for model, title in zip(
-        [model_gd, model_sgd],
-        ["Gradient Descent", "Stochastic Gradient Descent"]
+        [model_sgd],#, model_gd],
+        ["Stochastic Gradient Descent"]#, "Gradient Descent"]
     ):
         model.fit(dataset.X, dataset.Z, dataset.Y)
 
@@ -58,15 +58,22 @@ if __name__ == "__main__":
 
         ax_model_on_grid.scatter(dataset.X, dataset.Y_denoised, c="r", s=4, label="truth")
         ax_model_on_grid.scatter(model.grid_domain, model.estimate_on_grid, c="b", s=3, label="model")
+        ax_model_on_grid.scatter(model.grid_domain,
+                                 model.sequence_of_estimates.on_grid_points[-1],
+                                 c="k", s=3, label="last estimate")
         ax_model_on_grid.legend()
         ax_model_on_grid.set_title("Model on grid points")
 
         ax_model_on_obs.scatter(dataset.X, dataset.Y_denoised, c="r", s=4, label="truth")
         ax_model_on_obs.scatter(dataset.X, model.estimate_on_obs, c="b", s=3, label="model")
+        ax_model_on_obs.scatter(dataset.X,
+                                model.sequence_of_estimates.on_observed_points[-1],
+                                c="k", s=3, label="last estimate")
         ax_model_on_obs.legend()
         ax_model_on_obs.set_title("Model on observed points")
 
         fig.suptitle(title)
         fig.tight_layout()
-        fig.savefig(title.lower().replace(" ", "_") + ".pdf")
+        # fig.savefig(title.lower().replace(" ", "_") + ".pdf")
+        plt.show()
 

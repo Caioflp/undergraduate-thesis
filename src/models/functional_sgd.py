@@ -10,6 +10,7 @@ from typing import Literal
 import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.neighbors import KernelDensity as KDE
+from tqdm import tqdm
 
 from .utils import (
     DEFAULT_REGRESSOR,
@@ -75,7 +76,7 @@ class FunctionalSGD(BaseEstimator):
         densities_z = self.density_estimator_z.fit(Z).score_samples(Z)
         self.density_estimator_xz.fit(np.hstack((X, Z)))
 
-        for i in range(n_iter):
+        for i in tqdm(range(n_iter)):
             # Project current estimate on Z, i.e., compute E [Th(X) | Z]
             current_estimate = estimates.on_observed_points[i]
             projected_current_estimate = self.projector_estimate \
@@ -140,3 +141,4 @@ class FunctionalSGD(BaseEstimator):
         self.grid_domain = x_domain
         self.estimate_on_grid = mean_estimate_on_grid
         self.estimate_on_obs = mean_estimate_on_observed
+        self.sequence_of_estimates = estimates
