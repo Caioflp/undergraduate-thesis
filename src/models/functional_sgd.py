@@ -92,6 +92,8 @@ class FunctionalSGD(BaseEstimator):
 
             # Compute the ratio of densities p(x, z)/(p(x) * p(z)) which
             # appears in the functional gradient expression
+            # We apply the exponential because `score_samples` returns
+            # log densities.
             ratio_of_densities_grid = np.exp(
                 self.density_estimator_xz.score_samples(
                     np.hstack((
