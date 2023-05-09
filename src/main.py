@@ -8,6 +8,7 @@ import os
 import hydra
 import matplotlib.pyplot as plt
 import numpy as np
+from hydra.utils import instantiate
 from omegaconf import DictConfig, OmegaConf
 from sklearn.neighbors import KNeighborsRegressor as KNN
 from sklearn.neighbors import KernelDensity as KDE
@@ -19,7 +20,6 @@ from src.models import FunctionalGD, FunctionalSGD
 @hydra.main(version_base=None, config_path="./config", config_name="config")
 def main(cfg: DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
-    print(f"Working directory: {os.getcwd()}")
 
 
 if __name__ == "__main__":

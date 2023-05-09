@@ -1,4 +1,12 @@
-db:
-  driver: mysql
-  user: omry
-  password: secret
+defaults:
+  - dataset: low_dim
+  - model: sgd
+
+hydra:
+  sweeper:
+    params:
+      dataset:
+        n_samples: 10,20,30
+      model:
+        projector_y:
+          bandwidth: 1,2,3
