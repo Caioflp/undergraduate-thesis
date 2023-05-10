@@ -7,9 +7,11 @@ from dataclasses import dataclass
 
 import numpy as np
 from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neighbors import KernelDensity as KDE
 
 
 DEFAULT_REGRESSOR = KNeighborsRegressor(weights="distance", n_neighbors=5)
+DEFAULT_DENSITY_ESTIMATOR = KDE()
 
 
 @dataclass

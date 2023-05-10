@@ -4,23 +4,25 @@ problems.
 Author: @Caioflp
 
 """
-from dataclasses import dataclass
+import logging
 from typing import Literal
 
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.base import BaseEstimator
-from sklearn.neighbors import KernelDensity as KDE
 from tqdm import tqdm
 
-from .utils import (
+from src.data.utils import InstrumentalVariableDataset
+from src.models.utils import (
     DEFAULT_REGRESSOR,
+    DEFAULT_DENSITY_ESTIMATOR,
     Estimates,
     create_discretized_domain,
     ensure_two_dimensional,
 )
 
 
-DEFAULT_DENSITY_ESTIMATOR = KDE()
+LOGGER = logging.getLogger(__name__)
 
 
 class FunctionalSGD(BaseEstimator):
@@ -40,7 +42,10 @@ class FunctionalSGD(BaseEstimator):
         self.density_estimator_z = density_estimator_z
         self.density_estimator_xz = density_estimator_xz
 
-    def fit(self, X: np.ndarray, Z: np.ndarray, Y: np.ndarray):
+    def fit(self, dataset: InstrumentalVariableDataset) -> None:
+        LOGGER.info("Fitting model.")
+
+        X, Z, Y = dataset.X, dataset.Z, dataset.Y
         X = ensure_two_dimensional(X)
         Z = ensure_two_dimensional(Z)
 
@@ -144,3 +149,43 @@ class FunctionalSGD(BaseEstimator):
         self.estimate_on_grid = mean_estimate_on_grid
         self.estimate_on_obs = mean_estimate_on_observed
         self.sequence_of_estimates = estimates
+        self.is_fitted = True
+
+    def make_plots(self, dataset: InstrumentalVariableDataset) -> None:
+        assert self.is_fitted
+        LOGGER.info("Making plots.")
+
+        title = "Stochastic Gradient Descent"
+
+        domain = self.estimate_domain.flatten()
+        sort_idx = np.argsort(domain)
+
+        fig, axs = plt.subplots(3)
+        ax_obs = axs[0]
+        ax_model_on_obs = axs[1]
+        ax_model_on_grid = axs[2]
+
+        ax_obs.scatter(dataset.X, dataset.Y_denoised, c="r", s=4, label="truth")
+        ax_obs.scatter(dataset.X, dataset.Y, c="y", s=3, label="observed")
+        ax_obs.legend()
+        ax_obs.set_title("Data")
+
+        ax_model_on_grid.scatter(dataset.X, dataset.Y_denoised, c="r", s=4, label="truth")
+        ax_model_on_grid.scatter(self.grid_domain, self.estimate_on_grid, c="b", s=3, label="model")
+        ax_model_on_grid.scatter(self.grid_domain,
+                                 self.sequence_of_estimates.on_grid_points[-1],
+                                 c="k", s=3, label="last estimate")
+        ax_model_on_grid.legend()
+        ax_model_on_grid.set_title("Model on grid points")
+
+        ax_model_on_obs.scatter(dataset.X, dataset.Y_denoised, c="r", s=4, label="truth")
+        ax_model_on_obs.scatter(dataset.X, self.estimate_on_obs, c="b", s=3, label="model")
+        ax_model_on_obs.scatter(dataset.X,
+                                self.sequence_of_estimates.on_observed_points[-1],
+                                c="k", s=3, label="last estimate")
+        ax_model_on_obs.legend()
+        ax_model_on_obs.set_title("Model on observed points")
+
+        fig.suptitle(title)
+        fig.tight_layout()
+        fig.savefig(title.lower().replace(" ", "_") + ".pdf")

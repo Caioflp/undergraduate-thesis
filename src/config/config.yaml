@@ -1,12 +1,8 @@
 defaults:
   - dataset: low_dim
   - model: sgd
+  - _self_
 
 hydra:
-  sweeper:
-    params:
-      dataset:
-        n_samples: 10,20,30
-      model:
-        projector_y:
-          bandwidth: 1,2,3
+  job:
+    chdir: True

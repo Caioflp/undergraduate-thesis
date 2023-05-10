@@ -3,17 +3,14 @@
     Author: @Caioflp
 """
 from dataclasses import dataclass
+import logging
 from typing import Literal
+from src.data.utils import InstrumentalVariableDataset
 
 import numpy as np
 
 
-@dataclass
-class InstrumentalVariableDataset:
-    X: np.ndarray
-    Z: np.ndarray
-    Y: np.ndarray
-    Y_denoised: np.ndarray
+LOGGER = logging.getLogger(__name__)
 
 
 def make_low_dimensional_regression(
@@ -42,6 +39,8 @@ def make_low_dimensional_regression(
         the denoised versions of Y.
 
     """
+    LOGGER.info("Generating low dimensional dataset.")
+
     response_dict = {
         "sin": np.sin,
         "step": lambda x: x >= 0,
