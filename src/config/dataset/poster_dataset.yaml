@@ -1,0 +1,3 @@
+_target_: src.data.synthetic.make_poster_dataset
+n_samples: 500
+response: case_1

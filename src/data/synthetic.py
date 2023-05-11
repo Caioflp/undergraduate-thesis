@@ -59,7 +59,6 @@ def make_poster_dataset(
     response_func = response_dict[response]
 
     W = rng.normal(loc=0, scale=1, size=(n_samples, 3))
-    print(W)
     W_1, W_2, W_3 = W[:, 0], W[:, 1], W[:, 2]
     Z = norm_cdf(W_1)
     X = norm_cdf(rho*W_1 + np.sqrt(1 - np.power(rho, 2))*W_2)
