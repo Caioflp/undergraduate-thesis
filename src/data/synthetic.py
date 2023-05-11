@@ -1,6 +1,7 @@
-""" Synthetic data generation.
+"""Synthetic data generation.
 
-    Author: @Caioflp
+Author: @Caioflp
+
 """
 from dataclasses import dataclass
 import logging

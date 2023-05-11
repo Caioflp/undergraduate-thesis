@@ -1,4 +1,4 @@
-"""Implements utilities for the models to use.
+"""Model related utilities.
 
 Author: @Caioflp
 
@@ -102,7 +102,7 @@ def ensure_two_dimensional(arr: np.ndarray):
 
     Raises
     ------
-    ValueError if the array has more than two dimensions
+    ValueError if the array has more than two dimensions.
 
     """
     if len(arr.shape) == 1:

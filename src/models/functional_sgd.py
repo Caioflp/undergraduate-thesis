@@ -43,6 +43,14 @@ class FunctionalSGD(BaseEstimator):
         self.density_estimator_xz = density_estimator_xz
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:
+        """Fits model to dataset.
+
+        Parameters
+        ----------
+        dataset: InstrumentalVariableDataset
+            Dataset containing X, Z and T.
+
+        """
         LOGGER.info("Fitting model.")
 
         X, Z, Y = dataset.X, dataset.Z, dataset.Y
@@ -152,6 +160,18 @@ class FunctionalSGD(BaseEstimator):
         self.is_fitted = True
 
     def make_plots(self, dataset: InstrumentalVariableDataset) -> None:
+        """Makes plots useful for analysing results
+
+        Parameters
+        ----------
+        dataset: InstrumentalVariableDataset
+            Dataset used to fit the model.
+
+        Raises
+        ------
+        AssertionError if the model was not fitted before calling this method.
+
+        """
         assert self.is_fitted
         LOGGER.info("Making plots.")
 
