@@ -26,6 +26,22 @@ LOGGER = logging.getLogger(__name__)
 
 
 class FunctionalSGD(BaseEstimator):
+    """Regressor based on a variant of stochastic gradient descent.
+
+    Parameters
+    ----------
+    projector_y: BaseEstimator, default KNN.
+        Computes an estimate to E[Y|Z].
+    projector_estimate: BaseEstimator, default KNN.
+        Computes an estimate to E[h_i-1|Z].
+    density_estimator_x: BaseEstimator, default KDE.
+        Computes an estimate to p(x).
+    density_estimator_z: BaseEstimator, default KDE.
+        Computes an estimate to  p(z)
+    density_estimator_xz: BaseEstimator, default KDE.
+        Computes an estimate to p(x, z)
+
+    """
     def __init__(
         self,
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
