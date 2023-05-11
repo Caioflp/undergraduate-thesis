@@ -1,0 +1,3 @@
+_target_: src.data.synthetic.make_uniform_instrument
+n_samples: 500
+response: sin
