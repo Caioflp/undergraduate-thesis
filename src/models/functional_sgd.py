@@ -108,9 +108,6 @@ class FunctionalSGD(BaseEstimator):
         # Fit the density estimators on X, Z and (X, Z)
         densities_x = self.density_estimator_x.fit(X) \
                 .score_samples(x_domain.all_points)
-        # densities_x_observed = self.density_estimator_x.fit(X) \
-        #                                                .score_samples(X)
-        # densities_x_grid = self.density_estimator_x.score_samples(x_domain)
         densities_z = self.density_estimator_z.fit(Z).score_samples(Z)
         self.density_estimator_xz.fit(np.concatenate((X, Z), axis=1))
 
@@ -120,10 +117,6 @@ class FunctionalSGD(BaseEstimator):
                                          .fit(Z, estimates.on_observed_points[i]) \
                                          .predict([Z[i]])[0]
 
-            # Compute the the gradient of the pointwise loss function.
-            # We are assuming that the loss function is quadratic,
-            # which makes its gradient linear.
-            # TODO: Implement other types of loss functions.
             pointwise_loss_grad = \
                     projected_current_estimate - projected_y[i]
 
@@ -132,10 +125,8 @@ class FunctionalSGD(BaseEstimator):
             # We apply the exponential because `score_samples` returns
             # log densities.
             joint_x_and_current_z = np.concatenate(
-                (
-                    x_domain.all_points,
-                    np.full((n_grid_points + n_samples, Z.shape[1]), Z[i])
-                ),
+                (x_domain.all_points,
+                 np.full((n_grid_points + n_samples, Z.shape[1]), Z[i])),
                 axis=1
             )
             ratio_of_densities = np.exp(
@@ -144,51 +135,16 @@ class FunctionalSGD(BaseEstimator):
                 - densities_z[i]
             )
 
-            # ratio_of_densities_grid = np.exp(
-            #     self.density_estimator_xz.score_samples(
-            #         np.hstack((
-            #             x_domain,
-            #             np.full((n_grid_points, Z.shape[1]), Z[i])
-            #         ))
-            #     )
-            #     - densities_x_grid
-            #     - densities_z[i]
-            # )
-            # ratio_of_densities_observed = np.exp(
-            #     self.density_estimator_xz.score_samples(
-            #         np.hstack((
-            #             X, np.full((n_samples, Z.shape[1]), Z[i])
-            #         ))
-            #     )
-            #     - densities_x_observed
-            #     - densities_z[i]
-            # )
-
             # Compute the stochastic estimates for the functional loss gradient
             functional_grad = (
                 ratio_of_densities * pointwise_loss_grad
             )
-
-            # functional_grad_grid = (
-            #     ratio_of_densities_grid * pointwise_loss_grad
-            # )
-            # functional_grad_observed = (
-            #     ratio_of_densities_observed * pointwise_loss_grad
-            # )
 
             # Take one step in the negative gradient direction
             estimates.on_all_points[i+1] = (
                 estimates.on_all_points[i]
                 - lr(i+1) * functional_grad
             )
-            # estimates.on_grid_points[i+1, :] = (
-            #     estimates.on_grid_points[i, :]
-            #     - lr(i+1) * functional_grad_grid
-            # )
-            # estimates.on_observed_points[i+1, :] =  (
-            #     estimates.on_observed_points[i, :]
-            #     - lr(i+1) * functional_grad_observed
-            # )
 
         # Construct final estimate as average of sequence of estimates
         self.sequence_of_estimates = estimates
@@ -197,18 +153,6 @@ class FunctionalSGD(BaseEstimator):
             on_grid_points=estimates.on_grid_points.mean(axis=0),
         )
         self.domain = x_domain
-
-        # mean_estimate_on_grid = estimates.on_grid_points.mean(axis=0)
-        # mean_estimate_on_observed = estimates.on_observed_points.mean(axis=0)
-        # self.estimate_domain = np.concatenate((x_domain, X), axis=0)
-        # self.estimate = np.concatenate(
-        #     (mean_estimate_on_grid, mean_estimate_on_observed),
-        #     axis=None
-        # )
-        # self.grid_domain = x_domain
-        # self.estimate_on_grid = mean_estimate_on_grid
-        # self.estimate_on_obs = mean_estimate_on_observed
-        # self.sequence_of_estimates = estimates
         self.is_fitted = True
 
     def plot_data(
@@ -226,10 +170,9 @@ class FunctionalSGD(BaseEstimator):
             alpha=0.8,
             label="Observed response",
         )
-        sort_idx = np.argsort(self.domain.observed_points)
+        sort_idx = np.argsort(self.domain.observed_points.flatten())
         sorted_x = self.domain.observed_points[sort_idx]
         sorted_y_denoised = dataset.Y_denoised[sort_idx]
-        print(sorted_y_denoised)
         ax.plot(
             sorted_x.flatten(),
             sorted_y_denoised,
@@ -247,17 +190,19 @@ class FunctionalSGD(BaseEstimator):
     ) -> None:
         fig, ax = plt.subplots(layout="constrained", figsize=figsize)
         title = "Estimate on observed points"
-        sort_idx = np.argsort(self.domain.observed_points)
+        sort_idx = np.argsort(self.domain.observed_points.flatten())
         sorted_x = self.domain.observed_points[sort_idx]
         sorted_y_denoised = dataset.Y_denoised[sort_idx]
         sorted_estimate = self.estimate.on_observed_points[sort_idx]
         sorted_last_estimate = \
                 self.sequence_of_estimates.on_observed_points[-1][sort_idx]
-        ax.plot(
-            sorted_x.flatten(),
-            sorted_y_denoised,
+        ax.scatter(
+            dataset.X.flatten(),
+            dataset.Y_denoised,
             c="r",
             label="Denoised response",
+            s=3,
+            alpha=.8,
         )
         ax.plot(
             sorted_x.flatten(),
@@ -282,17 +227,18 @@ class FunctionalSGD(BaseEstimator):
     ) -> None:
         fig, ax = plt.subplots(layout="constrained", figsize=figsize)
         title = "Estimate on grid points"
-        sort_idx = np.argsort(self.domain.grid_points)
+        sort_idx = np.argsort(self.domain.grid_points.flatten())
         sorted_x = self.domain.grid_points[sort_idx]
-        sorted_y_denoised = dataset.Y_denoised[sort_idx]
         sorted_estimate = self.estimate.on_grid_points[sort_idx]
         sorted_last_estimate = \
                 self.sequence_of_estimates.on_grid_points[-1][sort_idx]
-        ax.plot(
-            sorted_x.flatten(),
-            sorted_y_denoised,
+        ax.scatter(
+            dataset.X.flatten(),
+            dataset.Y_denoised,
             c="r",
             label="Denoised response",
+            s=3,
+            alpha=0.8,
         )
         ax.plot(
             sorted_x.flatten(),
