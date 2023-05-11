@@ -14,12 +14,12 @@ import numpy as np
 LOGGER = logging.getLogger(__name__)
 
 
-def make_low_dimensional_regression(
+def make_uniform_instrument(
     n_samples: int = 1000, 
     response: Literal["sin", "step", "abs", "linear"] = "sin",
     seed: int = None,
 ) -> InstrumentalVariableDataset:
-    """Creates a dataset for a low dimensional regression problem.
+    """Creates a dataset in which the instrument is uniformly distributed.
 
     Problem was taken from arXiv:1905.12495v2.
 
@@ -40,7 +40,7 @@ def make_low_dimensional_regression(
         the denoised versions of Y.
 
     """
-    LOGGER.info("Generating low dimensional dataset.")
+    LOGGER.info("Generating dataset with uniform instrument.")
 
     response_dict = {
         "sin": np.sin,

@@ -1,5 +1,5 @@
 defaults:
-  - dataset: low_dim
+  - dataset: uniform_instrument
   - model: sgd
   - _self_
 
