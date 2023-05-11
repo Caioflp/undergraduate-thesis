@@ -1,7 +1,6 @@
 ## To do
 
-* Plot things separetely.
-* Improve plots so that things aren't as streched out.
+* Move ploting to separate module.
 
 * Plot density estimates for sgd model.
 * Use analytical version of p(z, x)/p(z)p(x)
@@ -29,6 +28,8 @@
 
 ## Done
 
+* Plot things separetely.
+* Improve plots so that things aren't as streched out.
 * Implement poster's DGP
 * Write docstrings.
 * Started using hydra from experiment management.
