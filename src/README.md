@@ -1,14 +1,34 @@
 ## To do
 
-* Improve `Estimates` class so that I don't have to write every operation
-  twice for grid and observed points.
-* Implement the minimax estimator with a RKHS ball as $\mathcal{G}$.
 * Write docstrings.
-* Improve plots so that things aren't as streched out.
+
+* Implement DGP of poster
+* Use analytical version of p(z, x)/p(z)p(x)
+* Use analytical version of E[Y|Z]
 * Plot density estimates for sgd model.
-* Decide if we'll keep mantaining the gd model.
+
+
+* Plot things separetely.
+* Improve plots so that things aren't as streched out.
+
 * Implement the ML version.
+* Implement the minimax estimator with a RKHS ball as $\mathcal{G}$,
+  or one of the other more recent IV estimation methods.
+* Implement mirror descent
+
+* Improve `Estimates` class so that I don't have to write every
+  operation twice for grid and observed points.
+
 * Perform hyperparameter sweeps.
+* Decide if we'll keep mantaining the gd model.
+
+### Meeting 10/05
+
+* Implement DGP of poster
+* Use analytical version of p(z, x)/p(z)p(x)
+* Use analytical version of E[Y|Z]
+* Implement mirror descent
+
 
 
 ## Done
