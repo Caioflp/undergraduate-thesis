@@ -3,6 +3,6 @@ from .utils import (
     DEFAULT_REGRESSOR,
     DEFAULT_DENSITY_ESTIMATOR,
     Estimates,
-    create_discretized_domain,
+    create_covering_grid,
     ensure_two_dimensional,
 )
