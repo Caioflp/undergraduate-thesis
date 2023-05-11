@@ -1,5 +1,5 @@
 defaults:
-  - dataset: uniform_instrument
+  - dataset: deep_gmm_article_dataset
   - model: sgd
   - _self_
 
