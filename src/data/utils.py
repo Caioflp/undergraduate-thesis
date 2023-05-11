@@ -17,3 +17,4 @@ class InstrumentalVariableDataset:
     Z: np.ndarray
     Y: np.ndarray
     Y_denoised: np.ndarray
+    name: str = None

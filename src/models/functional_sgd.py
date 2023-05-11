@@ -68,6 +68,7 @@ class FunctionalSGD(BaseEstimator):
 
         """
         LOGGER.info("Fitting model.")
+        self.fit_dataset_name = dataset.name
 
         X, Z, Y = dataset.X, dataset.Z, dataset.Y
         X = ensure_two_dimensional(X)
@@ -189,9 +190,10 @@ class FunctionalSGD(BaseEstimator):
 
         """
         assert self.is_fitted
+        assert self.fit_dataset_name == dataset.name
         LOGGER.info("Making plots.")
 
-        title = "Stochastic Gradient Descent"
+        title = f"Stochastic Gradient Descent on {dataset.name}"
 
         domain = self.estimate_domain.flatten()
         sort_idx = np.argsort(domain)

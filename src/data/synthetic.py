@@ -66,7 +66,9 @@ def make_poster_dataset(
     eps = sigma*(eta*W_2 + np.sqrt(1 - np.power(eta, 2))*W_3)
     Y = Y_denoised + eps
 
-    return InstrumentalVariableDataset(X, Z, Y, Y_denoised)
+    return InstrumentalVariableDataset(
+        X, Z, Y, Y_denoised, "poster dataset"
+    )
     
 
 def make_deep_gmm_article_dataset(
@@ -114,7 +116,9 @@ def make_deep_gmm_article_dataset(
     X = Z[:, 0] + eps + gamma
     Y_denoised = response_func(X)
     Y = Y_denoised + eps + delta
-    return InstrumentalVariableDataset(X, Z, Y, Y_denoised)
+    return InstrumentalVariableDataset(
+        X, Z, Y, Y_denoised, "deep gmm dataset"
+    )
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
