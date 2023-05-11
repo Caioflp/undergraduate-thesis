@@ -14,23 +14,49 @@ DEFAULT_REGRESSOR = KNeighborsRegressor(weights="distance", n_neighbors=5)
 DEFAULT_DENSITY_ESTIMATOR = KDE()
 
 
-@dataclass
 class Estimates:
     """Holds sequence of estimates evaluated on grid points and on observed
     points.
 
-    Attributes
-    ----------
-    on_grid_points : np.ndarray
-        Array of shape (n_estimates, n_grid_points) which contains the values
-        of the estimate function on each of the grid points.
-    on_observed_points : np.ndarray
-        Array of shape (n_estimates, n_samples) which contains the values
-        of the estimate function on each of the observed (sample) points
-
     """
-    on_grid_points: np.ndarray
-    on_observed_points: np.ndarray
+    def __init__(
+        self,
+        n_estimates: int,
+        n_samples: int,
+        n_grid_points: int,
+    ) -> None:
+        self.n_estimates = n_estimates
+        self.n_samples = n_samples
+        self.n_grid_points = n_grid_points
+
+        # Observed points come first!
+        self.spliting_index = self.n_samples
+        self._estimates = np.empty(
+            (n_estimates, n_samples + n_grid_points),
+            dtype=np.float64
+        )
+
+    @property
+    def on_all_points(self) -> np.ndarray:
+        return self._estimates
+
+    @property
+    def on_observed_points(self) -> np.ndarray:
+        return self._estimates[:, :self.spliting_index]
+    
+    # @on_observed_points.setter(self, value: np.ndarray) -> None: 
+    #     assert len(value.shape) == 2
+    #     assert value.shape == self.on_observed_points.shape
+    #     self._estimate[:self.splitting_index] = value
+
+    @property
+    def on_grid_points(self) -> np.ndarray:
+        return self._estimates[:, self.splitting_index:]
+
+    # @on_grid_points.setter(self, value: np.ndarray) -> None: 
+    #     assert len(value.shape) == 2
+    #     assert value.shape == self.on_grid_points.shape
+    #     self._estimate[self.splitting_index:] = value
 
 
 def create_discretized_domain(

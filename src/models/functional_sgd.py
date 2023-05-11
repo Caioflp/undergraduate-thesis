@@ -186,7 +186,8 @@ class FunctionalSGD(BaseEstimator):
 
         Raises
         ------
-        AssertionError if the model was not fitted before calling this method.
+        AssertionError if the model was not fitted before calling this method,
+        or if the supplied dataset does not match the dataset used during fit.
 
         """
         assert self.is_fitted
