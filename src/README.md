@@ -1,6 +1,5 @@
 ## To do
 
-* Write docstrings.
 
 * Implement DGP of poster
 * Use analytical version of p(z, x)/p(z)p(x)
@@ -33,8 +32,9 @@
 
 ## Done
 
-* Implemented simple synthetic DGP.
+* Write docstrings.
+* Started using hydra from experiment management.
 * Implement our estimator with the projected loss
     - Ways to estimate $E [h(X)|Z = z]$: KNN, linear regression with
       basis expansion,
-* Started using hydra from experiment management.
+* Implemented simple synthetic DGP.
