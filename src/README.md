@@ -1,6 +1,7 @@
 ## To do
 
 * Move ploting to separate module.
+* Remove separate plots for grid and observed points in functional sgd.
 
 * Plot density estimates for sgd model.
 * Use analytical version of p(z, x)/p(z)p(x)

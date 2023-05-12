@@ -16,4 +16,3 @@ density_estimator_xz:
   _target_: sklearn.neighbors.KernelDensity
   bandwidth: 1
   kernel: gaussian
-
