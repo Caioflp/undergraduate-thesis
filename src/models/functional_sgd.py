@@ -166,15 +166,15 @@ class FunctionalSGD(BaseEstimator):
         fig, ax = plt.subplots(layout="constrained", figsize=figsize)
         title = "Data"
         ax.scatter(
-            self.domain.observed_points.flatten(),
+            dataset.X.flatten(),
             dataset.Y,
             c="y",
             s=1.5,
             alpha=0.8,
             label="Observed response",
         )
-        sort_idx = np.argsort(self.domain.observed_points.flatten())
-        sorted_x = self.domain.observed_points[sort_idx]
+        sort_idx = np.argsort(dataset.X.flatten())
+        sorted_x = dataset.X[sort_idx].flatten()
         sorted_y_denoised = dataset.Y_denoised[sort_idx]
         ax.plot(
             sorted_x.flatten(),
@@ -186,19 +186,18 @@ class FunctionalSGD(BaseEstimator):
         ax.legend()
         fig.savefig(title.lower() + ".pdf")
 
-    def plot_estimate_on_observed_points(
+    def plot_estimate(
         self,
         dataset: InstrumentalVariableDataset,
         figsize: Tuple[int] = (7, 7),
     ) -> None:
         fig, ax = plt.subplots(layout="constrained", figsize=figsize)
-        title = "Estimate on observed points"
-        sort_idx = np.argsort(self.domain.observed_points.flatten())
-        sorted_x = self.domain.observed_points[sort_idx]
-        sorted_y_denoised = dataset.Y_denoised[sort_idx]
-        sorted_estimate = self.estimate.on_observed_points[sort_idx]
+        title = "Estimate"
+        sort_idx = np.argsort(self.domain.all_points.flatten())
+        sorted_x = self.domain.all_points[sort_idx].flatten()
+        sorted_estimate = self.estimate.on_all_points[sort_idx]
         sorted_last_estimate = \
-                self.sequence_of_estimates.on_observed_points[-1][sort_idx]
+                self.sequence_of_estimates.on_all_points[-1][sort_idx]
         ax.scatter(
             dataset.X.flatten(),
             dataset.Y_denoised,
@@ -208,49 +207,13 @@ class FunctionalSGD(BaseEstimator):
             alpha=.8,
         )
         ax.plot(
-            sorted_x.flatten(),
+            sorted_x,
             sorted_estimate,
             c="b",
             label="Average estimate",
         )
         ax.plot(
-            sorted_x.flatten(),
-            sorted_last_estimate,
-            c="k",
-            label="Last estimate",
-        )
-        ax.set_title(title)
-        ax.legend()
-        fig.savefig(title.lower().replace(" ", "_") + ".pdf")
-
-    def plot_estimate_on_grid_points(
-        self,
-        dataset: InstrumentalVariableDataset,
-        figsize: Tuple[int] = (7, 7),
-    ) -> None:
-        fig, ax = plt.subplots(layout="constrained", figsize=figsize)
-        title = "Estimate on grid points"
-        sort_idx = np.argsort(self.domain.grid_points.flatten())
-        sorted_x = self.domain.grid_points[sort_idx]
-        sorted_estimate = self.estimate.on_grid_points[sort_idx]
-        sorted_last_estimate = \
-                self.sequence_of_estimates.on_grid_points[-1][sort_idx]
-        ax.scatter(
-            dataset.X.flatten(),
-            dataset.Y_denoised,
-            c="r",
-            label="Denoised response",
-            s=3,
-            alpha=0.8,
-        )
-        ax.plot(
-            sorted_x.flatten(),
-            sorted_estimate,
-            c="b",
-            label="Average estimate",
-        )
-        ax.plot(
-            sorted_x.flatten(),
+            sorted_x,
             sorted_last_estimate,
             c="k",
             label="Last estimate",
@@ -278,5 +241,4 @@ class FunctionalSGD(BaseEstimator):
         LOGGER.info("Making plots.")
 
         self.plot_data(dataset)
-        self.plot_estimate_on_observed_points(dataset)
-        self.plot_estimate_on_grid_points(dataset)
+        self.plot_estimate(dataset)
