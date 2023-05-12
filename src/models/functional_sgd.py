@@ -44,6 +44,9 @@ class FunctionalSGD(BaseEstimator):
         Computes an estimate to p(x, z)
 
     """
+
+    has_discretized_estimate = True
+
     def __init__(
         self,
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
@@ -277,38 +280,3 @@ class FunctionalSGD(BaseEstimator):
         self.plot_data(dataset)
         self.plot_estimate_on_observed_points(dataset)
         self.plot_estimate_on_grid_points(dataset)
-
-        # title = f"Stochastic Gradient Descent on {dataset.name}"
-
-        # domain = self.estimate_domain.flatten()
-        # sort_idx = np.argsort(domain)
-
-        # fig, axs = plt.subplots(3)
-        # ax_obs = axs[0]
-        # ax_model_on_obs = axs[1]
-        # ax_model_on_grid = axs[2]
-
-        # ax_obs.scatter(dataset.X, dataset.Y_denoised, c="r", s=2, label="truth")
-        # ax_obs.scatter(dataset.X, dataset.Y, c="y", s=1.5, label="observed")
-        # ax_obs.legend()
-        # ax_obs.set_title("Data")
-
-        # ax_model_on_grid.scatter(dataset.X, dataset.Y_denoised, c="r", s=2, label="truth")
-        # ax_model_on_grid.scatter(self.grid_domain, self.estimate_on_grid, c="b", s=1.5, label="model")
-        # ax_model_on_grid.scatter(self.grid_domain,
-        #                          self.sequence_of_estimates.on_grid_points[-1],
-        #                          c="k", s=1.5, label="last estimate")
-        # ax_model_on_grid.legend()
-        # ax_model_on_grid.set_title("Model on grid points")
-
-        # ax_model_on_obs.scatter(dataset.X, dataset.Y_denoised, c="r", s=2, label="truth")
-        # ax_model_on_obs.scatter(dataset.X, self.estimate_on_obs, c="b", s=1.5, label="model")
-        # ax_model_on_obs.scatter(dataset.X,
-        #                         self.sequence_of_estimates.on_observed_points[-1],
-        #                         c="k", s=1.5, label="last estimate")
-        # ax_model_on_obs.legend()
-        # ax_model_on_obs.set_title("Model on observed points")
-
-        # fig.suptitle(title)
-        # fig.tight_layout()
-        # fig.savefig(title.lower().replace(" ", "_") + ".pdf")
