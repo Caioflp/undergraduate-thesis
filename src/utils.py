@@ -11,8 +11,10 @@ from functools import wraps
 from typing import Callable
 
 
-def run_on_output_dir(func: Callable) -> Callable:
-    """Runs function in its own newly created directory.
+def experiment(func: Callable) -> Callable:
+    """Marks a function as the main function of an experiment.
+
+    Creates a separate directory for it to be run.
 
     """
     now = datetime.now()

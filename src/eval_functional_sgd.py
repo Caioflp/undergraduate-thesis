@@ -11,7 +11,7 @@ import numpy as np
 from src.data import InstrumentalVariableDataset
 from src.data.synthetic import make_poster_dataset
 from src.models import FunctionalSGD
-from src.utils import run_on_output_dir
+from src.utils import experiment
 
 
 def plot_data(
@@ -79,9 +79,9 @@ def plot_estimate(
     fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
 
-@run_on_output_dir
+@experiment
 def main():
-    dataset = make_poster_dataset()
+    dataset = make_poster_dataset(n_samples=100)
     model = FunctionalSGD()
     model.fit(dataset)
 
