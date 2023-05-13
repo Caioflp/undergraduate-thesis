@@ -1,8 +1,0 @@
-defaults:
-  - dataset: deep_gmm_article_dataset
-  - model: sgd
-  - _self_
-
-hydra:
-  job:
-    chdir: True

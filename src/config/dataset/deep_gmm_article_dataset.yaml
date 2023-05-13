@@ -1,3 +1,0 @@
-_target_: src.data.synthetic.make_deep_gmm_article_dataset
-n_samples: 200
-response: sin
