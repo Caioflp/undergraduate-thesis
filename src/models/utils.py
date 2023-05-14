@@ -103,7 +103,7 @@ class FinalEstimate:
 
 def create_covering_grid(
     X: np.ndarray,
-    step: float = 1E-1
+    step: float = 1E-2
 ) -> np.ndarray:
     """Create a regular grid of points covering the domain of the input
     array X.
