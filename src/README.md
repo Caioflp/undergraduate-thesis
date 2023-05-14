@@ -1,7 +1,5 @@
 ## To do
 
-* Verify the implementation
-
 * Plot density estimates for sgd model.
 
 * Use analytical version of p(z, x)/p(z)p(x)
@@ -25,6 +23,7 @@
 
 ## Done
 
+* Verify the implementation (seems to be correct)
 * Remove separate plots for grid and observed points in functional sgd.
 * Move ploting to separate module.
 * Decide if we'll keep mantaining the gd model.
