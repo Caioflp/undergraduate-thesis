@@ -21,7 +21,7 @@ def experiment(path: str = None):
     """
     output_dir = Path("./outputs")
     now = datetime.now()
-    if name is None:
+    if path is None:
         inner_output_dir = output_dir / now.strftime("%Y-%m-%d")
     else:
         inner_output_dir = output_dir / path.lower().replace(" ", "_")
