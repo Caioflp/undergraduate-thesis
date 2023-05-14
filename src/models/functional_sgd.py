@@ -150,8 +150,8 @@ class FunctionalSGD(BaseEstimator):
         # Construct final estimate as average of sequence of estimates
         self.sequence_of_estimates = estimates
         self.estimate = FinalEstimate(
-            on_observed_points=estimates.on_observed_points.mean(axis=0),
-            on_grid_points=estimates.on_grid_points.mean(axis=0),
+            on_observed_points=estimates.on_observed_points[1:].mean(axis=0),
+            on_grid_points=estimates.on_grid_points[1:].mean(axis=0),
         )
         self.domain = x_domain
         self.is_fitted = True
