@@ -17,7 +17,7 @@ from src.data.synthetic import (
     make_deep_gmm_dataset,
 )
 from src.models import FunctionalSGD
-from src.utils import experiment
+from src.scripts.utils import experiment
 
 
 def make_model(
