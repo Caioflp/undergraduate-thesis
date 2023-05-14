@@ -1,4 +1,4 @@
-from .functional_sgd import FunctionalSGD
+from .functional_sgd import FunctionalSGD, FunctionalSGDWithHacks
 from .utils import (
     Estimates,
     default_regressor,
