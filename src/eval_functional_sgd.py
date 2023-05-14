@@ -7,6 +7,9 @@ from typing import Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
+from sklearn.neighbors import KernelDensity as KDE
+from sklearn.neighbors import KNeighborsRegressor as KNN
 
 from src.data import InstrumentalVariableDataset
 from src.data.synthetic import (
@@ -15,6 +18,29 @@ from src.data.synthetic import (
 )
 from src.models import FunctionalSGD
 from src.utils import experiment
+
+
+def make_model(
+    n_neighbors: int = 5,
+    weights: str = "distance",
+    bandwidth_x: float = 1.0,
+    bandwidth_z: float = 1.0,
+    bandwidth_xz: float = 1.0,
+) -> FunctionalSGD:
+    projector_y = KNN(n_neighbors=n_neighbors)
+    projector_estimate = KNN(n_neighbors=n_neighbors)
+    density_estimator_x = KDE(bandwidth=bandwidth_x)
+    density_estimator_z = KDE(bandwidth=bandwidth_z)
+    density_estimator_xz = KDE(bandwidth=bandwidth_xz)
+    model = FunctionalSGD(
+        projector_y=projector_y,
+        projector_estimate=projector_estimate,
+        density_estimator_x=density_estimator_x,
+        density_estimator_z=density_estimator_z,
+        density_estimator_xz=density_estimator_xz,
+    )
+    return model
+
 
 
 def plot_data(
@@ -95,91 +121,58 @@ def plot_estimate(
     fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
 
-def plot_densities_for_poster_dataset(
+def plot_density_estimates(
     model: FunctionalSGD,
     dataset: InstrumentalVariableDataset,
     figsize: Tuple[int] = (7, 5),
     with_data = True,
-    title: str = "Estimate",
+    title: str = "Densities",
+    plot_x: bool = True,
+    plot_z: bool = True,
 ) -> None:
-    assert dataset.name == "poster dataset"
     fig, ax = plt.subplots(figsize=figsize)
-    sort_idx = np.argsort(model.domain.all_points.flatten())
-    sorted_x = model.domain.all_points[sort_idx]
-    model_densities = np.exp(model.density_estimator_x.score_samples(sorted_x))
-    ax.plot(
-        sorted_x.flatten(),
-        model_densities,
-        c="b",
-        label="Model estimate for p(x)"
-    )
+    if plot_x:
+        grid_x = np.linspace(-0.5, 1.5, num=200).reshape(-1, 1)
+        model_densities_x = \
+                np.exp(model.density_estimator_x.score_samples(grid_x))
+        ax.plot(
+            grid_x.flatten(),
+            model_densities_x,
+            c="b",
+            label="Model estimate for p(x)"
+        )
+    if plot_z:
+        grid_z = np.linspace(-0.5, 1.5, num=200).reshape(-1, 1)
+        model_densities_z = \
+                np.exp(model.density_estimator_z.score_samples(grid_z))
+        ax.plot(
+            grid_z.flatten(),
+            model_densities_z,
+            c="r",
+            label="Model estimate for p(z)"
+        )
+    ax.set_ylim([0, 1.2])
+    ax.set_title(title)
+    ax.legend()
+    fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
 
-@experiment()
+@experiment("Ploting densities")
 def main():
-    dataset = make_poster_dataset(n_samples=100)
-    model = FunctionalSGD()
+    dataset = make_deep_gmm_dataset(n_samples=300, response="sin")
+    # var_x = np.sqrt(np.sum(np.var(dataset.X, axis=0)))
+    # var_z = np.sqrt(np.sum(np.var(dataset.Z, axis=0)))
+    # var_xz = np.sqrt(np.sum(np.var(np.hstack((dataset.X.reshape(-1, 1), dataset.Z)), axis=0)))
+    model = make_model(
+        bandwidth_x=0.3,
+        bandwidth_z=0.3,
+        bandwidth_xz=0.3,
+    )
     model.fit(dataset)
-    print(model.density_estimator_x.sample(3))
-    print(model.density_estimator_x == model.density_estimator_z ==
-          model.density_estimator_xz)
-    # plot_densities_for_poster_dataset(
-    #     model, dataset, title="Estimate for case 2"
-    # )
-
-    # for response in ["sin", "step", "abs", "linear"]:
-    #     print(f"Running for {response} data")
-    #     dataset = make_deep_gmm_dataset(n_samples=500, response=response)
-    #     model = FunctionalSGD()
-    #     model.fit(dataset)
-
-    #     # plot_data(dataset, title=f"Data_{response}")
-    #     plot_estimate(model, dataset, title=f"Estimate_{response}")
-
-    # for response in ["case_1", "case_2", "case_3"]:
-    #     print(f"Running for {response} data")
-    #     dataset = make_poster_dataset(n_samples=100, response=response)
-    #     model = FunctionalSGD()
-    #     model.fit(dataset)
-
-    #     plot_estimate(model, dataset, title=f"Estimate_{response}")
-
-    # print("Sequence of estimates:")
-    # print(model.sequence_of_estimates.on_all_points[:3])
-    # print(30*"-")
-    # print("Final estimate:")
-    # print(model.estimate.on_all_points)
-
-    # dataset = make_poster_dataset(n_samples=100, response="case_2")
-    # model = FunctionalSGD()
-    # model.fit(dataset)
-    # plot_estimate(model, dataset, title="Estimate for case 2")
-
-    # print(np.all(model.domain.observed_points.flatten() == dataset.X))
-    # sort_idx = np.argsort(model.domain.all_points.flatten())
-    # print(np.all(
-    #     (model.domain.all_points[sort_idx].flatten()
-    #      == model.domain.all_points.flatten()[sort_idx])
-    # ))
-
-    # print("domain shapes:")
-    # print("observed: ", model.domain.observed_points.shape)
-    # print("grid: ", model.domain.grid_points.shape)
-    # print("all: ", model.domain.all_points.shape)
-    # 
-    # print(50*"-")
-
-    # print("estimates shapes")
-    # print("observed: ", model.sequence_of_estimates.on_observed_points.shape)
-    # print("grid: ", model.sequence_of_estimates.on_grid_points.shape)
-    # print("all: ", model.sequence_of_estimates.on_all_points.shape)
-
-    # print(50*"-")
-
-    # print("final estimate shapes")
-    # print("observed: ", model.estimate.on_observed_points.shape)
-    # print("grid: ", model.estimate.on_grid_points.shape)
-    # print("all: ", model.estimate.on_all_points.shape)
+    plot_density_estimates(
+        model, dataset, title="Estimate for sin response", plot_z=False,
+    )
+    plot_estimate(model, dataset)
 
 
 if __name__ == "__main__":
