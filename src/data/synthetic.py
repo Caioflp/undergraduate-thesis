@@ -52,7 +52,7 @@ def make_poster_dataset(
 
     response_dict = {
         "case_1": lambda x: np.power(x, 2) + 0.2*x,
-        "case_2": lambda x: 2*np.power(x*(x - 0.5 > 0), 2) + 0.5*x,
+        "case_2": lambda x: 2*np.power((x - 0.5)*(x - 0.5 > 0), 2) + 0.5*x,
         "case_3": lambda x: np.exp(np.abs(x - 0.5)),
     }
     assert response in ["case_1", "case_2", "case_3"]
@@ -71,7 +71,7 @@ def make_poster_dataset(
     )
     
 
-def make_deep_gmm_article_dataset(
+def make_deep_gmm_dataset(
     n_samples: int = 500, 
     response: Literal["sin", "step", "abs", "linear"] = "sin",
     seed: int = None,
@@ -123,7 +123,7 @@ def make_deep_gmm_article_dataset(
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
-    # dataset = make_deep_gmm_article_dataset(500, response="abs")
+    # dataset = make_deep_gmm_dataset(500, response="abs")
     # plt.scatter(
     #     dataset.X,
     #     dataset.Y,
