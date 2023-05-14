@@ -157,20 +157,17 @@ def plot_density_estimates(
     fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
 
-@experiment("Ploting densities")
+@experiment("plot_densities")
 def main():
-    dataset = make_deep_gmm_dataset(n_samples=300, response="sin")
-    # var_x = np.sqrt(np.sum(np.var(dataset.X, axis=0)))
-    # var_z = np.sqrt(np.sum(np.var(dataset.Z, axis=0)))
-    # var_xz = np.sqrt(np.sum(np.var(np.hstack((dataset.X.reshape(-1, 1), dataset.Z)), axis=0)))
+    dataset = make_poster_dataset(n_samples=700, response="case_3")
     model = make_model(
-        bandwidth_x=0.3,
-        bandwidth_z=0.3,
-        bandwidth_xz=0.3,
+        bandwidth_x=0.1,
+        bandwidth_z=0.1,
+        bandwidth_xz=0.1,
     )
     model.fit(dataset)
     plot_density_estimates(
-        model, dataset, title="Estimate for sin response", plot_z=False,
+        model, dataset, title="Estimate for sin response",
     )
     plot_estimate(model, dataset)
 
