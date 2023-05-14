@@ -40,8 +40,3 @@
     - Ways to estimate $E [h(X)|Z = z]$: KNN, linear regression with
       basis expansion,
 * Implemented simple synthetic DGP.
-
-
-
-
-FunctionalSGDEvaluator(model, dataset)
