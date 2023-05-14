@@ -1,9 +1,9 @@
 ## To do
 
-* Plot density estimates for sgd model.
-
 * Use analytical version of p(z, x)/p(z)p(x)
 * Use analytical version of E[Y|Z]
+
+* Implement way to save parameters in each execution
 
 * Implement the ML version.
 * Implement the minimax estimator with a RKHS ball as $\mathcal{G}$,
@@ -15,6 +15,7 @@
 
 ### Meeting 10/05
 
+* Plot density estimates for sgd model.
 * Implement DGP of poster
 * Use analytical version of $ p(z, x)/p(z)p(x) $
 * Use analytical version of $ E[Y|Z] $
