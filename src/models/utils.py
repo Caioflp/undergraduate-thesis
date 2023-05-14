@@ -6,12 +6,8 @@ Author: @Caioflp
 from dataclasses import dataclass
 
 import numpy as np
-from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neighbors import KNeighborsRegressor as KNN
 from sklearn.neighbors import KernelDensity as KDE
-
-
-DEFAULT_REGRESSOR = KNeighborsRegressor(weights="distance", n_neighbors=5)
-DEFAULT_DENSITY_ESTIMATOR = KDE()
 
 
 class Domain:
@@ -179,6 +175,21 @@ def ensure_two_dimensional(arr: np.ndarray):
         return arr
     else:
         raise ValueError
+
+
+def default_regressor() -> KNN:
+    """Generates an instance of a regressor with chosen default parameters.
+
+    """
+    return KNN(weights="distance", n_neighbors=5)
+
+
+def default_density_estimator() -> KDE:
+    """Generates an instance of a density estimator with chosen default
+    parameters.
+
+    """
+    return KDE()
 
 
 if __name__ == "__main__":

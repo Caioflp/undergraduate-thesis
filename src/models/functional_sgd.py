@@ -14,13 +14,13 @@ from tqdm import tqdm
 
 from src.data.utils import InstrumentalVariableDataset
 from src.models.utils import (
-    DEFAULT_REGRESSOR,
-    DEFAULT_DENSITY_ESTIMATOR,
     Estimates,
     FinalEstimate,
     Domain,
     create_covering_grid,
     ensure_two_dimensional,
+    default_regressor,
+    default_density_estimator,
 )
 
 
@@ -50,11 +50,11 @@ class FunctionalSGD(BaseEstimator):
     def __init__(
         self,
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
-        projector_y: BaseEstimator = DEFAULT_REGRESSOR,
-        projector_estimate: BaseEstimator = DEFAULT_REGRESSOR,
-        density_estimator_x: BaseEstimator = DEFAULT_DENSITY_ESTIMATOR,
-        density_estimator_z: BaseEstimator = DEFAULT_DENSITY_ESTIMATOR,
-        density_estimator_xz: BaseEstimator = DEFAULT_DENSITY_ESTIMATOR,
+        projector_y: BaseEstimator = default_regressor(),
+        projector_estimate: BaseEstimator = default_regressor(),
+        density_estimator_x: BaseEstimator = default_density_estimator(),
+        density_estimator_z: BaseEstimator = default_density_estimator(),
+        density_estimator_xz: BaseEstimator = default_density_estimator(),
     ):
         self.lr = lr
         self.projector_y = projector_y

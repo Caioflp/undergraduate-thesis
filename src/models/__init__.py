@@ -1,8 +1,8 @@
 from .functional_sgd import FunctionalSGD
 from .utils import (
-    DEFAULT_REGRESSOR,
-    DEFAULT_DENSITY_ESTIMATOR,
     Estimates,
+    default_regressor,
+    default_density_estimator,
     create_covering_grid,
     ensure_two_dimensional,
 )
