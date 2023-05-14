@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
     rng = np.random.default_rng()
     sample = rng.normal(size=(100, 2))
-    domain = create_discretized_domain(sample, step=1E-1)
+    domain = create_covering_grid(sample, step=1E-1)
     assert (domain.min(axis=0) == sample.min(axis=0)).all()
     assert (domain.max(axis=0) == sample.max(axis=0)).all()
 
