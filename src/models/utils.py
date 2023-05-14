@@ -189,7 +189,7 @@ def default_density_estimator() -> KDE:
     parameters.
 
     """
-    return KDE()
+    return KDE(bandwidth=0.1)
 
 
 if __name__ == "__main__":
