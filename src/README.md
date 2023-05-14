@@ -4,6 +4,7 @@
 * Use analytical version of E[Y|Z]
 
 * Implement way to save parameters in each execution
+* Setup a working logger
 
 * Implement the ML version.
 * Implement the minimax estimator with a RKHS ball as $\mathcal{G}$,
