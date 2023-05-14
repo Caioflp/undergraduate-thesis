@@ -10,7 +10,7 @@ from typing import Literal, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
-import scilab
+import scipy
 from sklearn.base import BaseEstimator
 from tqdm import tqdm
 
@@ -24,9 +24,6 @@ from src.models.utils import (
     default_regressor,
     default_density_estimator,
 )
-
-
-LOGGER = logging.getLogger(__name__)
 
 
 class FunctionalSGDWithHacks(BaseEstimator):
@@ -83,7 +80,6 @@ class FunctionalSGDWithHacks(BaseEstimator):
             Dataset containing X, Z and T.
 
         """
-        LOGGER.info("Fitting model.")
         self.fit_dataset_name = dataset.name
         assert dataset.name == "poster dataset"
 
@@ -141,13 +137,22 @@ class FunctionalSGDWithHacks(BaseEstimator):
             z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z[i])
             if self.use_true_density:
                 # The marginals are one, so the ratio is just the joint density
+                # (which happens to also be written as a ratio).
+                # We make computations in the log scale and exponentiate the
+                # result.
                 transformed_x = scipy.stats.norm.ppf(x_domain.all_points)
                 transformed_z = scipy.stats.norm.ppf(z_i)
                 cov = np.array([[1, self.rho], [self.rho, 1]])
-                ratio_of_densities = scipy.stats.multivariate_normal.pdf(
-                    np.concatenate(transformed_x, transformed_z, axis=1),
-                    mean=0, cov=cov
+                mean = np.zeros(2, dtype=np.float64)
+                numerator = scipy.stats.multivariate_normal.logpdf(
+                    np.concatenate((transformed_x, transformed_z), axis=1),
+                    mean=mean, cov=cov
                 )
+                denominator = (
+                    scipy.stats.norm.logpdf(transformed_x)
+                    + scipy.stats.norm.logpdf(transformed_z)
+                ).flatten()
+                ratio_of_densities = np.exp(numerator - denominator)
             else:
                 # We apply the exponential because `score_samples` returns
                 # log densities.

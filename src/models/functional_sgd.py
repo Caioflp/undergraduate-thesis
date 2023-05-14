@@ -24,9 +24,6 @@ from src.models.utils import (
 )
 
 
-LOGGER = logging.getLogger(__name__)
-
-
 class FunctionalSGD(BaseEstimator):
     """Regressor based on a variant of stochastic gradient descent.
 
@@ -72,7 +69,6 @@ class FunctionalSGD(BaseEstimator):
             Dataset containing X, Z and T.
 
         """
-        LOGGER.info("Fitting model.")
         self.fit_dataset_name = dataset.name
 
         X, Z, Y = dataset.X, dataset.Z, dataset.Y
