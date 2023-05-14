@@ -115,7 +115,7 @@ class FunctionalSGD(BaseEstimator):
         self.density_estimator_xz.fit(np.concatenate((X, Z), axis=1))
 
         for i in tqdm(range(n_iter)):
-            # Project current estimate on Z, i.e., compute E [Th(X) | Z]
+            # Project current estimate on Z, i.e., compute E [Th_{i-1}(X) | Z]
             projected_current_estimate = self.projector_estimate \
                                          .fit(Z, estimates.on_observed_points[i]) \
                                          .predict([Z[i]])[0]
@@ -127,10 +127,9 @@ class FunctionalSGD(BaseEstimator):
             # appears in the functional gradient expression
             # We apply the exponential because `score_samples` returns
             # log densities.
+            z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z[i])
             joint_x_and_current_z = np.concatenate(
-                (x_domain.all_points,
-                 np.full((n_grid_points + n_samples, Z.shape[1]), Z[i])),
-                axis=1
+                (x_domain.all_points, z_i), axis=1
             )
             ratio_of_densities = np.exp(
                 self.density_estimator_xz.score_samples(joint_x_and_current_z)
@@ -145,8 +144,7 @@ class FunctionalSGD(BaseEstimator):
 
             # Take one step in the negative gradient direction
             estimates.on_all_points[i+1] = (
-                estimates.on_all_points[i]
-                - lr(i+1) * functional_grad
+                estimates.on_all_points[i] - lr(i+1) * functional_grad
             )
 
         # Construct final estimate as average of sequence of estimates
