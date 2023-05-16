@@ -23,6 +23,17 @@
 * Implement mirror descent
 
 
+### Meeting 16/03
+
+* Run our algorithm (with estimates, KNN) in Deep GMM examples.
+* Maybe choose K through validation.
+* See if the available implementations of different models are easy to
+  use.
+* Try to fit our proof to the IV case.
+* Implement the ML version.
+* Maybe implement Mirror Descent or Nesterov Acceleration.
+
+
 ## Done
 
 * Verify the implementation (seems to be correct)
