@@ -124,7 +124,7 @@ class FunctionalSGDWithHacks(BaseEstimator):
             self.density_estimator_xz.fit(np.concatenate((X, Z), axis=1))
 
         for i in tqdm(range(n_iter)):
-            # Project current estimate on Z, i.e., compute E [Th_{i-1}(X) | Z]
+            # Project current estimate on Z, i.e., compute E [h_{i-1}(X) | Z]
             projected_current_estimate = self.projector_estimate \
                                          .fit(Z, estimates.on_observed_points[i]) \
                                          .predict([Z[i]])[0]
@@ -144,19 +144,18 @@ class FunctionalSGDWithHacks(BaseEstimator):
                 transformed_z = scipy.stats.norm.ppf(z_i)
                 cov = np.array([[1, self.rho], [self.rho, 1]])
                 mean = np.zeros(2, dtype=np.float64)
-                numerator = scipy.stats.multivariate_normal.logpdf(
+                log_numerator = scipy.stats.multivariate_normal.logpdf(
                     np.concatenate((transformed_x, transformed_z), axis=1),
                     mean=mean, cov=cov
                 )
-                denominator = (
+                log_denominator = (
                     scipy.stats.norm.logpdf(transformed_x)
                     + scipy.stats.norm.logpdf(transformed_z)
                 ).flatten()
-                ratio_of_densities = np.exp(numerator - denominator)
+                ratio_of_densities = np.exp(log_numerator - log_denominator)
             else:
                 # We apply the exponential because `score_samples` returns
                 # log densities.
-                z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z[i])
                 joint_x_and_current_z = np.concatenate(
                     (x_domain.all_points, z_i), axis=1
                 )
