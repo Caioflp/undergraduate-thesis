@@ -1,6 +1,5 @@
 ## To do
 
-* Use analytical version of p(z, x)/p(z)p(x)
 * Use analytical version of E[Y|Z]
 
 * Implement way to save parameters in each execution
@@ -9,12 +8,39 @@
 * Implement the ML version.
 * Implement the minimax estimator with a RKHS ball as $\mathcal{G}$,
   or one of the other more recent IV estimation methods.
-* Implement mirror descent
 
-* Perform hyperparameter sweeps.
+* Implement Mirror Descent / Nesterov Acceleration
+
+## What to show Yuri Rezende in 25/05 meeting
+
+* Review algorithm formulation
+    - Comment on exact gradient version and why it was discontinued
+    - Explain how each term is being approximated
+    - Comment on the possible gain from directly estimating the copula
+* Show performance of algorithm
+    - Multiple datasets (poster and Deep GMM)
+    - Show influence of bandwidth parameter in density estimation
+    - Show influence of K in KNN for estimate and Y projection
+    - Show some other types of projectors (e.g. linear regression with
+      basis expansion)
+* Comment on main difficulties that arise when trying to adapt the proof
+  to the IV case
 
 
-### Meeting 10/05
+## Meeting 16/05
+
+* Main thing: Compile everything we've done so far to show Yuri.
+* Run our algorithm (with estimates, KNN) in Deep GMM examples.
+* Maybe choose K through validation.
+* See if the available implementations of different models are easy to
+  use.
+* Try to fit our proof to the IV case.
+* Implement the ML version.
+
+* Maybe implement Mirror Descent or Nesterov Acceleration.
+
+
+## Meeting 10/05
 
 * Plot density estimates for sgd model.
 * Implement DGP of poster
@@ -23,19 +49,9 @@
 * Implement mirror descent
 
 
-### Meeting 16/03
-
-* Run our algorithm (with estimates, KNN) in Deep GMM examples.
-* Maybe choose K through validation.
-* See if the available implementations of different models are easy to
-  use.
-* Try to fit our proof to the IV case.
-* Implement the ML version.
-* Maybe implement Mirror Descent or Nesterov Acceleration.
-
-
 ## Done
 
+* Use analytical version of p(z, x)/p(z)p(x) (Seems to perform worse?)
 * Verify the implementation (seems to be correct)
 * Remove separate plots for grid and observed points in functional sgd.
 * Move ploting to separate module.
