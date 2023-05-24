@@ -52,6 +52,7 @@ class FunctionalSGD(BaseEstimator):
         density_estimator_x: BaseEstimator = default_density_estimator(),
         density_estimator_z: BaseEstimator = default_density_estimator(),
         density_estimator_xz: BaseEstimator = default_density_estimator(),
+        warm_up_duration: int = 50,
     ):
         self.lr = lr
         self.projector_y = projector_y
@@ -59,6 +60,7 @@ class FunctionalSGD(BaseEstimator):
         self.density_estimator_x = density_estimator_x
         self.density_estimator_z = density_estimator_z
         self.density_estimator_xz = density_estimator_xz
+        self.warm_up_samples = 50
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:
         """Fits model to dataset.
@@ -144,10 +146,23 @@ class FunctionalSGD(BaseEstimator):
             )
 
         # Construct final estimate as average of sequence of estimates
+        # Discard the first `self.warm_up_duration` samples if we have enough
+        # estimates. If we don't, simply average them all.
+
         self.sequence_of_estimates = estimates
-        self.estimate = FinalEstimate(
-            on_observed_points=estimates.on_observed_points[1:].mean(axis=0),
-            on_grid_points=estimates.on_grid_points[1:].mean(axis=0),
-        )
+        if self.warm_up_duration < n_samples:
+            self.estimate = FinalEstimate(
+                on_observed_points=estimates \
+                                   .on_observed_points[self.warm_up_duration:] \
+                                   .mean(axis=0),
+                on_grid_points=estimates \
+                               .on_grid_points[self.warm_up_duration:] \
+                               .mean(axis=0),
+            )
+        else:
+            self.estimate = FinalEstimate(
+                on_observed_points=estimates.on_observed_points[1:] .mean(axis=0),
+                on_grid_points=estimates.on_grid_points[1:].mean(axis=0),
+            )
         self.domain = x_domain
         self.is_fitted = True
