@@ -16,7 +16,7 @@ from src.data.synthetic import (
     make_poster_dataset,
     make_deep_gmm_dataset,
 )
-from src.models import FunctionalSGDWithHacks
+from src.models import FunctionalSGDWithHacks, FunctionalSGD
 from src.scripts.utils import experiment
 
 
@@ -26,21 +26,33 @@ def make_model(
     bandwidth_x: float = 1.0,
     bandwidth_z: float = 1.0,
     bandwidth_xz: float = 1.0,
+    with_hacks: bool = True,
 ) -> FunctionalSGDWithHacks:
     projector_y = KNN(n_neighbors=n_neighbors)
     projector_estimate = KNN(n_neighbors=n_neighbors)
     density_estimator_x = KDE(bandwidth=bandwidth_x)
     density_estimator_z = KDE(bandwidth=bandwidth_z)
     density_estimator_xz = KDE(bandwidth=bandwidth_xz)
-    model = FunctionalSGDWithHacks(
-        projector_y=projector_y,
-        projector_estimate=projector_estimate,
-        density_estimator_x=density_estimator_x,
-        density_estimator_z=density_estimator_z,
-        density_estimator_xz=density_estimator_xz,
-        use_true_density=True,
-        use_true_conditional_expectations=False,
-    )
+    if with_hacks:
+        model = FunctionalSGDWithHacks(
+            projector_y=projector_y,
+            projector_estimate=projector_estimate,
+            density_estimator_x=density_estimator_x,
+            density_estimator_z=density_estimator_z,
+            density_estimator_xz=density_estimator_xz,
+            use_true_density=True,
+            use_true_conditional_expectations=False,
+        )
+    else:
+        model = FunctionalSGDWithHacks(
+            projector_y=projector_y,
+            projector_estimate=projector_estimate,
+            density_estimator_x=density_estimator_x,
+            density_estimator_z=density_estimator_z,
+            density_estimator_xz=density_estimator_xz,
+            use_true_density=False,
+            use_true_conditional_expectations=False,
+        )
     return model
 
 
@@ -88,7 +100,7 @@ def plot_estimate(
             label="Observed response",
         )
     ax.set_title(title)
-    ax.set_xlim([0.05, 0.95])
+    # ax.set_xlim([0.05, 0.95])
     ax.legend()
     fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
@@ -100,15 +112,26 @@ def main():
         n_samples = 700
         dataset = make_poster_dataset(n_samples=n_samples, response=response)
         h = 0.1
-        model = make_model(
+        model_with_hacks = make_model(
             bandwidth_x=h,
             bandwidth_z=h,
             bandwidth_xz=h,
         )
-        model.fit(dataset)
+        model_vanilla = make_model(
+            bandwidth_x=h,
+            bandwidth_z=h,
+            bandwidth_xz=h,
+            with_hacks=False
+        )
+        model_with_hacks.fit(dataset)
+        model_vanilla.fit(dataset)
         plot_estimate(
-            model, dataset,
+            model_with_hacks, dataset,
             title=f"Estimate {response} true density n_samples {n_samples}"
+        )
+        plot_estimate(
+            model_vanilla, dataset,
+            title=f"Estimate {response} estimated density n_samples {n_samples}"
         )
 
 
