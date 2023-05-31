@@ -60,7 +60,7 @@ class FunctionalSGD(BaseEstimator):
         self.density_estimator_x = density_estimator_x
         self.density_estimator_z = density_estimator_z
         self.density_estimator_xz = density_estimator_xz
-        self.warm_up_samples = 50
+        self.warm_up_duration = 50
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:
         """Fits model to dataset.
