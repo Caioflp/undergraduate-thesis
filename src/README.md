@@ -1,11 +1,14 @@
 ## To do
 
-* Use analytical version of E[Y|Z]
+* Implement the ML version.
+* Try to estimate $ E[Y | Z] $ non parametrically, like Newey does
+  (hermite polynomias and so forth).
+* Keep translating the proofing and taking note of which assumptions must
+  hold.
 
 * Implement way to save parameters in each execution
 * Setup a working logger
 
-* Implement the ML version.
 * Implement the minimax estimator with a RKHS ball as $\mathcal{G}$,
   or one of the other more recent IV estimation methods.
 
