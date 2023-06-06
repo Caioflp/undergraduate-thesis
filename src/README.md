@@ -1,10 +1,10 @@
 ## To do
 
+* Keep translating the proofing and taking note of which assumptions must
+  hold.
 * Implement the ML version.
 * Try to estimate $ E[Y | Z] $ non parametrically, like Newey does
   (hermite polynomias and so forth).
-* Keep translating the proofing and taking note of which assumptions must
-  hold.
 
 * Implement way to save parameters in each execution
 * Setup a working logger
