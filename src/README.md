@@ -1,6 +1,6 @@
 ## To do
 
-* Keep translating the proofing and taking note of which assumptions must
+* Keep translating the proof and taking note of which assumptions must
   hold.
 * Implement the ML version.
 * Try to estimate $ E[Y | Z] $ non parametrically, like Newey does
@@ -13,6 +13,16 @@
   or one of the other more recent IV estimation methods.
 
 * Implement Mirror Descent / Nesterov Acceleration
+
+## Meeting 07/06
+
+* Redo all the calculations we did, in LaTeX (copy the neurips paper's
+  template and work on top of that, pointing out what's different in the
+  proof)
+* Formulate and implement the algorithm with different datasets per
+  iteration, and also different datasets for phi and $ (T, r_0) $ within
+  each iteration.
+* Think about what are the biases when estimating phi, T and r_0.
 
 ## What to show Yuri Rezende in 25/05 meeting
 
