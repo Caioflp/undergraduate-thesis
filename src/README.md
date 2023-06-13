@@ -2,7 +2,7 @@
 
 * Keep translating the proof and taking note of which assumptions must
   hold.
-* Implement the ML version.
+* Implement the boosted version.
 * Try to estimate $ E[Y | Z] $ non parametrically, like Newey does
   (hermite polynomias and so forth).
 
