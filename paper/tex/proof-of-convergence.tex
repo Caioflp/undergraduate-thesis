@@ -1,0 +1,30 @@
+\section{Proof of convergence}
+
+The first problem is proving our sequence of estimates is, in fact, contained in $ L^{ 2 } ( X ) $.
+This amounts to proving $ u_{ m } \in L^{ 2 } ( X ) $ for every $ m $.
+It's not even immediate why $ u_{ h } ( x ) = \Phi ( x, Z ) \xi_{ h } ( Z ) $ (the unbiased gradient when we know $ r_{ 0 }, \Phi $ and $ \mathcal{T} $) belongs to $ L^{ 2 } ( X ) $\improvement{Do this.}.
+
+After doing this, the first steps in the proof are the same as in the previous paper.
+We show that $ \risk $ is convex in $ \mathcal{F} $ and then simple algebraic manipulation allows us to write
+\begin{align*}
+    \begin{split}
+        \sum_{ n=1 }^{ M } \left[
+            \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hstar )
+        \right]
+        &\leq \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
+            \norm{ \hat{ h }_{ m-1 } - \hstar }^2_{ L^{ 2 } ( X ) }
+            -
+            \norm{ \hat{ h }_{ m } - \hstar }^2_{ L^{ 2 } ( X ) }
+        \right) \\
+        &\hspace{1cm} + \sum_{ m=1 }^{ M } \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \\
+        &\hspace{1cm} - \sum_{ m=1 }^{ M }
+        \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }_{ L^{ 2 } ( X ) }
+    \end{split}
+.\end{align*}
+We then treat each term separately:
+\begin{itemize}
+    \item The first term is bounded using the assumption\info{Assumption} that $ \diam \mathcal{F} = D < \infty $.
+    \item The bound on the second term depends on bounding $ \mean \left[ \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \right] $ by a constant.
+    \item The third term must vanish because of the unbiasedness of $ u_{ m } $, but we don't know that our $ u_{ m } $ is unbiased, and it may very well not be.
+\end{itemize}
+

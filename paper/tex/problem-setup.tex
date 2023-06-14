@@ -1,0 +1,57 @@
+\section{Problem setup}
+
+\subsection{Basic definitions}
+
+Fix a probability space $ ( \Omega, \mathcal{A}, \prob ) $.
+Given $ X \in L^{ 2 } ( \Omega ; \mathbb{X} \subseteq \R^{ p } ) $, we define
+\begin{equation*}
+    L^{ 2 } ( X ) \defeq \left\{ h : \mathbb{X} \to \R \ : \ \mean [ h ( X )^2 ] < \infty \right\}
+,\end{equation*}
+that is, $ L^{ 2 } ( X ) = L^{ 2 } ( \mathbb{X}, \mathcal{B} ( \mathbb{X} ), \prob_{ X } ) $\footnote{We denote by $ \prob_{ X } $ the distribution of the r.v. $ X $ and by $ \mathcal{B} ( \mathbb{X} ) $ the Borel $ \sigma $-algebra in $ \mathbb{X} $.}, a Hilbert space equipped with the inner product $ \dotprod{ h, g }_{ L^{ 2 } ( X ) } = \mean [ h ( X ) g ( X ) ] $.
+The regression problem we are interested in has the form
+\begin{equation}
+    \label{eq: main problem}
+    Y = \hstar (X) + \varepsilon
+,\end{equation}
+where $ \hstar \in L^{ 2 } ( X ) $ and $ \varepsilon $ is an integrable r.v. such that $ \mean [ \varepsilon \mid X ] \neq 0 $.
+We assume there exists $ Z \in L^{ 2 } ( \Omega ; \mathbb{Z} \subseteq \R^{ q } ) $ such that $ Z \notindep X $ and $ \mean [ \varepsilon \mid Z ] = 0 $.
+This variable is called the instrumental variable.
+The problem consists of estimating $ \hstar $ based on independent joint samples from $ X, Z $ and $ Y $.
+
+Conditioning (\ref{eq: main problem}) in $ Z $, we find
+\begin{equation}
+    \label{eq: problem given Z}
+    \mean [ Y \mid Z ] = \mean [ \hstar ( X ) \mid Z ]
+.\end{equation}
+This motivates us to introduce the operator $ \mathcal{T} : L^{ 2 } ( X ) \to L^{ 2 } ( Z ) $ defined by
+\begin{equation*}
+    T [ h ] ( z ) \defeq \mean [ h ( X ) \mid Z = z ]
+.\end{equation*}
+Clearly $ \mathcal{T} $ is linear and, using Jensen's inequality, one may prove that it's bounded.
+It's also interesting to notice that its adjoint $ \mathcal{T}^{ * } : L^{ 2 } ( Z ) \to L^{ 2 } ( X ) $ satisfies
+\begin{equation}
+    \label{eq: T adjoint}
+    \mathcal{T}^{ * } [ g ] ( x ) = \mean [ g ( Z ) \mid X = x ].
+\end{equation}
+Define $ r_{ 0 } : \mathbb{Z} \to \R $ by $ r_{ 0 } ( Z ) = \mean [ Y \mid Z ] $.
+Again by Jensen's inequality, we have $ r_{ 0 } \in L^{ 2 } ( Z ) $, and thus we can rewrite (\ref{eq: problem given Z}) as
+\begin{equation}
+    \label{eq: problem with T}
+    T [ \hstar ] = r_{ 0 }
+.\end{equation}
+Hence, (\ref{eq: main problem}) can be formulated as an inverse problem, where we wish to invert the operator $ \mathcal{T} $.
+
+\subsection{Risk measure}
+
+Let $ \ell : \R \times \R \to \R_{ + } $ be a pointwise loss function, which, with respect to its second argument, is convex and differentiable.
+We use the symbol $ \partial_{ 2 } $ to denote a derivative with respect to the second argument.
+The example to keep in mind is the quadratic loss function $ \ell ( y, y' ) = ( y - y' )^2 $.
+Given $ h \in L^{ 2 } ( X ) $, we define the \emph{populational risk} associated with it to be
+\begin{equation*}
+    \risk ( h ) \defeq \mean [ \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) ]
+.\end{equation*}
+We would like to solve
+\begin{equation*}
+    \inf_{ h \in \mathcal{F} } \risk ( h )
+,\end{equation*}
+where $ \mathcal{F} \subseteq L^{ 2 } ( X ) $ is a subspace such that $ \hstar \in \mathcal{F} $.

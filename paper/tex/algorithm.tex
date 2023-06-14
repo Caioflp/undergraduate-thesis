@@ -1,0 +1,25 @@
+\section{Algorithm}
+
+Having an unbiased estimator of the gradient, we can construct an SGD algorithm for estimating $ \hstar $.\improvement{Discuss everything we don't know and must estimate.}\improvement{Comment on exactly what is needed to estimate each unknown (samples from which r.v.'s).}\improvement{Discuss necessity of discretizing $ \mathbb{X} $.}
+
+\begin{algorithm}[H]\label{algo:functional_SGD}
+    \caption{SGD-NPIV}
+    \SetKwInOut{Input}{input}
+    \SetKwInOut{Output}{output}
+    \Input{
+       %  $ \mathcal{D}_{ \Phi } = \left\{ ( \bx_{ i }, \bz_{ i } ) \right\}_{ i=1 }^{ N_{ xz } } \sim \prob_{ XZ } $,
+       %  $ \mathcal{D}_{ r_{ 0 } } = \left\{ ( \by_{ j }, \bz_{ j } ) \right\}_{ j=1 }^{ N_{ yz } } \sim \prob_{ YZ } $,
+       %  $ \mathcal{D}_{ z } = \left\{ \bz_{ m } \right\}_{ m=1 }^{ M } \sim \prob_{ Z } $ where $ M = N_{ xz } + N_{ yz } + N_{ z } $, initial estimator $ \hat{ h }_{ 0 } $,
+        Datasets $ \mathcal{D}_{ r_{ 0 } } = \left\{ ( y_{ i }, \bz_{ i } ) \right\} \iid \prob_{ YZ } $, $ \mathcal{D}_{ \Phi } = \left\{ ( \bx_{ i }, \bz_{ i } ) \right\} \iid \prob_{ XZ } $, $ \mathcal{D}_{ \mathcal{T} } = \left\{ ( \bx_{ i }, \bz_{ i } ) \right\} \iid \prob_{ XZ } $,
+        discretization $ \left\{ \bx_{ k } \right\}_{ k=1 }^{ K } $ of $ \mathbb{X} $ which contains the observed values of $ X $, sequence of learning rates $ ( \alpha_{ m } )_{ m=1 }^{ M } $.
+    }
+    \Output{ $ \left\{ \hat{ h } ( \bx_{ k } ) \right\}_{ k=1 }^{ K } $ }
+    Compute $ \left\{ \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ) \right\}_{ m=1 }^{ M } $ \;
+    Compute $ \hat{ \Phi } ( \bx, \bz ; \mathcal{D}_{ \Phi } ) $ \;
+    \For{$ 1 \leq m \leq M $}{
+        Compute $ \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } ) $ \;
+        Set $ u_{ m } ( \bx_{ k } ) = \hat{ \Phi } ( \bx_{ k }, \bz_{ m } ) \partial_{ 2 } \ell \left( \hat{ r_{ 0 } } ( \bz_{ m }, \mathcal{D}_{ r_{ 0 } } ), \hat{ \mathcal{T} [ \hat{ h }_{ m - 1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } ) \right) $ \quad for $ 1 \leq k \leq K $ \;
+        Set $ \hat{ h }_{ m } ( \bx_{ k } ) = \hat{ h }_{ m-1 } ( \bx_{ k } ) - \alpha_{ m } u_{ m } ( \bx_{ k } ) $ \quad for $ 1 \leq k \leq K $ \;
+    }
+    Set $ \hat{ h } = \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \hat{ h }_{ m } $ \;
+\end{algorithm}

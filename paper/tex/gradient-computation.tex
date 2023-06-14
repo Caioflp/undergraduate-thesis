@@ -1,0 +1,63 @@
+\section{Gradient computation}
+
+We'd like to compute $ \nabla \risk ( h ) $ for $ h \in L^{ 2 } ( X ) $.
+We start by computing the directional derivative of $ \risk $ at $ h $ in the direction $ f $, denoted by $ D \risk [ h ] ( f ) $:
+\begin{align*}
+    D \risk [ h ] ( f )
+    &= \lim\limits_{ \delta \to 0 } \frac{ 1 }{ \delta } \left[
+        \risk ( h + \delta f ) - \risk ( f )
+    \right] \\
+    &= \lim\limits_{ \delta \to 0 } \frac{ 1 }{ \delta } \mean \left[
+        \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h + \delta f ] ( Z ) )
+        -
+        \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) )
+    \right] \\
+    &= \lim\limits_{ \delta \to 0 } \frac{ 1 }{ \delta } \mean \left[
+        \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) + \delta \mathcal{T} [ f ] ( Z ) )
+        -
+        \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) )
+    \right] \\
+    \begin{split}
+        &= \lim\limits_{ \delta \to 0 } \frac{ 1 }{ \delta } \mean \Biggl[
+            \delta \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) \mathcal{T} [ f ] ( Z ) \\
+        &\hspace{2cm}+ \frac{ \delta^2 }{ 2 } \partial_{ 2 }^2 \ell ( r_{ 0 } ( Z ) , \mathcal{T} [ h + \theta f ] ( Z ) ) \mathcal{T} [ f ] ( Z )^2
+        \Biggr]
+    \end{split} \\
+    \begin{split}
+        &= \mean \left[
+            \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) \mathcal{T} [ f ] ( Z )
+        \right] \\
+        &\hspace{2cm}+ \lim\limits_{ \delta \to 0 } \mean \Biggl[
+            \frac{ \delta }{ 2 } \partial_{ 2 }^2 \ell ( r_{ 0 } ( Z ) , \mathcal{T} [ h + \theta f ] ( Z ) ) \mathcal{T} [ f ] ( Z )^2
+        \Biggr]
+    \end{split} \\
+    &= \mean \left[
+        \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) \mathcal{T} [ f ] ( Z )
+    \right]
+,\end{align*}
+where $ \theta \in \R $ is due to Taylor's formula and can be assumed\info{Assumption} to be inside a fixed interval $ ( -\theta_{ 0 }, \theta_{ 0 } ) $, with $ \theta_{ 0 } $ arbitrarily small.
+We have assumed\info{Assumption} at the last step that there exists $ \theta_{ 0 } > 0 $ such that
+\begin{equation*}
+    \sup_{ \abs{ \theta } < \theta_{ 0 } }
+    \mean \left[
+        \partial_{ 2 }^2 \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h + \theta f ] ( Z ) ) \mathcal{T} [ f ] ( Z )^2
+    \right] < \infty
+.\end{equation*}
+This is a mild integrability condition which can be shown to hold in the quadratic case.
+
+We can in fact expand the calculation a bit more, as follows:
+\begin{align*}
+    D \risk [ h ] ( f )
+    &= \mean \left[
+        \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) \mathcal{T} [ f ] ( Z )
+    \right] \\
+    &= \dotprod{ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \mathcal{T} [ h ] ( \cdot ) ), \mathcal{T} [ f ] }_{ L^{ 2 } ( Z ) } \\
+    &= \dotprod{ \mathcal{T}^{ * } [ \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( \cdot ) ) ], f }_{ L^{ 2 } ( X ) }
+,\end{align*}
+where we are assuming\info{Assumption} that $ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \mathcal{T} [ h ] ( \cdot ) ) \in L^{ 2 } ( Z ) $.
+This shows that $ \risk $ is Gateux-differentiable, with Gateux derivative at $ h $ given by
+\begin{equation*}
+    D \risk [ h ] = \mathcal{T}^{ * } [ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \mathcal{T} [ h ] ( \cdot ) ) ]
+.\end{equation*}
+If we assume\footnote{It is if $ \ell $ is quadratic.}\info{Assumption} that $ h \mapsto D \risk [ h ] $ is a continuous mapping from $ L^{ 2 } ( Z ) $ to $ L^{ 2 } ( Z ) $\improvement{Talk about which conditions $ \ell $ can satisfy so that this is continuous.}, then $ \risk $ is also Fréchet-differentiable, and both derivatives coincide.
+Therefore, under this assumption, which we henceforth make, $ \nabla \risk ( h ) = \mathcal{T}^{ * } [ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \mathcal{T} [ h ] ( \cdot ) ) ] $.
