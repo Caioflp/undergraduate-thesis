@@ -256,6 +256,9 @@ INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/microtype/microtype.lua
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/microtype/microtype.cfg
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/microtype/microtype.cfg
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/microtype/microtype.cfg
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/enumitem/enumitem.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/enumitem/enumitem.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/enumitem/enumitem.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/xcolor/xcolor.sty

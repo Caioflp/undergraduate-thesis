@@ -1,7 +1,7 @@
 # Fdb version 4
-["lualatex"] 1686753387 "main.tex" ".out/main.pdf" "main" 1686753389 0
-  ".out/main.aux" 1686753389 5583 ce74236941f143b21f9537b3b4707b38 "lualatex"
-  ".out/main.out" 1686753389 984 28dfd9bac30c5cd15e00ece951a32d31 "lualatex"
+["lualatex"] 1686853501 "main.tex" ".out/main.pdf" "main" 1686853503 0
+  ".out/main.aux" 1686853502 5583 ce74236941f143b21f9537b3b4707b38 "lualatex"
+  ".out/main.out" 1686853502 984 28dfd9bac30c5cd15e00ece951a32d31 "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1685645277 368630 cef10b4c83a6dcad01321f431b18c742 ""
   "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1686709041 2378 9b6b8b804b4be760efd5d1fecdbfabf7 ""
@@ -183,6 +183,7 @@
   "/usr/local/texlive/2023/texmf-dist/tex/latex/base/size10.clo" 1667332637 8448 c33a4e1cb35cee9b33c2b21033b73e39 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/base/ts1cmr.fd" 1667332637 2430 8418b3f1835e588625becbcac4dbce56 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/booktabs/booktabs.sty" 1579038678 6078 f1cb470c9199e7110a27851508ed7a5c ""
+  "/usr/local/texlive/2023/texmf-dist/tex/latex/enumitem/enumitem.sty" 1561238569 51697 f8f08183cd2080d9d18a41432d651dfb ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/environ/environ.sty" 1399239813 4378 f429f0da968c278653359293040a8f52 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1579991033 13886 d1306dcf79a944f6988e688c1785f9ce ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/etoolbox/etoolbox.sty" 1601931149 46845 3b58f70c6e861a13d927bff09d35ecbc ""
@@ -298,9 +299,9 @@
   "algorithm.tex" 1686750270 2337 8a1e8608b3880dcc55d3ff688ec4bdea ""
   "gradient-computation.tex" 1686747716 3796 110c5161082344f78a1246da7e72876e ""
   "main.tex" 1686750010 247 8ec7d03c189789b9478cdab5e454454c ""
-  "preamble.tex" 1686751645 2537 cb9a2171b2f32d330fe3ef5357a79ebd ""
+  "preamble.tex" 1686848717 2591 2f185e86d2e3e617f0729cab2741bcc4 ""
   "problem-setup.tex" 1686753193 3197 ad65af608fb7d033c7676848fcf506c1 ""
-  "proof-of-convergence.tex" 1686753384 1757 26d3fdff2a3ccef6c02792caa78e2f28 ""
+  "proof-of-convergence.tex" 1686853500 4838 a4d8d964025576f62c4da26caccbbdf7 ""
   "unbiased-estimator-of-the-gradient.tex" 1686749176 2040 38fd209752a10afc1a98bdb1503a2cc3 ""
   (generated)
   ".out/main.aux"

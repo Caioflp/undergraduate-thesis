@@ -24,7 +24,72 @@ We show that $ \risk $ is convex in $ \mathcal{F} $ and then simple algebraic ma
 We then treat each term separately:
 \begin{itemize}
     \item The first term is bounded using the assumption\info{Assumption} that $ \diam \mathcal{F} = D < \infty $.
-    \item The bound on the second term depends on bounding $ \mean \left[ \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \right] $ by a constant.
+    \item The bound on the second term depends on bounding $ \mean \left[ \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \right] $ by a constant independent of $ m $.
     \item The third term must vanish because of the unbiasedness of $ u_{ m } $, but we don't know that our $ u_{ m } $ is unbiased, and it may very well not be.
 \end{itemize}
+
+\begin{description}[style=unboxed, leftmargin=0cm]
+    \item[Second term]
+        Define $ \mathcal{D} $ to be the set of all observed data, that is, all of the variables in $ \data_{ \Phi }, \data_{ r_{ 0 } }, \data_{ \mathcal{T} } $ and $ \left\{ \bz_{ i } \right\}_{ i=1 }^{ M } $.
+        Let's evaluate $ \mean \left[ \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \right] $:
+        \begin{equation*}
+            \mean \left[
+                \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) }
+            \right]
+            = \mean_{ \data } \left[
+                \mean_{ X } \left[
+                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+                    \partial_{ 2 } \left(
+                        \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
+                        \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+                    \right)^2
+                \right]
+            \right]
+        ,\end{equation*}
+        where the second expectation is with respect to a copy of $ X $ which is independent of $ \data $.
+        Continuing:
+        \begin{align*}
+            &\mean_{ \data } \left[
+                \mean_{ X } \left[
+                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+                    \partial_{ 2 } \left(
+                        \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
+                        \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+                    \right)^2
+                \right]
+            \right] \\
+            &\hspace{2cm}=
+            \mean_{ \data } \left[
+                \partial_{ 2 } \left(
+                    \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
+                    \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+                \right)^2
+                \mean_{ X } \left[
+                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+                \right]
+            \right]
+        .\end{align*}
+        If $ \ell $ is quadratic, we have
+        \begin{align*}
+            &\mean_{ \data } \left[
+                \partial_{ 2 } \left(
+                    \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
+                    \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+                \right)^2
+                \mean_{ X } \left[
+                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+                \right]
+            \right] \\
+            &\hspace{2cm}=
+            \mean_{ \data } \left[
+                \left(
+                    \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+                    - \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } )
+                \right)^2
+                \mean_{ X } \left[
+                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+                \right]
+            \right]
+        .\end{align*}
+\end{description}
 
