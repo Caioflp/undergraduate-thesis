@@ -1,13 +1,16 @@
 ## To do
 
-* Keep translating the proof and taking note of which assumptions must
-  hold.
+* Read material on density estimation and see if it gives us the results
+  we need.
+
 * Implement the boosted version.
 * Try to estimate $ E[Y | Z] $ non parametrically, like Newey does
   (hermite polynomias and so forth).
 
 * Implement way to save parameters in each execution
 * Setup a working logger
+
+* Take a look at the IV datasets that Moises sent me.
 
 * Implement the minimax estimator with a RKHS ball as $\mathcal{G}$,
   or one of the other more recent IV estimation methods.
@@ -64,6 +67,11 @@
 
 ## Done
 
+* Redo all the calculations we did, in LaTeX (copy the neurips paper's
+  template and work on top of that, pointing out what's different in the
+  proof)
+* Keep translating the proof and taking note of which assumptions must
+  hold.
 * Use analytical version of p(z, x)/p(z)p(x) (Seems to perform worse?)
 * Verify the implementation (seems to be correct)
 * Remove separate plots for grid and observed points in functional sgd.
