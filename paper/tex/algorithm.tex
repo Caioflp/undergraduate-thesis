@@ -2,7 +2,7 @@
 
 Having an unbiased estimator of the gradient, we can construct an SGD algorithm for estimating $ \hstar $.\improvement{Discuss everything we don't know and must estimate.}\improvement{Comment on exactly what is needed to estimate each unknown (samples from which r.v.'s).}\improvement{Discuss necessity of discretizing $ \mathbb{X} $.}
 
-\begin{algorithm}[H]\label{algo:functional_SGD}
+\begin{algorithm}[H]\label{algo: functional sgd}
     \caption{SGD-NPIV}
     \SetKwInOut{Input}{input}
     \SetKwInOut{Output}{output}
@@ -23,3 +23,23 @@ Having an unbiased estimator of the gradient, we can construct an SGD algorithm 
     }
     Set $ \hat{ h } = \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \hat{ h }_{ m } $ \;
 \end{algorithm}
+
+An option\unsure{Should we do this?} we have is to project onto the closed, convex, bounded set $ \mathcal{F} $ after applying the stochastic gradient, that is, constructing the new estimate as
+\begin{equation*}
+    \hat{ h }_{ m } = P_{ \mathcal{F} } \left[
+        \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m }
+    \right]
+.\end{equation*}
+From what I can see, this would require minor changes to the proof and would justify the assumption that $ \hat{ h }_{ m } \in \mathcal{F} $ for all $ m $.
+
+A possible choice for the set $ \mathcal{F} $ is
+\begin{equation*}
+    \mathcal{F} \defeq \left\{ h \in L^{ 2 } ( X ) : \norm{ h }_{ \infty } \leq M \right\}
+,\end{equation*}
+where $ M > 0 $ is a constant chosen \emph{a priori}.
+This set is obviously closed, convex and bounded in the $ L^2 ( X ) $ norm.
+Furthermore, the operator $ P_{ \mathcal{F} } $ is very easy to compute, as $ P_{ \mathcal{F} } [ h ] $ is obtained by cropping $ h $ inside $ [ -M, M ] $.
+More formally,
+\begin{equation*}
+    P_{ \mathcal{F} } [ h ] = h^{ + } \wedge M - h^{ - } \wedge M
+.\end{equation*}

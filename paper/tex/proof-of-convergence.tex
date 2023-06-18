@@ -2,44 +2,108 @@
 
 The first problem is proving our sequence of estimates is, in fact, contained in $ L^{ 2 } ( X ) $.
 This amounts to proving $ u_{ m } \in L^{ 2 } ( X ) $ for every $ m $.
-It's not even immediate why $ u_{ h } ( x ) = \Phi ( x, Z ) \xi_{ h } ( Z ) $ (the unbiased gradient when we know $ r_{ 0 }, \Phi $ and $ \mathcal{T} $) belongs to $ L^{ 2 } ( X ) $\improvement{Do this.}.
+It's not even immediate why $ u_{ h } ( x ) = \Phi ( x, Z ) \xi_{ h } ( Z ) $ (the unbiased gradient when we know $ r_{ 0 }, \Phi $ and $ \mathcal{T} $) belongs to $ L^{ 2 } ( X ) $\improvement{ We'll need to bound the norm of $ u_{ m } $ by a constant later in the proof. }
 
-After doing this, the first steps in the proof are the same as in the previous paper.
-We show that $ \risk $ is convex in $ \mathcal{F} $ and then simple algebraic manipulation allows us to write
+After doing this, we check that $ \risk $ is convex in $ \mathcal{F} $:
+if $ h, g \in \mathcal{F} $ and $ \lambda \in [ 0, 1 ] $, then
 \begin{align*}
-    \begin{split}
-        \sum_{ n=1 }^{ M } \left[
-            \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hstar )
-        \right]
-        &\leq \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
-            \norm{ \hat{ h }_{ m-1 } - \hstar }^2_{ L^{ 2 } ( X ) }
-            -
-            \norm{ \hat{ h }_{ m } - \hstar }^2_{ L^{ 2 } ( X ) }
-        \right) \\
-        &\hspace{1cm} + \sum_{ m=1 }^{ M } \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \\
-        &\hspace{1cm} - \sum_{ m=1 }^{ M }
-        \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }_{ L^{ 2 } ( X ) }
-    \end{split}
+    \risk ( \lambda h + ( 1 - \lambda ) g )
+    &= \mean [ \loss ( r_{ 0 } ( Z ), \mathcal{T} [ \lambda h + ( 1 - \lambda ) g ] ( Z ) ) ] \\
+    &= \mean [ \loss ( r_{ 0 } ( Z ), \lambda \mathcal{T} [ h ] ( Z ) + ( 1 - \lambda ) \mathcal{T} [ g ] ( Z ) ) ] \\
+    &\leq \lambda \mean [ \loss ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) ] + ( 1 - \lambda ) \mean [ \loss ( r_{ 0 } ( Z ), \mathcal{T} [ g ] ( Z ) ) ] \\
+    &= \lambda \risk ( h ) + ( 1 - \lambda ) \risk ( g )
 .\end{align*}
-We then treat each term separately:
+To lighten the notation, we denote the norm and inner product in $ L^{ 2 } ( X ) $ by $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \cdot } $, respectively.
+By the Algorithm \ref{algo: functional sgd} procedure, we have
+\begin{align*}
+    \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m } - \hstar }^2
+    &= \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m } - \hstar }^2 \\
+    &= \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \hstar }^2
+    - \alpha_{ m } \dotprod{ u_{ m }, \hat{ h }_{ m-1 } - \hstar }
+    + \frac{ \alpha_{ m }^2 }{ 2 } \norm{ u_{ m } }^2
+.\end{align*}
+After adding and subtracting $ \alpha_{ m } \dotprod{ \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar } $, we are left with
+\begin{equation*}
+    \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \hstar }^2
+    - \alpha_{ m } \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+    + \frac{ \alpha_{ m }^2 }{ 2 } \norm{ u_{ m } }^2
+    - \alpha_{ m } \dotprod{ \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+.\end{equation*}
+Applying the basic convexity inequality on the last term give us, in total,
+\begin{align*}
+    \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m } - \hstar }^2
+    &\leq
+    \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \hstar }^2
+    - \alpha_{ m } \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar } \\
+    &\hspace{1.5cm}
+    + \frac{ \alpha_{ m }^2 }{ 2 } \norm{ u_{ m } }^2
+    - \alpha_{ m } ( \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hstar ) )
+.\end{align*}
+Rearranging terms, we get
+\begin{align*}
+    \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hstar )
+    &\leq
+    \frac{ 1 }{ 2 \alpha_{ m } } \left(
+        \norm{ \hat{ h }_{ m-1 } - \hstar }^2
+        -
+        \norm{ \hat{ h }_{ m } - \hstar }^2
+    \right) \\
+    &\hspace{1.5cm}+ \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2
+    - \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+.\end{align*}
+Finally, summing over $ 1 \leq m \leq M $ leads to
+\begin{align*}
+    \sum_{ n=1 }^{ M } \left[
+        \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hstar )
+    \right]
+    &\leq \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
+        \norm{ \hat{ h }_{ m-1 } - \hstar }^2
+        -
+        \norm{ \hat{ h }_{ m } - \hstar }^2
+    \right) \\
+    &\hspace{1cm} + \sum_{ m=1 }^{ M } \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2 \\
+    &\hspace{1cm} - \sum_{ m=1 }^{ M }
+    \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+.\end{align*}
+We then treat each term (summation) separately:
 \begin{itemize}
     \item The first term is bounded using the assumption\info{Assumption} that $ \diam \mathcal{F} = D < \infty $.
-    \item The bound on the second term depends on bounding $ \mean \left[ \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \right] $ by a constant independent of $ m $.
+    \item The bound on the second term depends on bounding $ \mean \left[ \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \right] $ by a constant independent of $ m $ or $ M $.
     \item The third term must vanish because of the unbiasedness of $ u_{ m } $, but we don't know that our $ u_{ m } $ is unbiased, and it may very well not be.
 \end{itemize}
 
 \begin{description}[style=unboxed, leftmargin=0cm]
+    \item[First term]
+        By assumption, we have $ \diam \mathcal{F} = D < \infty $.
+        Hence
+        \begin{align*}
+            \begin{split}
+                \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
+                    \norm{ \hat{ h }_{ m-1 } - \hstar }^2
+                    -
+                    \norm{ \hat{ h }_{ m } - \hstar }^2
+                \right)
+                &= \sum_{ m=2 }^{ M } \left(
+                    \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
+                \right) \norm{ \hat{ h }_{ m-1 } - \hstar }^2 \\
+                &\hspace{1.5cm}+ \frac{ 1 }{ 2 \alpha_{ 1 } } \norm{ \hat{ h }_{ 0 } - \hstar }^2 - \frac{ 1 }{ 2 \alpha_{ M } } \norm{ \hat{ h }_{ M } - \hstar }^2
+            \end{split} \\
+            &\leq 
+            \sum_{ m=2 }^{ M } \left(
+                \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
+            \right) D^2 + \frac{ 1 }{ 2 \alpha_{ 1 } } D^2 = \frac{ D^2 }{ 2 \alpha_{ M } }
+        .\end{align*}
     \item[Second term]
         Define $ \mathcal{D} $ to be the set of all observed data, that is, all of the variables in $ \data_{ \Phi }, \data_{ r_{ 0 } }, \data_{ \mathcal{T} } $ and $ \left\{ \bz_{ i } \right\}_{ i=1 }^{ M } $.
-        Let's evaluate $ \mean \left[ \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \right] $:
+        Let's evaluate $ \mean \left[ \norm{ u_{ m } }^2 \right] $:
         \begin{equation*}
             \mean \left[
-                \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) }
+                \norm{ u_{ m } }^2
             \right]
             = \mean_{ \data } \left[
                 \mean_{ X } \left[
                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
-                    \partial_{ 2 } \left(
+                    \partial_{ 2 } \loss \left(
                         \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
                         \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
                     \right)^2
@@ -52,7 +116,7 @@ We then treat each term separately:
             &\mean_{ \data } \left[
                 \mean_{ X } \left[
                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
-                    \partial_{ 2 } \left(
+                    \partial_{ 2 } \loss \left(
                         \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
                         \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
                     \right)^2
@@ -60,7 +124,7 @@ We then treat each term separately:
             \right] \\
             &\hspace{2cm}=
             \mean_{ \data } \left[
-                \partial_{ 2 } \left(
+                \partial_{ 2 } \loss \left(
                     \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
                     \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
                 \right)^2
@@ -72,7 +136,7 @@ We then treat each term separately:
         If $ \ell $ is quadratic, we have
         \begin{align*}
             &\mean_{ \data } \left[
-                \partial_{ 2 } \left(
+                \partial_{ 2 } \loss \left(
                     \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
                     \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
                 \right)^2
@@ -90,6 +154,129 @@ We then treat each term separately:
                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
                 \right]
             \right]
+        .\end{align*}
+        \improvement{Find a way to finish this bound.
+        Maybe switch the order of expectations? First in $ X $ and then in $ \data $.}
+
+    \item[Third term]
+        We have to work with
+        \begin{equation*}
+            \mean \left[
+                \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+            \right]
+        .\end{equation*}
+        The strategy employed on the SIP paper was to condition on the $ \sigma $-algebra generated by the training samples observed up until iteration iteration $ m - 1 $.
+        In our case, that would be $ \bz_{ 1 }, \dots, \bz_{ m-1 } $.
+        The problem which arises is that we no longer have measurability of $ \hat{ h }_{ m-1 } $ with respect to this $ \sigma $-algebra, as it depends on the datasets $ \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $, used to estimate $ \hat{ \Phi }, \hat{ \mathcal{T} } $ and $ \hat{ r }_{ 0 } $ in an offline manner.
+
+        The other option would be to condition on more things, namely the $ \sigma $-algebra generated by $ \bz_{ 1 }, \dots, \bz_{ m - 1 }, \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $.
+        We gain measurability of $ \hat{ h }_{ m-1 } $, but we are no longer integrating out $ \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $, which is needed to use some sort of unbiasedness of the estimators $ \hat{ \Phi }, \hat{ \mathcal{T} }, \hat{ r }_{ 0 } $.
+
+        Let's try the latter and see what we end up with.
+        Define $ \data_{ m-1 } \defeq \data_{ \Phi } \cup \data_{ \mathcal{T} } \cup \data_{ r_{ 0 } } \cup \left\{ \bz_{ 1 }, \dots, \bz_{ m-1 } \right\} $.
+        Then,
+        \begin{align*}
+            \begin{split}
+                &\mean_{ \data } \left[
+                    \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+                \right] \\
+                &\hspace{2cm}
+                =\mean_{ \data_{ m-1 } } \left[
+                    \mean \left[
+                        \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+                        \mid \data_{ m-1 }
+                    \right]
+                \right]
+            \end{split} \\
+            &\hspace{2cm}
+            = \mean_{ \data_{ m-1 } } \left[
+                \dotprod{ 
+                    \mean \left[
+                        u_{ m }
+                        \mid \data_{ m-1 }
+                    \right]
+                    - \nabla \risk ( \hat{ h }_{ m-1 } )
+                    ,
+                    \hat{ h }_{ m-1 } - \hstar
+                }
+        \right] && (\text{Justify this properly.})
+        .\end{align*}
+        Now we must evaluate the expression inside the inner product.
+        We restrict ourselves to the quadratic case.
+        Define $ \psi ( z ) = \mathcal{T} [ \hat{ h }_{ m-1 } ] ( z ) - r_{ 0 } ( z ) $ and $ \hat{ \psi } ( z ; \dataproj ) = \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( z ; \data_{ \mathcal{T} } ) - \hat{ r }_{ 0 } ( z ; \data_{ r_{ 0 } } ) $, where $ \dataproj = \data_{ \mathcal{T} } \cup \data_{ r_{ 0 } } $.
+        Then:
+        \begin{align*}
+            \begin{split}
+                &\mean \left[
+                    u_{ m } (x)
+                    \mid \data_{ m-1 }
+                \right]
+                - \nabla \risk ( \hat{ h }_{ m-1 } ) (x) \\
+                &\hspace{1.7cm}
+                = \mean \left[
+                    \hat{ \Phi } ( x, Z ; \data_{ \Phi } )
+                    \hat{ \psi } ( Z ; \dataproj )
+                    \mid \data_{ m-1 }
+                \right]
+                - \mean_{ Z } \left[
+                    \Phi ( x, Z ) \psi ( Z )
+                \right]
+            \end{split} \\
+            &\hspace{1.7cm}
+            = \mean_{ Z } \left[
+                \hat{ \Phi } ( x, Z ; \data_{ \Phi } )
+                \hat{ \psi } ( Z ; \dataproj )
+            \right]
+            - \mean_{ Z } \left[
+                \Phi ( x, Z ) \psi ( Z )
+            \right] \\
+            &\hspace{1.7cm}
+            = \mean_{ Z } \left[
+                \left(
+                    \hat{ \Phi } ( x, Z ; \data_{ \Phi } )
+                    -
+                    \Phi ( x, Z )
+                \right) \hat{ \psi } ( Z ; \dataproj )
+                +
+                \left(
+                    \hat{ \psi } ( Z ; \dataproj )
+                    -
+                    \psi ( Z )
+                \right) \Phi ( x, Z )
+            \right] \\
+            &\hspace{1.7cm}
+            = \Bigl<
+                \hat{ \Phi } ( x, \cdot ; \data_{ \Phi } )
+                - \Phi ( x, \cdot )
+                ,
+                \hat{ \psi } ( \cdot ; \dataproj )
+            \Bigr>_{ L^{ 2 } ( Z ) }
+            +
+            \Bigl<
+                \hat{ \psi } ( \cdot ; \dataproj )
+                - \psi ( \cdot )
+                ,
+                \Phi ( x, \cdot )
+            \Bigr>_{ L^{ 2 } ( Z ) } \\
+            \begin{split}
+                &\hspace{1.7cm}
+                \leq \norm{
+                    \hat{ \Phi } ( x, \cdot ; \data_{ \Phi } )
+                    - \Phi ( x, \cdot )
+                }_{ L^{ 2 } ( Z ) }
+                \norm{
+                    \hat{ \psi } ( \cdot ; \dataproj )
+                }_{ L^{ 2 } ( Z ) } \\
+                &\hspace{4cm}
+                +
+                \norm{
+                    \hat{ \psi } ( \cdot ; \dataproj )
+                    - \psi ( \cdot )
+                }_{ L^{ 2 } ( Z ) }
+                \norm{
+                    \Phi ( x, \cdot )
+                }_{ L^{ 2 } ( Z ) }
+            \end{split} 
         .\end{align*}
 \end{description}
 

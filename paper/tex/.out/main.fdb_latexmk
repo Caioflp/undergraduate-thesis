@@ -1,7 +1,7 @@
 # Fdb version 4
-["lualatex"] 1686853501 "main.tex" ".out/main.pdf" "main" 1686853503 0
-  ".out/main.aux" 1686853502 5583 ce74236941f143b21f9537b3b4707b38 "lualatex"
-  ".out/main.out" 1686853502 984 28dfd9bac30c5cd15e00ece951a32d31 "lualatex"
+["lualatex"] 1687027990 "main.tex" ".out/main.pdf" "main" 1687027991 0
+  ".out/main.aux" 1687027991 7087 269d5d3fff7f42e427dd63894d7512b3 "lualatex"
+  ".out/main.out" 1687027991 984 28dfd9bac30c5cd15e00ece951a32d31 "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1685645277 368630 cef10b4c83a6dcad01321f431b18c742 ""
   "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1686709041 2378 9b6b8b804b4be760efd5d1fecdbfabf7 ""
@@ -68,6 +68,7 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1248133631 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb" 1248133631 33993 9b89b85fd2d9df0482bd47194d1d3bf3 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb" 1248133631 32915 7bf7720c61a5b3a7ff25b0964421c9b6 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb" 1248133631 32587 1788b0c1c5b39540c96f5e42ccd6dae8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb" 1248133631 32442 c975af247b6702f7ca0c299af3616b80 ""
@@ -295,13 +296,12 @@
   "/usr/local/texlive/2023/texmf-dist/tex/luatex/luaotfload/luaotfload.lua" 1664913378 13565 83bac25a8cf8630acccd6a7f8bb9f791 ""
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1685627427 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/luahbtex/lualatex.fmt" 1685627356 11878523 2b8a1901742a4edff1e9481006137752 ""
-  "abstract.tex" 1686747230 41 c75c3bd6c6130c2351a55ad7841b6155 ""
-  "algorithm.tex" 1686750270 2337 8a1e8608b3880dcc55d3ff688ec4bdea ""
+  "algorithm.tex" 1687016063 3410 b062d7adcd1ca30765f73009499cbdf9 ""
   "gradient-computation.tex" 1686747716 3796 110c5161082344f78a1246da7e72876e ""
-  "main.tex" 1686750010 247 8ec7d03c189789b9478cdab5e454454c ""
-  "preamble.tex" 1686848717 2591 2f185e86d2e3e617f0729cab2741bcc4 ""
-  "problem-setup.tex" 1686753193 3197 ad65af608fb7d033c7676848fcf506c1 ""
-  "proof-of-convergence.tex" 1686853500 4838 a4d8d964025576f62c4da26caccbbdf7 ""
+  "main.tex" 1687016122 249 ad2e6ee5ba8ee8bc70775aa2eecba4f6 ""
+  "preamble.tex" 1687025887 2670 9a87b1b749aadd19a5d5c80cd2b986ba ""
+  "problem-setup.tex" 1687017832 3456 f454d96f9065e7c5520e17c1ae9a59ba ""
+  "proof-of-convergence.tex" 1687027988 13869 285099236724c9fb583898ab394de824 ""
   "unbiased-estimator-of-the-gradient.tex" 1686749176 2040 38fd209752a10afc1a98bdb1503a2cc3 ""
   (generated)
   ".out/main.aux"

@@ -25,7 +25,7 @@ Conditioning (\ref{eq: main problem}) in $ Z $, we find
 .\end{equation}
 This motivates us to introduce the operator $ \mathcal{T} : L^{ 2 } ( X ) \to L^{ 2 } ( Z ) $ defined by
 \begin{equation*}
-    T [ h ] ( z ) \defeq \mean [ h ( X ) \mid Z = z ]
+    \mathcal{T} [ h ] ( z ) \defeq \mean [ h ( X ) \mid Z = z ]
 .\end{equation*}
 Clearly $ \mathcal{T} $ is linear and, using Jensen's inequality, one may prove that it's bounded.
 It's also interesting to notice that its adjoint $ \mathcal{T}^{ * } : L^{ 2 } ( Z ) \to L^{ 2 } ( X ) $ satisfies
@@ -37,9 +37,11 @@ Define $ r_{ 0 } : \mathbb{Z} \to \R $ by $ r_{ 0 } ( Z ) = \mean [ Y \mid Z ] $
 Again by Jensen's inequality, we have $ r_{ 0 } \in L^{ 2 } ( Z ) $, and thus we can rewrite (\ref{eq: problem given Z}) as
 \begin{equation}
     \label{eq: problem with T}
-    T [ \hstar ] = r_{ 0 }
+    \mathcal{T} [ \hstar ] = r_{ 0 }
 .\end{equation}
 Hence, (\ref{eq: main problem}) can be formulated as an inverse problem, where we wish to invert the operator $ \mathcal{T} $.
+\improvement{Discuss the other implication, that if $ h $ satisfies $ \mathcal{T} [ h ] = r_{ 0 } $, then $ h = \hstar $.
+This is false, but the reason can be connected to the strength of the instrument $ Z $.}
 
 \subsection{Risk measure}
 
@@ -54,4 +56,4 @@ We would like to solve
 \begin{equation*}
     \inf_{ h \in \mathcal{F} } \risk ( h )
 ,\end{equation*}
-where $ \mathcal{F} \subseteq L^{ 2 } ( X ) $ is a subspace such that $ \hstar \in \mathcal{F} $.
+where $ \mathcal{F} \subseteq L^{ 2 } ( X ) $ is a closed, convex set such that $ \hstar \in \mathcal{F} $ \info{Assumption}.
