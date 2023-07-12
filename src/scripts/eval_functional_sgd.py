@@ -117,6 +117,7 @@ def plot_estimate(
         )
 
     ax.set_title(title)
+    ax.set_xlim(-4, 4)
     ax.legend()
     fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
