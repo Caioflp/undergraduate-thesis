@@ -1,21 +1,28 @@
 ## To do
 
-* Read material on density estimation and see if it gives us the results
-  we need.
+* Finish proof:
+    - Use bounds on convergence of density ration estimates.
+    - Use bounds on Kernel Ridge Regression (for the expectation operator
+      and for E[Y|Z]).
+    - Formulate things in a "with high probability" way, not in an
+      "average loss" way.
+* Reimplement things using kernel methods.
+* Benchmark against KIV, DeepIV, DeepGMM, 2SLS.
 
-* Implement the boosted version.
-* Try to estimate $ E[Y | Z] $ non parametrically, like Newey does
-  (hermite polynomias and so forth).
 
 * Implement way to save parameters in each execution
 * Setup a working logger
-
 * Take a look at the IV datasets that Moises sent me.
-
 * Implement the minimax estimator with a RKHS ball as $\mathcal{G}$,
   or one of the other more recent IV estimation methods.
-
 * Implement Mirror Descent / Nesterov Acceleration
+
+
+## Meeting 12/07
+
+* Marcelo Moreira
+* Next steps
+
 
 ## Meeting 07/06
 
@@ -67,6 +74,8 @@
 
 ## Done
 
+* Read material on density estimation and see if it gives us the results
+  we need.
 * Redo all the calculations we did, in LaTeX (copy the neurips paper's
   template and work on top of that, pointing out what's different in the
   proof)
