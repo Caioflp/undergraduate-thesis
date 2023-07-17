@@ -1,10 +1,10 @@
 # Fdb version 4
-["lualatex"] 1689341789 "main.tex" ".out/main.pdf" "main" 1689341791 0
-  ".out/main.aux" 1689341791 7087 269d5d3fff7f42e427dd63894d7512b3 "lualatex"
-  ".out/main.out" 1689341791 984 28dfd9bac30c5cd15e00ece951a32d31 "lualatex"
+["lualatex"] 1689541487 "main.tex" ".out/main.pdf" "main" 1689541489 0
+  ".out/main.aux" 1689541489 7485 c8522432be8588433eb480afb99089ae "lualatex"
+  ".out/main.out" 1689541489 1865 86449c45fede4b91bc624aeec76beecb "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1685645277 368630 cef10b4c83a6dcad01321f431b18c742 ""
-  "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1688422735 2794 9f8e5cda4f3e2af1abf5ad6bcbfd2cbb ""
+  "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1689537911 2833 2c7eed9097c75165d7eaf4822b771395 ""
   "/Users/caio/Library/texmf/tex/latex/packages/neurips_2023.sty" 1686686540 11306 7a0a622cd12ea31e106a743bb7d4c3c6 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/helvetic/phvr8r.tfm" 1136768653 4712 9ef4d7d106579d4b136e1529e1a4533c ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/helvetic/phvr8t.tfm" 1136768653 7040 b2bd27e2bfe6f6948cbc3239cae7444f ""
@@ -72,6 +72,7 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb" 1248133631 32587 1788b0c1c5b39540c96f5e42ccd6dae8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb" 1248133631 32442 c975af247b6702f7ca0c299af3616b80 ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb" 1248133631 39386 0bb525d495ceab21fe797301a586e0d7 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb" 1248133631 31764 459c573c03a4949a528c2cc7f557e217 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb" 1248133631 35309 940e81a5b9e04201a07e8b33a3ae6e64 ""
@@ -299,9 +300,9 @@
   "algorithm.tex" 1687094337 3410 b062d7adcd1ca30765f73009499cbdf9 ""
   "gradient-computation.tex" 1687094337 3796 110c5161082344f78a1246da7e72876e ""
   "main.tex" 1687547193 249 ad2e6ee5ba8ee8bc70775aa2eecba4f6 ""
-  "preamble.tex" 1687094337 2670 9a87b1b749aadd19a5d5c80cd2b986ba ""
-  "problem-setup.tex" 1689341788 3499 0479e09cd16609c935ed92343e4356dd ""
-  "proof-of-convergence.tex" 1687094337 13869 285099236724c9fb583898ab394de824 ""
+  "preamble.tex" 1689538339 2749 bac727f4bea22b18045dc835dc63e5b4 ""
+  "problem-setup.tex" 1689530124 3499 0479e09cd16609c935ed92343e4356dd ""
+  "proof-of-convergence.tex" 1689541486 19133 a5bfcdd81569db4204baaf4a6b4d305b ""
   "unbiased-estimator-of-the-gradient.tex" 1687094337 2040 38fd209752a10afc1a98bdb1503a2cc3 ""
   (generated)
   ".out/main.aux"

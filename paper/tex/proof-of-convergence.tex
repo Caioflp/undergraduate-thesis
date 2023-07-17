@@ -65,6 +65,11 @@ Finally, summing over $ 1 \leq m \leq M $ leads to
     &\hspace{1cm} - \sum_{ m=1 }^{ M }
     \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
 .\end{align*}
+
+
+\subsection{Option 1: averaging with respect to everything}
+
+
 We then treat each term (summation) separately:
 \begin{itemize}
     \item The first term is bounded using the assumption\info{Assumption} that $ \diam \mathcal{F} = D < \infty $.
@@ -280,3 +285,148 @@ We then treat each term (summation) separately:
         .\end{align*}
 \end{description}
 
+\subsection{Option 2: conditioning on $ \data_{ \Phi, \mathcal{T}, r_{ 0 } } $ and averaging with respect to $ z_{ 1 } , \dots, z_{ M } $}
+
+With this strategy, our aim isn't to get a convergence guarantee analogous to that of the SIP paper, but some sort of ``given $ \dataoff $, this inequality is true with high probability'' guarantee.
+
+We similarly treat each of the three terms separately.
+
+\textbf{First term }
+It is bounded in the exact same way as before, since this bound is deterministic and does not involve expectations.
+
+\textbf{Second term }
+We are fixing the offline data $ \dataoff $ and averaging with respect to the other samples of the instrumental variable.
+Therefore, what we wish to compute is
+\begin{align*}
+    \mean_{ \bz_{ 1:M } } \left[
+        \norm{ u_{ m } }^2
+        \given{} \dataoff
+    \right]
+    &= \mean_{ \bz_{ 1:m } } \left[
+        \mean_{ X } \left[
+            \hat{ \Phi } ( X, \bz_{ m } )^2
+            \partial_{ 2 } \ell \left(
+                \hat{ r_{ 0 } } ( \bz_{ m } ),
+                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \right)^2
+        \right]
+        \given{\Big} \dataoff
+    \right] \\
+    &= \mean_{ X } \left[
+        \mean_{ \bz_{ 1:m } } \left[
+            \hat{ \Phi } ( X, \bz_{ m } )^2
+            \partial_{ 2 } \ell \left(
+                \hat{ r_{ 0 } } ( \bz_{ m } ),
+                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \right)^2
+            \given{\Big} \dataoff
+        \right]
+    \right]
+.\end{align*}
+Since $ \bz_{ 1:m } $ is independent from $ \dataoff $, this is equal to
+\begin{equation*}
+    \mean_{ X } \left[
+        \mean_{ \bz_{ 1:m } } \left[
+            \hat{ \Phi } ( X, \bz_{ m } )^2
+            \partial_{ 2 } \ell \left(
+                \hat{ r_{ 0 } } ( \bz_{ m } ),
+                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \right)^2
+        \right]
+    \right]
+.\end{equation*}
+Reversing back the expectations, we get
+\begin{align*}
+    &\mean_{ \bz_{ 1:m } } \left[
+        \mean_{ X } \left[
+            \hat{ \Phi } ( X, \bz_{ m } )^2
+            \partial_{ 2 } \ell \left(
+                \hat{ r_{ 0 } } ( \bz_{ m } ),
+                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \right)^2
+        \right]
+    \right] \\
+    &\hspace{1cm}=
+    \mean_{ \bz_{ 1:m } } \left[
+        \mean_{ X } \left[
+            \hat{ \Phi } ( X, \bz_{ m } )^2
+        \right]
+        \partial_{ 2 } \ell \left(
+            \hat{ r_{ 0 } } ( \bz_{ m } ),
+            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+        \right)^2
+    \right]
+.\end{align*}
+Assuming quadratic loss, we can write this as
+\begin{align*}
+    &\mean_{ \bz_{ 1:m } } \left[
+        \mean_{ X } \left[
+            \hat{ \Phi } ( X, \bz_{ m } )^2
+        \right]
+        \left(
+            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            - \hat{ r_{ 0 } } ( \bz_{ m } )
+        \right)^2
+    \right] \\
+    \begin{split}
+        &\hspace{1cm}
+        = \mean_{ \bz_{ 1:m } } \bigg[
+            \mean_{ X } \left[
+                \hat{ \Phi } ( X, \bz_{ m } )^2
+            \right]
+            \cdot \Big(
+                \left(
+                    \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                    - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                \right) \\
+                &\hspace{5.5cm}
+                + \left(
+                    r_{ 0 } ( \bz_{ m } )
+                    - \hat{ r_{ 0 } } ( \bz_{ m } )
+                \right) \\
+                &\hspace{5.5cm}
+                + \left(
+                    \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                    - r_{ 0 } ( \bz_{ m } )
+                \right)
+            \Big)^2
+        \bigg]
+    \end{split} \\
+    \begin{split}
+        &\hspace{1cm}
+        \leq 3 \mean_{ \bz_{ 1:m } } \bigg[
+            \mean_{ X } \left[
+                \hat{ \Phi } ( X, \bz_{ m } )^2
+            \right]
+            \left(
+                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \right)^2
+            \\
+            &\hspace{2.75cm}
+            + \mean_{ X } \left[
+                \hat{ \Phi } ( X, \bz_{ m } )^2
+            \right]
+            \left(
+                r_{ 0 } ( \bz_{ m } )
+                - \hat{ r_{ 0 } } ( \bz_{ m } )
+            \right)^2
+            \\
+            &\hspace{2.75cm}
+            + \mean_{ X } \left[
+                \hat{ \Phi } ( X, \bz_{ m } )^2
+            \right]
+            \left(
+                \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                - r_{ 0 } ( \bz_{ m } )
+            \right)^2
+        \bigg]
+    \end{split}
+.\end{align*}
+
+{\color{red} Don't know what else to do with this for now.
+My guess is well have to use some boundedness assumptions on the RKHSs used to estimate $ \Phi, \mathcal{T} $ and $ r_{ 0 } $ to uniformly bound this expression.
+The goal is to bound this uniformly with respect to $ \bz_{ 1 }, \bz_{ 2 }, \dots $ and in a way which does not explode as $ \abs{ \dataoff } $ and $ M $ grow.}
+
+
+\textbf{Third term }
