@@ -357,12 +357,56 @@ Reversing back the expectations, we get
         \right)^2
     \right]
 .\end{align*}
-Assuming quadratic loss, we can write this as
+Now we use Assumption 14.5.1 in \cite{sugiyama2012}, which states that
+\begin{equation*}
+    \sup_{ w \in \mathbb{W} } k ( \bw, \bw ) \leq 1
+,\end{equation*}
+where $ \mathbb{W} = \mathbb{X} \times \mathbb{Z} $, $ \bw = ( \bx, \bz ) $ and $ k : \mathbb{W} \times \mathbb{W} \to \R $ is the kernel corresponding to the RKHS used to estimate $ \Phi $, which we denote by $ \rkhsw $.
+This assumption implies
+\begin{align*}
+    &\hat{ \Phi } ( \bw )
+    = \dotprod{ \hat{ \Phi }, k ( \bw, \cdot ) }_{ \rkhsw }
+    \leq \norm{ \hat{ \Phi } }_{ \rkhsw } \norm{ k ( \bw, \cdot ) }_{ \rkhsw }
+    = \norm{ \hat{ \Phi } }_{ \rkhsw } \sqrt{ \dotprod{ k ( \bw, \cdot ), k ( \bw, \cdot ) } } = \\
+    &\hspace{1.6cm}
+    = \norm{ \hat{ \Phi } }_{ \rkhsw } \sqrt{ k ( \bw, \bw ) }
+    \leq \norm{ \Phi }_{ \rkhsw }
+\end{align*}
+for all $ \bw \in \mathbb{W} $.
+Therefore,
 \begin{align*}
     &\mean_{ \bz_{ 1:m } } \left[
         \mean_{ X } \left[
             \hat{ \Phi } ( X, \bz_{ m } )^2
         \right]
+        \partial_{ 2 } \ell \left(
+            \hat{ r_{ 0 } } ( \bz_{ m } ),
+            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+        \right)^2
+    \right] \\
+    &\hspace{1cm}\leq
+    \mean_{ \bz_{ 1:m } } \left[
+        \mean_{ X } \left[
+            \norm{ \hat{ \Phi } }_{ \rkhsw }^2
+        \right]
+        \partial_{ 2 } \ell \left(
+            \hat{ r_{ 0 } } ( \bz_{ m } ),
+            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+        \right)^2
+    \right] \\
+    &\hspace{1cm}=
+    \norm{ \hat{ \Phi } }_{ \rkhsw }^2
+    \mean_{ \bz_{ 1:m } } \left[
+        \partial_{ 2 } \ell \left(
+            \hat{ r_{ 0 } } ( \bz_{ m } ),
+            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+        \right)^2
+    \right]
+.\end{align*}
+
+To bound the expectation, we assume the loss is quadratic and then
+\begin{align*}
+    &\mean_{ \bz_{ 1:m } } \left[
         \left(
             \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
             - \hat{ r_{ 0 } } ( \bz_{ m } )
@@ -371,20 +415,16 @@ Assuming quadratic loss, we can write this as
     \begin{split}
         &\hspace{1cm}
         = \mean_{ \bz_{ 1:m } } \bigg[
-            \mean_{ X } \left[
-                \hat{ \Phi } ( X, \bz_{ m } )^2
-            \right]
-            \cdot \Big(
+            \Big(
                 \left(
                     \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
                     - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-                \right) \\
-                &\hspace{5.5cm}
+                \right)
                 + \left(
                     r_{ 0 } ( \bz_{ m } )
                     - \hat{ r_{ 0 } } ( \bz_{ m } )
                 \right) \\
-                &\hspace{5.5cm}
+        &\hspace{4cm}
                 + \left(
                     \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
                     - r_{ 0 } ( \bz_{ m } )
@@ -395,38 +435,156 @@ Assuming quadratic loss, we can write this as
     \begin{split}
         &\hspace{1cm}
         \leq 3 \mean_{ \bz_{ 1:m } } \bigg[
-            \mean_{ X } \left[
-                \hat{ \Phi } ( X, \bz_{ m } )^2
-            \right]
             \left(
                 \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
                 - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
             \right)^2
-            \\
-            &\hspace{2.75cm}
-            + \mean_{ X } \left[
-                \hat{ \Phi } ( X, \bz_{ m } )^2
-            \right]
-            \left(
+            + \left(
                 r_{ 0 } ( \bz_{ m } )
                 - \hat{ r_{ 0 } } ( \bz_{ m } )
-            \right)^2
-            \\
-            &\hspace{2.75cm}
-            + \mean_{ X } \left[
-                \hat{ \Phi } ( X, \bz_{ m } )^2
-            \right]
-            \left(
+            \right)^2 \\
+    &\hspace{3cm}
+            + \left(
                 \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
                 - r_{ 0 } ( \bz_{ m } )
             \right)^2
         \bigg]
+    \end{split} \\
+    \begin{split}
+        &\hspace{1cm}
+        = 3 \bigg\{
+            \mean_{ \bz_{ 1:m-1 } }\left[
+                \norm{
+                ( \hat{ \mathcal{T} } - \mathcal{T} )
+                [ \hat{ h }_{ m-1 } ]
+            }_{ L^2 ( \mathbb{Z} ) }^2
+            \right]
+            + \mean_{ \bz_{ 1:m } } \left[
+                \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^2 ( \mathbb{Z} ) }^2
+            \right]\\
+        &\hspace{3cm}
+            + \mean_{ \bz_{ 1:m-1 } }  \left[
+                \norm{ \mathcal{T} [ \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
+            \right]
+        \bigg\}
     \end{split}
 .\end{align*}
+We treat each part of this expression separately.
+Firstly,
+\begin{align*}
+    \norm{ ( \hat{ \mathcal{T} } - \mathcal{T} ) [ \hat{ h }_{ m-1 } ] }_{ L^2 ( \mathbb{Z} ) }^2
+    \leq \norm{ \hat{ \mathcal{T} } - \mathcal{T} }_{ \mathrm{op} }^2 \norm{ \hat{ h }_{ m-1 } }_{ L^2 ( \mathbb{X} ) }^2
+    \leq M^2 \norm{ \hat{ \mathcal{T} } - \mathcal{T} }_{ \mathrm{op} }^2
+.\end{align*}
+We leave the second term as $ \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( \mathbb{Z} ) }^2 $.
+Finally, for the third term, we have
+\begin{align*}
+    \norm{ \mathcal{T} [ \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
+    &= \mean_{ Z } \left[
+        \left(
+            \mathcal{T} [ \hat{ h }_{ m-1 } ] ( Z ) - r_{ 0 } ( Z )
+        \right)^2
+    \right] \\
+    &= \mean_{ Z } \left[
+        \left(
+            \mean \left[ \hat{ h }_{ m-1 } ( X ) - Y \given{} Z \right]
+        \right)^2
+    \right] \\
+    &\leq \mean_{ ( X, Y ) } \left[
+        \left(
+            \hat{ h }_{ m-1 } ( X ) - Y
+        \right)^2
+    \right] \\
+    &\leq 2 \left(
+        \mean_{ X } \left[ \hat{ h }_{ m-1 } ( X )^2 \right]
+        + \mean \left[ Y^2 \right]
+    \right) \\
+    &= 2 \left(
+        \norm{ \hat{ h }_{ m-1 } }_{ L^2 ( \mathbb{X} ) }^2
+        + \mean \left[ Y^2 \right]
+    \right) \\
+    &\leq 2 \left( M^2 + \mean \left[ Y^2 \right] \right)
+.\end{align*}
+Putting everything together, what we conclude is
+\begin{align*}
+    \mean_{ \bz_{ 1:m } } \left[
+        \norm{ u_{ m } }_{ L^2 ( \mathbb{X} ) }^2 \given{} \dataoff
+    \right]
+    \leq
+    3 \norm{ \hat{ \Phi } }_{ \rkhsw }^2 \left(
+        M^2 \norm{ \hat{ \mathcal{T} } - \mathcal{T} }_{ \mathrm{op} }^2
+        + \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^2 ( \mathbb{Z} ) }^2
+        + 2 \left( M^2 + \mean [ Y^2 ] \right)
+    \right)
+.\end{align*}
 
-{\color{red} Don't know what else to do with this for now.
-My guess is well have to use some boundedness assumptions on the RKHSs used to estimate $ \Phi, \mathcal{T} $ and $ r_{ 0 } $ to uniformly bound this expression.
-The goal is to bound this uniformly with respect to $ \bz_{ 1 }, \bz_{ 2 }, \dots $ and in a way which does not explode as $ \abs{ \dataoff } $ and $ M $ grow.}
+% \begin{align*}
+%     &\norm{ \hat{ \Phi } }_{ \rkhsw }^2
+%     \mean_{ \bz_{ 1:m } } \left[
+%         \left(
+%             \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%             - \hat{ r_{ 0 } } ( \bz_{ m } )
+%         \right)^2
+%     \right] \\
+%     \begin{split}
+%         &\hspace{1cm}
+%         = \mean_{ \bz_{ 1:m } } \bigg[
+%             \mean_{ X } \left[
+%                 \hat{ \Phi } ( X, \bz_{ m } )^2
+%             \right]
+%             \cdot \Big(
+%                 \left(
+%                     \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                     - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                 \right) \\
+%                 &\hspace{5.5cm}
+%                 + \left(
+%                     r_{ 0 } ( \bz_{ m } )
+%                     - \hat{ r_{ 0 } } ( \bz_{ m } )
+%                 \right) \\
+%                 &\hspace{5.5cm}
+%                 + \left(
+%                     \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                     - r_{ 0 } ( \bz_{ m } )
+%                 \right)
+%             \Big)^2
+%         \bigg]
+%     \end{split} \\
+%     \begin{split}
+%         &\hspace{1cm}
+%         \leq 3 \mean_{ \bz_{ 1:m } } \bigg[
+%             \mean_{ X } \left[
+%                 \hat{ \Phi } ( X, \bz_{ m } )^2
+%             \right]
+%             \left(
+%                 \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                 - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%             \right)^2
+%             \\
+%             &\hspace{2.75cm}
+%             + \mean_{ X } \left[
+%                 \hat{ \Phi } ( X, \bz_{ m } )^2
+%             \right]
+%             \left(
+%                 r_{ 0 } ( \bz_{ m } )
+%                 - \hat{ r_{ 0 } } ( \bz_{ m } )
+%             \right)^2
+%             \\
+%             &\hspace{2.75cm}
+%             + \mean_{ X } \left[
+%                 \hat{ \Phi } ( X, \bz_{ m } )^2
+%             \right]
+%             \left(
+%                 \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                 - r_{ 0 } ( \bz_{ m } )
+%             \right)^2
+%         \bigg]
+%     \end{split}
+% .\end{align*}
+% 
+% {\color{red} Don't know what else to do with this for now.
+% My guess is well have to use some boundedness assumptions on the RKHSs used to estimate $ \Phi, \mathcal{T} $ and $ r_{ 0 } $ to uniformly bound this expression.
+% The goal is to bound this uniformly with respect to $ \bz_{ 1 }, \bz_{ 2 }, \dots $ and in a way which does not explode as $ \abs{ \dataoff } $ and $ M $ grow.}
 
 
 \textbf{Third term }

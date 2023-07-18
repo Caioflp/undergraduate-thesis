@@ -4,7 +4,7 @@
 
 
 % ready for submission
-\usepackage{neurips_2023}
+\usepackage[nonatbib]{neurips_2023}
 \usepackage{global-macros}
 
 
@@ -32,6 +32,8 @@
 \usepackage{microtype}      % microtypography
 \usepackage{enumitem}
 \usepackage[dvipsnames]{xcolor}         % colors
+\usepackage{biblatex}
+\addbibresource{../bib/bibliography.bib}
 
 \usepackage{xargs}                      % Use more than one optional parameter in a new commands
 % \usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
@@ -68,5 +70,7 @@
 \newcommand{\data}{\mathcal{D}}
 \newcommand{\dataoff}{\mathcal{D}_{ \Phi, \mathcal{T}, r_{ 0 } }}
 \newcommand{\dataproj}{\mathcal{D}_{ \mathrm{proj} }}
+
+\newcommand{\rkhsw}{\mathcal{R}_{ \mathbb{W} }}
 
 \hfuzz=10pt
