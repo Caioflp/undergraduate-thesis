@@ -1,12 +1,15 @@
 ## To do
 
 * Finish proof:
+    - Use O_p (1) in bound of ||u_m||^2
+    - relate RKHS norm with L2(X \times Z) norm
     - Use bounds on convergence of density ration estimates.
     - Use bounds on Kernel Ridge Regression (for the expectation operator
       and for E[Y|Z]).
     - Formulate things in a "with high probability" way, not in an
       "average loss" way.
 * Reimplement things using kernel methods.
+* Implement things even if we don't have exact bounds.
 * Benchmark against KIV, DeepIV, DeepGMM, 2SLS.
 
 
@@ -16,6 +19,15 @@
 * Implement the minimax estimator with a RKHS ball as $\mathcal{G}$,
   or one of the other more recent IV estimation methods.
 * Implement Mirror Descent / Nesterov Acceleration
+
+
+## Meeting 19/07
+
+* Difficulty understanding KIV stage 1
+* Strange assumptions
+* Not sure if using KIV's first stage is a good thing
+* Don't know how to bound \hat{\Phi} RKHS norm
+* Don't know how to regress Y on Z
 
 
 ## Meeting 12/07
