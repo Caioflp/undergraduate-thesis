@@ -1,0 +1,47 @@
+\usepackage{global-macros}
+\usepackage{graphicx}
+\graphicspath{{../fig}}
+\usepackage{algpseudocode, algorithm}
+\usepackage{biblatex}
+
+\vfuzz=30pt
+
+
+\addbibresource{../bib/bibliography.bib}
+
+\title{NPIV estimation through functional SGD}
+\author{Student: Caio Lins
+        \\ Advisor: Yuri Saporito
+}
+\institute{EMAp -- FGV}
+\date{\today}
+
+\titlegraphic{
+    \includegraphics[width=3cm]{logo.png}
+}
+
+\AtBeginSection[]
+{%
+  \begin{frame}
+    \frametitle{Summary}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\newcommand{\boldf}{\boldsymbol{f}}
+
+\newcommand{\hstar}{h^{ \star }}
+\newcommand{\risk}{\mathcal{R}}
+\newcommand{\loss}{\ell}
+\renewcommand{\hat}{\widehat}
+\newcommand{\iid}{\overset{\mathrm{iid}}{\sim}}
+\DeclareMathOperator{\diam}{diam}
+\newcommand{\data}{\mathcal{D}}
+\newcommand{\dataproj}{\mathcal{D}_{ \mathrm{proj} }}

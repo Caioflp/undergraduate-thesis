@@ -1,0 +1,104 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{fonseca2022statistical}{misc}{}
+      \name{author}{2}{}{%
+        {{hash=7288af19bfc023d832d3f7941b6f79db}{%
+           family={Fonseca},
+           familyi={F\bibinitperiod},
+           given={Yuri\bibnamedelima R.},
+           giveni={Y\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=fef59f3119689fd59d57b9747f0755c1}{%
+           family={Saporito},
+           familyi={S\bibinitperiod},
+           given={Yuri\bibnamedelima F.},
+           giveni={Y\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \strng{namehash}{ef0558a500b7f08c45d767b6ff8668a2}
+      \strng{fullhash}{ef0558a500b7f08c45d767b6ff8668a2}
+      \strng{bibnamehash}{ef0558a500b7f08c45d767b6ff8668a2}
+      \strng{authorbibnamehash}{ef0558a500b7f08c45d767b6ff8668a2}
+      \strng{authornamehash}{ef0558a500b7f08c45d767b6ff8668a2}
+      \strng{authorfullhash}{ef0558a500b7f08c45d767b6ff8668a2}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{stat.ML}
+      \field{eprinttype}{arXiv}
+      \field{title}{Statistical Learning and Inverse Problems: A Stochastic Gradient Approach}
+      \field{year}{2022}
+      \true{nocite}
+      \verb{eprint}
+      \verb 2209.14967
+      \endverb
+    \endentry
+    \entry{newey03}{article}{}
+      \name{author}{2}{}{%
+        {{hash=058d74ae5e89fbd5a49ebdbe97b4c922}{%
+           family={Newey},
+           familyi={N\bibinitperiod},
+           given={Whitney\bibnamedelima K.},
+           giveni={W\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=52ad8eec8014fdb8f72da420d06eb7e9}{%
+           family={Powell},
+           familyi={P\bibinitperiod},
+           given={James\bibnamedelima L.},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {[Wiley, Econometric Society]}%
+      }
+      \strng{namehash}{c2700fc3c834f10ec3860a41e2bf97a7}
+      \strng{fullhash}{c2700fc3c834f10ec3860a41e2bf97a7}
+      \strng{bibnamehash}{c2700fc3c834f10ec3860a41e2bf97a7}
+      \strng{authorbibnamehash}{c2700fc3c834f10ec3860a41e2bf97a7}
+      \strng{authornamehash}{c2700fc3c834f10ec3860a41e2bf97a7}
+      \strng{authorfullhash}{c2700fc3c834f10ec3860a41e2bf97a7}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{In econometrics there are many occasions where knowledge of the structural relationship among dependent variables is required to answer questions of interest. This paper gives identification and estimation results for nonparametric conditional moment restrictions. We characterize identification of structural functions as completeness of certain conditional distributions, and give sufficient identification conditions for exponential families and discrete variables. We also give a consistent, nonparametric estimator of the structural function. The estimator is nonparametric two-stage least squares based on series approximation, which overcomes an ill-posed inverse problem by placing bounds on integrals of higher-order derivatives.}
+      \field{issn}{00129682, 14680262}
+      \field{journaltitle}{Econometrica}
+      \field{number}{5}
+      \field{title}{Instrumental Variable Estimation of Nonparametric Models}
+      \field{urlday}{3}
+      \field{urlmonth}{7}
+      \field{urlyear}{2023}
+      \field{volume}{71}
+      \field{year}{2003}
+      \field{urldateera}{ce}
+      \true{nocite}
+      \field{pages}{1565\bibrangedash 1578}
+      \range{pages}{14}
+      \verb{urlraw}
+      \verb http://www.jstor.org/stable/1555512
+      \endverb
+      \verb{url}
+      \verb http://www.jstor.org/stable/1555512
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
