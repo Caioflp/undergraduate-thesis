@@ -13,7 +13,7 @@ if $ h, g \in \mathcal{F} $ and $ \lambda \in [ 0, 1 ] $, then
     &\leq \lambda \mean [ \loss ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) ] + ( 1 - \lambda ) \mean [ \loss ( r_{ 0 } ( Z ), \mathcal{T} [ g ] ( Z ) ) ] \\
     &= \lambda \risk ( h ) + ( 1 - \lambda ) \risk ( g )
 .\end{align*}
-To lighten the notation, we denote the norm and inner product in $ L^{ 2 } ( X ) $ by $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \cdot } $, respectively.
+To lighten the notation, the symbols $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \cdot } $, when written without a subscript to specify which space they refer to, will act as the norm and inner product, respectively, of $ L^2 ( X ) $.
 By the Algorithm \ref{algo: functional sgd} procedure, we have
 \begin{align*}
     \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m } - \hstar }^2
@@ -66,233 +66,250 @@ Finally, summing over $ 1 \leq m \leq M $ leads to
     \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
 .\end{align*}
 
+We then treat each of the three terms in the RHS of the inequality above separately:
 
-\subsection{Option 1: averaging with respect to everything}
+% \subsection{Option 1: averaging with respect to everything}
+% 
+% \begin{itemize}
+%     \item The first term is bounded using the assumption\info{Assumption} that $ \diam \mathcal{F} = D < \infty $.
+%     \item The bound on the second term depends on bounding $ \mean \left[ \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \right] $ by a constant independent of $ m $ or $ M $.
+%     \item The third term must vanish because of the unbiasedness of $ u_{ m } $, but we don't know that our $ u_{ m } $ is unbiased, and it may very well not be.
+% \end{itemize}
+% 
+% \begin{description}[style=unboxed, leftmargin=0cm]
+%     \item[First term]
+%         By assumption, we have $ \diam \mathcal{F} = D < \infty $.
+%         Hence
+%         \begin{align*}
+%             \begin{split}
+%                 \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
+%                     \norm{ \hat{ h }_{ m-1 } - \hstar }^2
+%                     -
+%                     \norm{ \hat{ h }_{ m } - \hstar }^2
+%                 \right)
+%                 &= \sum_{ m=2 }^{ M } \left(
+%                     \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
+%                 \right) \norm{ \hat{ h }_{ m-1 } - \hstar }^2 \\
+%                 &\hspace{1.5cm}+ \frac{ 1 }{ 2 \alpha_{ 1 } } \norm{ \hat{ h }_{ 0 } - \hstar }^2 - \frac{ 1 }{ 2 \alpha_{ M } } \norm{ \hat{ h }_{ M } - \hstar }^2
+%             \end{split} \\
+%             &\leq 
+%             \sum_{ m=2 }^{ M } \left(
+%                 \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
+%             \right) D^2 + \frac{ 1 }{ 2 \alpha_{ 1 } } D^2 = \frac{ D^2 }{ 2 \alpha_{ M } }
+%         .\end{align*}
+%     \item[Second term]
+%         Define $ \mathcal{D} $ to be the set of all observed data, that is, all of the variables in $ \data_{ \Phi }, \data_{ r_{ 0 } }, \data_{ \mathcal{T} } $ and $ \left\{ \bz_{ i } \right\}_{ i=1 }^{ M } $.
+%         Let's evaluate $ \mean \left[ \norm{ u_{ m } }^2 \right] $:
+%         \begin{equation*}
+%             \mean \left[
+%                 \norm{ u_{ m } }^2
+%             \right]
+%             = \mean_{ \data } \left[
+%                 \mean_{ X } \left[
+%                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+%                     \partial_{ 2 } \loss \left(
+%                         \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
+%                         \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                     \right)^2
+%                 \right]
+%             \right]
+%         ,\end{equation*}
+%         where the second expectation is with respect to a copy of $ X $ which is independent of $ \data $.
+%         Continuing:
+%         \begin{align*}
+%             &\mean_{ \data } \left[
+%                 \mean_{ X } \left[
+%                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+%                     \partial_{ 2 } \loss \left(
+%                         \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
+%                         \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                     \right)^2
+%                 \right]
+%             \right] \\
+%             &\hspace{2cm}=
+%             \mean_{ \data } \left[
+%                 \partial_{ 2 } \loss \left(
+%                     \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
+%                     \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                 \right)^2
+%                 \mean_{ X } \left[
+%                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+%                 \right]
+%             \right]
+%         .\end{align*}
+%         If $ \ell $ is quadratic, we have
+%         \begin{align*}
+%             &\mean_{ \data } \left[
+%                 \partial_{ 2 } \loss \left(
+%                     \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
+%                     \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                 \right)^2
+%                 \mean_{ X } \left[
+%                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+%                 \right]
+%             \right] \\
+%             &\hspace{2cm}=
+%             \mean_{ \data } \left[
+%                 \left(
+%                     \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                     - \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } )
+%                 \right)^2
+%                 \mean_{ X } \left[
+%                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
+%                 \right]
+%             \right]
+%         .\end{align*}
+%         \improvement{Find a way to finish this bound.
+%         Maybe switch the order of expectations? First in $ X $ and then in $ \data $.}
+% 
+%     \item[Third term]
+%         We have to work with
+%         \begin{equation*}
+%             \mean \left[
+%                 \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+%             \right]
+%         .\end{equation*}
+%         The strategy employed on the SIP paper was to condition on the $ \sigma $-algebra generated by the training samples observed up until iteration iteration $ m - 1 $.
+%         In our case, that would be $ \bz_{ 1 }, \dots, \bz_{ m-1 } $.
+%         The problem which arises is that we no longer have measurability of $ \hat{ h }_{ m-1 } $ with respect to this $ \sigma $-algebra, as it depends on the datasets $ \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $, used to estimate $ \hat{ \Phi }, \hat{ \mathcal{T} } $ and $ \hat{ r }_{ 0 } $ in an offline manner.
+% 
+%         The other option would be to condition on more things, namely the $ \sigma $-algebra generated by $ \bz_{ 1 }, \dots, \bz_{ m - 1 }, \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $.
+%         We gain measurability of $ \hat{ h }_{ m-1 } $, but we are no longer integrating out $ \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $, which is needed to use some sort of unbiasedness of the estimators $ \hat{ \Phi }, \hat{ \mathcal{T} }, \hat{ r }_{ 0 } $.
+% 
+%         Let's try the latter and see what we end up with.
+%         Define $ \data_{ m-1 } \defeq \data_{ \Phi } \cup \data_{ \mathcal{T} } \cup \data_{ r_{ 0 } } \cup \left\{ \bz_{ 1 }, \dots, \bz_{ m-1 } \right\} $.
+%         Then,
+%         \begin{align*}
+%             \begin{split}
+%                 &\mean_{ \data } \left[
+%                     \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+%                 \right] \\
+%                 &\hspace{2cm}
+%                 =\mean_{ \data_{ m-1 } } \left[
+%                     \mean \left[
+%                         \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
+%                         \mid \data_{ m-1 }
+%                     \right]
+%                 \right]
+%             \end{split} \\
+%             &\hspace{2cm}
+%             = \mean_{ \data_{ m-1 } } \left[
+%                 \dotprod{ 
+%                     \mean \left[
+%                         u_{ m }
+%                         \mid \data_{ m-1 }
+%                     \right]
+%                     - \nabla \risk ( \hat{ h }_{ m-1 } )
+%                     ,
+%                     \hat{ h }_{ m-1 } - \hstar
+%                 }
+%         \right] && (\text{Justify this properly.})
+%         .\end{align*}
+%         Now we must evaluate the expression inside the inner product.
+%         We restrict ourselves to the quadratic case.
+%         Define $ \psi ( z ) = \mathcal{T} [ \hat{ h }_{ m-1 } ] ( z ) - r_{ 0 } ( z ) $ and $ \hat{ \psi } ( z ; \dataproj ) = \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( z ; \data_{ \mathcal{T} } ) - \hat{ r }_{ 0 } ( z ; \data_{ r_{ 0 } } ) $, where $ \dataproj = \data_{ \mathcal{T} } \cup \data_{ r_{ 0 } } $.
+%         Then:
+%         \begin{align*}
+%             \begin{split}
+%                 &\mean \left[
+%                     u_{ m } (x)
+%                     \mid \data_{ m-1 }
+%                 \right]
+%                 - \nabla \risk ( \hat{ h }_{ m-1 } ) (x) \\
+%                 &\hspace{1.7cm}
+%                 = \mean \left[
+%                     \hat{ \Phi } ( x, Z ; \data_{ \Phi } )
+%                     \hat{ \psi } ( Z ; \dataproj )
+%                     \mid \data_{ m-1 }
+%                 \right]
+%                 - \mean_{ Z } \left[
+%                     \Phi ( x, Z ) \psi ( Z )
+%                 \right]
+%             \end{split} \\
+%             &\hspace{1.7cm}
+%             = \mean_{ Z } \left[
+%                 \hat{ \Phi } ( x, Z ; \data_{ \Phi } )
+%                 \hat{ \psi } ( Z ; \dataproj )
+%             \right]
+%             - \mean_{ Z } \left[
+%                 \Phi ( x, Z ) \psi ( Z )
+%             \right] \\
+%             &\hspace{1.7cm}
+%             = \mean_{ Z } \left[
+%                 \left(
+%                     \hat{ \Phi } ( x, Z ; \data_{ \Phi } )
+%                     -
+%                     \Phi ( x, Z )
+%                 \right) \hat{ \psi } ( Z ; \dataproj )
+%                 +
+%                 \left(
+%                     \hat{ \psi } ( Z ; \dataproj )
+%                     -
+%                     \psi ( Z )
+%                 \right) \Phi ( x, Z )
+%             \right] \\
+%             &\hspace{1.7cm}
+%             = \Bigl<
+%                 \hat{ \Phi } ( x, \cdot ; \data_{ \Phi } )
+%                 - \Phi ( x, \cdot )
+%                 ,
+%                 \hat{ \psi } ( \cdot ; \dataproj )
+%             \Bigr>_{ L^{ 2 } ( Z ) }
+%             +
+%             \Bigl<
+%                 \hat{ \psi } ( \cdot ; \dataproj )
+%                 - \psi ( \cdot )
+%                 ,
+%                 \Phi ( x, \cdot )
+%             \Bigr>_{ L^{ 2 } ( Z ) } \\
+%             \begin{split}
+%                 &\hspace{1.7cm}
+%                 \leq \norm{
+%                     \hat{ \Phi } ( x, \cdot ; \data_{ \Phi } )
+%                     - \Phi ( x, \cdot )
+%                 }_{ L^{ 2 } ( Z ) }
+%                 \norm{
+%                     \hat{ \psi } ( \cdot ; \dataproj )
+%                 }_{ L^{ 2 } ( Z ) } \\
+%                 &\hspace{4cm}
+%                 +
+%                 \norm{
+%                     \hat{ \psi } ( \cdot ; \dataproj )
+%                     - \psi ( \cdot )
+%                 }_{ L^{ 2 } ( Z ) }
+%                 \norm{
+%                     \Phi ( x, \cdot )
+%                 }_{ L^{ 2 } ( Z ) }
+%             \end{split} 
+%         .\end{align*}
+% \end{description}
 
-
-We then treat each term (summation) separately:
-\begin{itemize}
-    \item The first term is bounded using the assumption\info{Assumption} that $ \diam \mathcal{F} = D < \infty $.
-    \item The bound on the second term depends on bounding $ \mean \left[ \norm{ u_{ m } }^2_{ L^{ 2 } ( X ) } \right] $ by a constant independent of $ m $ or $ M $.
-    \item The third term must vanish because of the unbiasedness of $ u_{ m } $, but we don't know that our $ u_{ m } $ is unbiased, and it may very well not be.
-\end{itemize}
-
-\begin{description}[style=unboxed, leftmargin=0cm]
-    \item[First term]
-        By assumption, we have $ \diam \mathcal{F} = D < \infty $.
-        Hence
-        \begin{align*}
-            \begin{split}
-                \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
-                    \norm{ \hat{ h }_{ m-1 } - \hstar }^2
-                    -
-                    \norm{ \hat{ h }_{ m } - \hstar }^2
-                \right)
-                &= \sum_{ m=2 }^{ M } \left(
-                    \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
-                \right) \norm{ \hat{ h }_{ m-1 } - \hstar }^2 \\
-                &\hspace{1.5cm}+ \frac{ 1 }{ 2 \alpha_{ 1 } } \norm{ \hat{ h }_{ 0 } - \hstar }^2 - \frac{ 1 }{ 2 \alpha_{ M } } \norm{ \hat{ h }_{ M } - \hstar }^2
-            \end{split} \\
-            &\leq 
-            \sum_{ m=2 }^{ M } \left(
-                \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
-            \right) D^2 + \frac{ 1 }{ 2 \alpha_{ 1 } } D^2 = \frac{ D^2 }{ 2 \alpha_{ M } }
-        .\end{align*}
-    \item[Second term]
-        Define $ \mathcal{D} $ to be the set of all observed data, that is, all of the variables in $ \data_{ \Phi }, \data_{ r_{ 0 } }, \data_{ \mathcal{T} } $ and $ \left\{ \bz_{ i } \right\}_{ i=1 }^{ M } $.
-        Let's evaluate $ \mean \left[ \norm{ u_{ m } }^2 \right] $:
-        \begin{equation*}
-            \mean \left[
-                \norm{ u_{ m } }^2
-            \right]
-            = \mean_{ \data } \left[
-                \mean_{ X } \left[
-                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
-                    \partial_{ 2 } \loss \left(
-                        \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
-                        \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
-                    \right)^2
-                \right]
-            \right]
-        ,\end{equation*}
-        where the second expectation is with respect to a copy of $ X $ which is independent of $ \data $.
-        Continuing:
-        \begin{align*}
-            &\mean_{ \data } \left[
-                \mean_{ X } \left[
-                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
-                    \partial_{ 2 } \loss \left(
-                        \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
-                        \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
-                    \right)^2
-                \right]
-            \right] \\
-            &\hspace{2cm}=
-            \mean_{ \data } \left[
-                \partial_{ 2 } \loss \left(
-                    \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
-                    \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
-                \right)^2
-                \mean_{ X } \left[
-                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
-                \right]
-            \right]
-        .\end{align*}
-        If $ \ell $ is quadratic, we have
-        \begin{align*}
-            &\mean_{ \data } \left[
-                \partial_{ 2 } \loss \left(
-                    \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
-                    \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
-                \right)^2
-                \mean_{ X } \left[
-                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
-                \right]
-            \right] \\
-            &\hspace{2cm}=
-            \mean_{ \data } \left[
-                \left(
-                    \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
-                    - \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } )
-                \right)^2
-                \mean_{ X } \left[
-                    \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
-                \right]
-            \right]
-        .\end{align*}
-        \improvement{Find a way to finish this bound.
-        Maybe switch the order of expectations? First in $ X $ and then in $ \data $.}
-
-    \item[Third term]
-        We have to work with
-        \begin{equation*}
-            \mean \left[
-                \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
-            \right]
-        .\end{equation*}
-        The strategy employed on the SIP paper was to condition on the $ \sigma $-algebra generated by the training samples observed up until iteration iteration $ m - 1 $.
-        In our case, that would be $ \bz_{ 1 }, \dots, \bz_{ m-1 } $.
-        The problem which arises is that we no longer have measurability of $ \hat{ h }_{ m-1 } $ with respect to this $ \sigma $-algebra, as it depends on the datasets $ \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $, used to estimate $ \hat{ \Phi }, \hat{ \mathcal{T} } $ and $ \hat{ r }_{ 0 } $ in an offline manner.
-
-        The other option would be to condition on more things, namely the $ \sigma $-algebra generated by $ \bz_{ 1 }, \dots, \bz_{ m - 1 }, \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $.
-        We gain measurability of $ \hat{ h }_{ m-1 } $, but we are no longer integrating out $ \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $, which is needed to use some sort of unbiasedness of the estimators $ \hat{ \Phi }, \hat{ \mathcal{T} }, \hat{ r }_{ 0 } $.
-
-        Let's try the latter and see what we end up with.
-        Define $ \data_{ m-1 } \defeq \data_{ \Phi } \cup \data_{ \mathcal{T} } \cup \data_{ r_{ 0 } } \cup \left\{ \bz_{ 1 }, \dots, \bz_{ m-1 } \right\} $.
-        Then,
-        \begin{align*}
-            \begin{split}
-                &\mean_{ \data } \left[
-                    \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
-                \right] \\
-                &\hspace{2cm}
-                =\mean_{ \data_{ m-1 } } \left[
-                    \mean \left[
-                        \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
-                        \mid \data_{ m-1 }
-                    \right]
-                \right]
-            \end{split} \\
-            &\hspace{2cm}
-            = \mean_{ \data_{ m-1 } } \left[
-                \dotprod{ 
-                    \mean \left[
-                        u_{ m }
-                        \mid \data_{ m-1 }
-                    \right]
-                    - \nabla \risk ( \hat{ h }_{ m-1 } )
-                    ,
-                    \hat{ h }_{ m-1 } - \hstar
-                }
-        \right] && (\text{Justify this properly.})
-        .\end{align*}
-        Now we must evaluate the expression inside the inner product.
-        We restrict ourselves to the quadratic case.
-        Define $ \psi ( z ) = \mathcal{T} [ \hat{ h }_{ m-1 } ] ( z ) - r_{ 0 } ( z ) $ and $ \hat{ \psi } ( z ; \dataproj ) = \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( z ; \data_{ \mathcal{T} } ) - \hat{ r }_{ 0 } ( z ; \data_{ r_{ 0 } } ) $, where $ \dataproj = \data_{ \mathcal{T} } \cup \data_{ r_{ 0 } } $.
-        Then:
-        \begin{align*}
-            \begin{split}
-                &\mean \left[
-                    u_{ m } (x)
-                    \mid \data_{ m-1 }
-                \right]
-                - \nabla \risk ( \hat{ h }_{ m-1 } ) (x) \\
-                &\hspace{1.7cm}
-                = \mean \left[
-                    \hat{ \Phi } ( x, Z ; \data_{ \Phi } )
-                    \hat{ \psi } ( Z ; \dataproj )
-                    \mid \data_{ m-1 }
-                \right]
-                - \mean_{ Z } \left[
-                    \Phi ( x, Z ) \psi ( Z )
-                \right]
-            \end{split} \\
-            &\hspace{1.7cm}
-            = \mean_{ Z } \left[
-                \hat{ \Phi } ( x, Z ; \data_{ \Phi } )
-                \hat{ \psi } ( Z ; \dataproj )
-            \right]
-            - \mean_{ Z } \left[
-                \Phi ( x, Z ) \psi ( Z )
-            \right] \\
-            &\hspace{1.7cm}
-            = \mean_{ Z } \left[
-                \left(
-                    \hat{ \Phi } ( x, Z ; \data_{ \Phi } )
-                    -
-                    \Phi ( x, Z )
-                \right) \hat{ \psi } ( Z ; \dataproj )
-                +
-                \left(
-                    \hat{ \psi } ( Z ; \dataproj )
-                    -
-                    \psi ( Z )
-                \right) \Phi ( x, Z )
-            \right] \\
-            &\hspace{1.7cm}
-            = \Bigl<
-                \hat{ \Phi } ( x, \cdot ; \data_{ \Phi } )
-                - \Phi ( x, \cdot )
-                ,
-                \hat{ \psi } ( \cdot ; \dataproj )
-            \Bigr>_{ L^{ 2 } ( Z ) }
-            +
-            \Bigl<
-                \hat{ \psi } ( \cdot ; \dataproj )
-                - \psi ( \cdot )
-                ,
-                \Phi ( x, \cdot )
-            \Bigr>_{ L^{ 2 } ( Z ) } \\
-            \begin{split}
-                &\hspace{1.7cm}
-                \leq \norm{
-                    \hat{ \Phi } ( x, \cdot ; \data_{ \Phi } )
-                    - \Phi ( x, \cdot )
-                }_{ L^{ 2 } ( Z ) }
-                \norm{
-                    \hat{ \psi } ( \cdot ; \dataproj )
-                }_{ L^{ 2 } ( Z ) } \\
-                &\hspace{4cm}
-                +
-                \norm{
-                    \hat{ \psi } ( \cdot ; \dataproj )
-                    - \psi ( \cdot )
-                }_{ L^{ 2 } ( Z ) }
-                \norm{
-                    \Phi ( x, \cdot )
-                }_{ L^{ 2 } ( Z ) }
-            \end{split} 
-        .\end{align*}
-\end{description}
-
-\subsection{Option 2: conditioning on $ \data_{ \Phi, \mathcal{T}, r_{ 0 } } $ and averaging with respect to $ z_{ 1 } , \dots, z_{ M } $}
-
-With this strategy, our aim isn't to get a convergence guarantee analogous to that of the SIP paper, but some sort of ``given $ \dataoff $, this inequality is true with high probability'' guarantee.
-
-We similarly treat each of the three terms separately.
+% \subsection{Option 2: conditioning on $ \data_{ \Phi, \mathcal{T}, r_{ 0 } } $ and averaging with respect to $ z_{ 1 } , \dots, z_{ M } $}
+% 
+% With this strategy, our aim isn't to get a convergence guarantee analogous to that of the SIP paper, but some sort of ``given $ \dataoff $, this inequality is true with high probability'' guarantee.
+% 
+% We similarly treat each of the three terms separately.
 
 \textbf{First term }
-It is bounded in the exact same way as before, since this bound is deterministic and does not involve expectations.
+By assumption, we have $ \diam \mathcal{F} = D < \infty $.
+Hence
+\begin{align*}
+    \begin{split}
+        \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
+            \norm{ \hat{ h }_{ m-1 } - \hstar }^2
+            -
+            \norm{ \hat{ h }_{ m } - \hstar }^2
+        \right)
+        &= \sum_{ m=2 }^{ M } \left(
+            \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
+        \right) \norm{ \hat{ h }_{ m-1 } - \hstar }^2 \\
+        &\hspace{1.5cm}+ \frac{ 1 }{ 2 \alpha_{ 1 } } \norm{ \hat{ h }_{ 0 } - \hstar }^2 - \frac{ 1 }{ 2 \alpha_{ M } } \norm{ \hat{ h }_{ M } - \hstar }^2
+    \end{split} \\
+    &\leq 
+    \sum_{ m=2 }^{ M } \left(
+        \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
+    \right) D^2 + \frac{ 1 }{ 2 \alpha_{ 1 } } D^2 = \frac{ D^2 }{ 2 \alpha_{ M } }
+.\end{align*}
 
 \textbf{Second term }
 We are fixing the offline data $ \dataoff $ and averaging with respect to the other samples of the instrumental variable.
@@ -404,7 +421,7 @@ Therefore,
     \right]
 .\end{align*}
 
-To bound the expectation, we assume the loss is quadratic and then
+To bound the expectation, we assume\info{Assumption} the loss is quadratic and then
 \begin{align*}
     &\mean_{ \bz_{ 1:m } } \left[
         \left(
@@ -476,8 +493,8 @@ Firstly,
     \leq \norm{ \hat{ \mathcal{T} } - \mathcal{T} }_{ \mathrm{op} }^2 \norm{ \hat{ h }_{ m-1 } }_{ L^2 ( \mathbb{X} ) }^2
     \leq M^2 \norm{ \hat{ \mathcal{T} } - \mathcal{T} }_{ \mathrm{op} }^2
 .\end{align*}
-We leave the second term as $ \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( \mathbb{Z} ) }^2 $.
-Finally, for the third term, we have
+We leave the second part as $ \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( \mathbb{Z} ) }^2 $.
+Finally, for the third part, we have
 \begin{align*}
     \norm{ \mathcal{T} [ \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
     &= \mean_{ Z } \left[
@@ -517,6 +534,8 @@ Putting everything together, what we conclude is
         + 2 \left( M^2 + \mean [ Y^2 ] \right)
     \right)
 .\end{align*}
+{\color{red} We still have to use convergence results for $ \hat{ \mathcal{T} } $ and $ \hat{ r_{ 0 } } $ to finish this bound.
+It doesn't need to be good, we only need to bound this by something which remains bounded as $ \abs{ \dataoff } $ and the number of iterations grow.}
 
 % \begin{align*}
 %     &\norm{ \hat{ \Phi } }_{ \rkhsw }^2
@@ -588,3 +607,333 @@ Putting everything together, what we conclude is
 
 
 \textbf{Third term }
+
+Our goal is to open up the inner product and make explicit the estimation errors of our model's different components, like we did before.
+Here, we define $ \Psi_{ m } ( Z ) \defeq \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \mathcal{T} [ \hat{ h }_{ m-1 } ] ( Z ) ) $.
+The hat version $ \hat{ \Psi }_{ m } $ is defined accordingly, replacing $ r_{ 0 } $ and $ \mathcal{T} $ by their estimators.
+{\allowdisplaybreaks
+\begin{align*}
+    &\mean_{ \bz_{ 1:m } } \left[
+        \dotprod{
+            \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m },
+            \hat{ h }_{ m-1 } - \hstar
+        }
+        \given{}
+        \dataoff
+    \right] \\
+    &\hspace{1cm}
+    = \mean_{ \bz_{ 1:m } } \left[
+        \dotprod{
+            \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m },
+            \hat{ h }_{ m-1 } - \hstar
+        }
+    \right]
+    && (\bz_{ 1:m } \indep \dataoff) \\
+    &\hspace{1cm}
+    = \mean_{ \bz_{ 1:m-1 } } \left[
+        \mean_{ \bz_{ m } } \left[
+            \dotprod{
+                \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m },
+                \hat{ h }_{ m-1 } - \hstar
+            }
+        \right]
+    \right]
+    && (\bz_{ m } \indep \bz_{ 1:m-1 }) \\
+    &\hspace{1cm}
+    = \mean_{ \bz_{ 1:m-1 } } \left[
+        \dotprod{
+            \nabla \risk ( \hat{ h }_{ m-1 } ) - \mean_{ \bz_{ m } } \left[ u_{ m } \right],
+            \hat{ h }_{ m-1 } - \hstar
+        }
+    \right] \\
+    &\hspace{1cm}
+    \leq \mean_{ \bz_{ 1:m-1 } } \left[
+        \norm{ \nabla \risk ( \hat{ h }_{ m-1 } ) - \mean_{ \bz_{ m } } \left[ u_{ m } \right] }
+        \norm{ \hat{ h }_{ m-1 } - \hstar }
+    \right] \\
+    &\hspace{1cm}
+    \leq D \mean_{ \bz_{ 1:m-1 } } \left[
+        \norm{ \nabla \risk ( \hat{ h }_{ m-1 } ) - \mean_{ \bz_{ m } } \left[ u_{ m } \right] }
+    \right]
+    && (\diam \mathcal{F} = D) \\
+    &\hspace{1cm}
+    \leq D \mean_{ \bz_{ 1:m-1 } } \left[
+        \mean_{ X } \left[
+            \left(
+                \nabla \risk ( \hat{ h }_{ m-1 } ) ( X ) - \mean_{ \bz_{ m } } \left[ u_{ m } \right]
+            \right)^2
+        \right]
+    \right]^{ \frac{ 1 }{ 2 } }
+    &&(\text{Jensen}) \\
+    \begin{split}
+        &\hspace{1cm}
+        = D \mean_{ \bz_{ 1:m-1 } } \bigg[
+            \mean_{ X } \bigg[
+                \Big(
+                    \mean_{ Z } \left[
+                        \Phi ( X, Z ) \Psi_{ m } ( Z )
+                    \right] \\
+        &\hspace{4.5cm}
+                    - \mean_{ \bz_{ m } } \left[
+                        \hat{ \Phi } ( X, \bz_{ m } ) \hat{ \Psi }_{ m } ( \bz_{ m } )
+                    \right]
+                \Big)^2
+            \bigg]
+        \bigg]^{ \frac{ 1 }{ 2 } }
+    \end{split} \\
+    &\hspace{1cm}
+    = D \mean_{ \bz_{ 1:m-1 } } \bigg[
+        \mean_{ X } \bigg[
+            \mean_{ Z } \Big[
+                \Phi ( X, Z ) \Psi_{ m } ( Z )
+                - \hat{ \Phi } ( X, Z ) \hat{ \Psi }_{ m } ( Z )
+            \Big]^2
+        \bigg]
+    \bigg]^{ \frac{ 1 }{ 2 } }
+    && (Z \iid \bz_{ m }) \\
+    \begin{split}
+        &\hspace{1cm}
+        = D \mean_{ \bz_{ 1:m-1 } } \bigg[
+            \mean_{ X } \bigg[
+                \mean_{ Z } \Big[
+                    \Psi_{ m } ( Z ) \left(
+                        \Phi ( X, Z ) - \hat{ \Phi } ( X, Z )
+                    \right) \\
+        &\hspace{5cm}
+                    + \hat{ \Phi } ( X, Z ) \left(
+                        \Psi_{ m } ( Z ) - \hat{ \Psi }_{ m } ( Z )
+                    \right)
+                \Big]^2
+            \bigg]
+        \bigg]^{ \frac{ 1 }{ 2 } }
+    \end{split} \\
+    \begin{split}
+        &\hspace{1cm}
+        \leq D \mean_{ \bz_{ 1:m-1 } } \bigg[
+            \mean_{ X } \bigg[
+                \Big(
+                    \norm{ \Psi_{ m } }_{ L^2 ( Z ) }
+                    \norm{ \Phi ( X, \cdot ) - \hat{ \Phi } ( X, \cdot ) }_{ L^2 ( Z ) }\\
+        &\hspace{4.5cm}
+                    + \norm{ \hat{ \Phi } ( X, \cdot ) }_{ L^2 ( Z ) }
+                    \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^2 ( Z ) }
+                \Big)^2
+            \bigg]
+        \bigg]^{ \frac{ 1 }{ 2 } }
+    \end{split} \\
+    \begin{split}
+        &\hspace{1cm}
+        \leq \sqrt{ 2 } D \mean_{ \bz_{ 1:m-1 } } \bigg[
+            \mean_{ X } \bigg[
+                \norm{ \Psi_{ m } }_{ L^2 ( Z ) }^2
+                \norm{ \Phi ( X, \cdot ) - \hat{ \Phi } ( X, \cdot ) }_{ L^2 ( Z ) }^2 \\
+    &\hspace{4.5cm}
+                + \norm{ \hat{ \Phi } ( X, \cdot ) }_{ L^2 ( Z ) }^2
+                \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^2 ( Z ) }^2
+            \bigg]
+        \bigg]^{ \frac{ 1 }{ 2 } }
+    \end{split} \\
+    \begin{split}
+        &\hspace{1cm}
+        = \sqrt{ 2 } D \bigg(
+            \mean_{ \bz_{ 1:m-1 } } \bigg[
+                \norm{ \Psi_{ m } }_{ L^2 ( Z ) }^2
+                \mean_{ X } \bigg[
+                    \norm{ \Phi ( X, \cdot )
+                    - \hat{ \Phi } ( X, \cdot ) }_{ L^2 ( Z ) }^2
+                \bigg] 
+            \bigg] \\
+        &\hspace{3cm}
+            + \mean_{ \bz_{ 1:m-1 } } \bigg[
+                    \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^2 ( Z ) }^2
+                    \mean_{ X } \bigg[
+                        \norm{ \hat{ \Phi } ( X, \cdot ) }_{ L^2 ( Z ) }^2
+                    \bigg]
+                \bigg]
+        \bigg)^{ \frac{ 1 }{ 2 } }
+    \end{split} \\
+    \begin{split}
+        &\hspace{1cm}
+        = \sqrt{ 2 } D \bigg(
+            \mean_{ X } \bigg[
+                \norm{ \Phi ( X, \cdot )
+                - \hat{ \Phi } ( X, \cdot ) }_{ L^2 ( Z ) }^2
+            \bigg] 
+            \mean_{ \bz_{ 1:m-1 } } \bigg[
+                \norm{ \Psi_{ m } }_{ L^2 ( Z ) }^2
+            \bigg] \\
+        &\hspace{3cm}
+            + \mean_{ X } \bigg[
+                \norm{ \hat{ \Phi } ( X, \cdot ) }_{ L^2 ( Z ) }^2
+            \bigg]
+            \mean_{ \bz_{ 1:m-1 } } \bigg[
+                    \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^2 ( Z ) }^2
+                \bigg]
+        \bigg)^{ \frac{ 1 }{ 2 } }
+    \end{split} \\
+    &\hspace{1cm}
+    =\vcentcolon \sqrt{ 2 } D ( A + B )^{ \frac{ 1 }{ 2 } }
+.\end{align*}
+}
+We proceed to analyze each term separately:
+\begin{itemize}
+    \item To bound $ A $, first notice that
+        \begin{align*}
+            \mean_{ X } \left[
+                \norm{ \Phi ( X, \cdot ) - \hat{ \Phi } ( X, \cdot ) }^2
+            \right]
+            = \mean_{ X } \left[
+                \mean_{ Z } \left[
+                    \left(
+                        \Phi ( X, Z ) - \hat{ \Phi } ( X, Z )
+                    \right)^2
+                \right]
+            \right]
+            = \norm{ \Phi - \hat{ \Phi } }_{ L^2 ( X \otimes Z ) }^2
+        ,\end{align*}
+        where $ L^2 ( X \otimes Z ) $ is the space of square integrable functions with respect to the measure induced by independent copies of $ X $ and $ Z $.
+        If we estimate $ \hat{ \Phi } $ using the uLSIF algorithm described in \cite{sugiyama2012}, under some regularity conditions, and decreasing the regularization parameter according to a specific rate\improvement{Create section describing how we are estimating each term.}, we have the following estimate: 
+        \begin{equation*}
+            \norm{ \Phi - \hat{ \Phi } }^2_{ L^2 ( X \otimes Z ) }
+            = \bigO_{ p } \left(
+                \left(
+                    \frac{ \log \abs{ \data_{ \Phi } } }{ \abs{ \data_{ \Phi } } }
+                \right)^{ \frac{ 2 }{ 2 + \gamma } }
+            \right)
+        .\end{equation*}
+    Furthermore, we can bound $ \norm{ \Psi_{ m } }_{ L^2 ( Z ) }^2 $ as follows:
+    \begin{align*}
+        \norm{ \Phi_{ m } }_{ L^2 ( Z ) }^2
+        &= \norm{ r_{ 0 } - \mathcal{T} [ \hat{ h }_{ m-1 } ] }_{ L^2 ( Z ) }^2 \\
+        &\leq 2 \left(
+            \norm{ r_{ 0 } }_{ L^{ 2 } ( Z ) }^2
+            + \norm{ \mathcal{T} [ \hat{ h }_{ m-1 } ] }_{ L^{ 2 } ( Z ) }^2
+        \right) \\
+        &\leq 2 \left(
+            \mean [ Y^2 ] + \norm{ \mathcal{T} }_{ \mathrm{op} }^2 \norm{ \hat{ h }_{ m-1 } }_{ L^{ 2 } ( Z ) }^2
+        \right) \\
+        &\leq 2 \left(
+            \mean [ Y^2 ] + M^2
+        \right)
+        &&( \norm{ \mathcal{T} }_{ \mathrm{op} } \leq 1 )
+    .\end{align*}
+    In total, what we have is
+    \begin{align*}
+        A &= \mean_{ X } \left[
+            \norm{ \Phi ( X, \cdot ) - \hat{ \Phi } ( X, \cdot ) }_{ L^{ 2 } ( Z ) }^2
+        \right]
+        \mean_{ \bz_{ 1:m-1 } } \left[
+            \norm{ \Psi_{ m } }_{ L^{ 2 } ( Z ) }^2
+        \right] \\
+        &\leq \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( Z ) }^2
+        \cdot 2 ( \mean [ Y^2 ] + M^2 ) \\
+        &= \bigO_{ p } \left(
+            \left(
+                \frac{ \log \abs{ \data_{ \Phi } } }{ \abs{ \data_{ \Phi } } }
+            \right)^{ \frac{ 2 }{ 2 + \gamma } }
+        \right)
+    .\end{align*}
+
+    \item To bound $ B $, notice that, by Assumption 14.15 of \cite{sugiyama2012}, we have
+        \begin{equation*}
+            \mean_{ X } \left[
+                \norm{ \hat{ \Phi } ( X, \cdot ) }_{ L^{ 2 } ( Z ) }^2
+            \right]
+            = \mean_{ X } \left[
+                \mean_{ Z } \left[
+                    \hat{ \Phi } ( X, Z )^2
+                \right]
+            \right]
+            \leq \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } }^2
+        .\end{equation*}
+        {\color{red} We still need to bound this norm somehow.}
+
+        Furthermore, we also have
+        \begin{align*}
+            \norm{ \Phi_{ m } - \hat{ \Phi }_{ m } }_{ L^{ 2 } ( Z ) }^2
+            &= \norm{
+                \left(
+                    \mathcal{T} [ \hat{ h }_{ m-1 } ] - r_{ 0 }
+                \right)
+                - \left(
+                    \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] - \hat{ r_{ 0 } }
+                \right)
+            }_{ L^{ 2 } ( Z ) }^2 \\
+            &= \norm{
+                \left(
+                    \mathcal{T} [ \hat{ h }_{ m-1 } ]
+                    - \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ]
+                \right)
+                - \left(
+                    r_{ 0 } - \hat{ r_{ 0 } }
+                \right)
+            }_{ L^{ 2 } ( Z ) }^2 \\
+            &\leq 2 \left(
+                \norm{
+                    \mathcal{T} [ \hat{ h }_{ m-1 } ]
+                    - \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ]
+                }_{ L^{ 2 } ( Z ) }^2
+                + \norm{
+                    r_{ 0 } - \hat{ r_{ 0 } }
+                }_{ L^{ 2 } ( Z ) }^2
+            \right) \\
+            &\leq 2 \left(
+                \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} }^2
+                \norm{
+                    \hat{ h }_{ m-1 }
+                }_{ L^{ 2 } ( Z ) }^2
+                + \norm{
+                    r_{ 0 } - \hat{ r_{ 0 } }
+                }_{ L^{ 2 } ( Z ) }^2
+            \right) \\
+            &\leq 2 \left(
+                M^2 \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} }^2
+                + \norm{
+                    r_{ 0 } - \hat{ r_{ 0 } }
+                }_{ L^{ 2 } ( Z ) }^2
+            \right)
+        .\end{align*}
+        Therefore,
+        \begin{align*}
+            B &= \mean_{ X } \bigg[
+                \norm{ \hat{ \Phi } ( X, \cdot ) }_{ L^2 ( Z ) }^2
+            \bigg]
+            \mean_{ \bz_{ 1:m-1 } } \bigg[
+                    \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^2 ( Z ) }^2
+            \bigg] \\
+            &\leq \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } }^2
+            \mean_{ \bz_{ 1:m-1 } } \left[
+                2 \left(
+                    M^2 \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} }^2
+                    + \norm{
+                        r_{ 0 } - \hat{ r_{ 0 } }
+                    }_{ L^{ 2 } ( Z ) }^2
+                \right)
+            \right] \\
+            &= 2 \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } }^2
+            \left(
+                M^2 \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} }^2
+                + \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( Z ) }^2
+            \right)
+        .\end{align*}
+\end{itemize}
+
+{\color{red}
+    What's left to do:
+    \begin{itemize}
+        \item Bound $ \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } } $
+
+        \item Use some estimate on $ \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} } $ (Adapt notation and setup in the KIV paper)
+
+        \item Find way to estimate $ r_{ 0 } $ which gives estimate on $ \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( Z ) } $.
+    \end{itemize}
+    For the rest of the paper:
+    \begin{itemize}
+        \item Create section which describes, in detail, how we are estimating $ \Phi $, $ \mathcal{T} $ and $ r_{ 0 } $, lists all the references, states the main convergence theorems and lists all of the assumptions that are being made.
+
+        \item Adapt the algorithm section to use the KIV first stage, which directly estimates $ \mathcal{T} $.
+
+        \item Find better letter for either the number of iterations or the upper bound for the set $ \mathcal{F} $.
+            Right now, both are being denoted by the letter $ M $.
+    \end{itemize}
+}
