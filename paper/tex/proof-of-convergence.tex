@@ -535,7 +535,8 @@ Putting everything together, what we conclude is
     \right)
 .\end{align*}
 {\color{red} We still have to use convergence results for $ \hat{ \mathcal{T} } $ and $ \hat{ r_{ 0 } } $ to finish this bound.
-It doesn't need to be good, we only need to bound this by something which remains bounded as $ \abs{ \dataoff } $ and the number of iterations grow.}
+It doesn't need to be good, we only need to bound this by something which remains bounded as $ \abs{ \dataoff } $ and the number of iterations grow.
+Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, that is, almost surely finite, and rely on the (fast enough) decay of the learning rate to achieve convergence.}
 
 % \begin{align*}
 %     &\norm{ \hat{ \Phi } }_{ \rkhsw }^2
@@ -921,11 +922,12 @@ We proceed to analyze each term separately:
 {\color{red}
     What's left to do:
     \begin{itemize}
-        \item Bound $ \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } } $
+        \item Bound $ \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } } $. (May not be strictly necessary. This is finite, and since it multiplies something which is $ \bigO_{ p } $ of something which goes to zero, we may not need to further bound it.) 
 
         \item Use some estimate on $ \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} } $ (Adapt notation and setup in the KIV paper)
 
         \item Find way to estimate $ r_{ 0 } $ which gives estimate on $ \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( Z ) } $.
+            Maybe use the same estimation technique we have for $ \mathcal{T} $ as an operator from $ L^2 ( Y ) \to L^2 ( Z ) $ applied to the identity and employ the same bound?
     \end{itemize}
     For the rest of the paper:
     \begin{itemize}
