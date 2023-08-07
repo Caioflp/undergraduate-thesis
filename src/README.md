@@ -1,5 +1,18 @@
 ## To do
 
+* Implementation changes:
+    - Use three datasets: (X, Z), (Y, Z), (Z), although the first two
+      don't need to be independent from each other.
+    - Crop h inside [-M, M] after each update
+    - Implement \hat{ Phi } using kernel methods
+        * Read and underestand the closed form solutions
+        * Understand how the regularization parameter is being chosen
+    - Implement \hat{ r_0 } using kernel methods
+        * Write a dumb implementation using kernel ridge regression
+        * Select regularization parameter using cross validation
+    - Implement \hat{ T } using kernel methods
+        * Understand what is being done in KIV paper
+
 * Finish proof:
     - Use O_p (1) in bound of ||u_m||^2
     - relate RKHS norm with L2(X \times Z) norm
