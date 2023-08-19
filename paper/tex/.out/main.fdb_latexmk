@@ -1,19 +1,19 @@
 # Fdb version 4
-["biber .out/main"] 1689695529 ".out/main.bcf" ".out/main.bbl" ".out/main" 1691004822 0
+["biber .out/main"] 1689695529 ".out/main.bcf" ".out/main.bbl" ".out/main" 1692125198 0
   "../bib/bibliography.bib" 1689802492 272 e03da5a101c1309e4bc96fdb81373de4 ""
-  ".out/main.bcf" 1691004821 107911 b1efa07d949109d39adbfcefaa9c9b71 "lualatex"
+  ".out/main.bcf" 1692125198 107911 b1efa07d949109d39adbfcefaa9c9b71 "lualatex"
   (generated)
   ".out/main.bbl"
   ".out/main.blg"
   (rewritten before read)
-["lualatex"] 1691004819 "main.tex" ".out/main.pdf" "main" 1691004822 0
-  ".out/main.aux" 1691004821 7407 e8ccd3ab8954867e3f8a56ee7952e38b "lualatex"
+["lualatex"] 1692125195 "main.tex" ".out/main.pdf" "main" 1692125198 0
+  ".out/main.aux" 1692125198 7407 e8ccd3ab8954867e3f8a56ee7952e38b "lualatex"
   ".out/main.bbl" 1689802492 1958 331aa6cc7e40d118bdc1394658f03829 "biber .out/main"
-  ".out/main.out" 1691004821 984 28dfd9bac30c5cd15e00ece951a32d31 "lualatex"
-  ".out/main.run.xml" 1691004821 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
+  ".out/main.out" 1692125198 984 28dfd9bac30c5cd15e00ece951a32d31 "lualatex"
+  ".out/main.run.xml" 1692125198 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1685645277 368630 cef10b4c83a6dcad01321f431b18c742 ""
-  "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1689692744 2898 f0ab44faa5217aa3687914d8069062b0 ""
+  "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1691460808 2904 9df24d430eca38985b553313cd33a565 ""
   "/Users/caio/Library/texmf/tex/latex/packages/neurips_2023.sty" 1686686540 11306 7a0a622cd12ea31e106a743bb7d4c3c6 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/helvetic/phvr8r.tfm" 1136768653 4712 9ef4d7d106579d4b136e1529e1a4533c ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/helvetic/phvr8t.tfm" 1136768653 7040 b2bd27e2bfe6f6948cbc3239cae7444f ""
@@ -328,7 +328,7 @@
   "main.tex" 1689802492 269 f523274691a472500e89af7878806022 ""
   "preamble.tex" 1689802492 2871 af3219dbd1c3a1455ffc83644fcc259e ""
   "problem-setup.tex" 1689802492 3499 0479e09cd16609c935ed92343e4356dd ""
-  "proof-of-convergence.tex" 1691004818 40118 d315acddaf74fd6b9e8bae019465477a ""
+  "proof-of-convergence.tex" 1691412603 40118 d315acddaf74fd6b9e8bae019465477a ""
   "unbiased-estimator-of-the-gradient.tex" 1687094337 2040 38fd209752a10afc1a98bdb1503a2cc3 ""
   (generated)
   ".out/main.aux"
