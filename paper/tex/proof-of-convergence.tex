@@ -924,7 +924,19 @@ We proceed to analyze each term separately:
     \begin{itemize}
         \item Bound $ \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } } $. (May not be strictly necessary. This is finite, and since it multiplies something which is $ \bigO_{ p } $ of something which goes to zero, we may not need to further bound it.) 
 
-        \item Use some estimate on $ \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} } $ (Adapt notation and setup in the KIV paper)
+        \item Use some estimate on $ \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} } $ (Adapt notation and setup in the KIV paper).
+
+            {\color{blue}
+                Conclusion (20/08/2023): We might need the extra hypothesis that $ \operatorname{Im} ( \operatorname{id}_{ L^2 ( X ) } - \iota_{ X } \iota_{ X }^{ * } ) \subseteq \ker \mathcal{T} $, where $ \iota_{ X } : \mathcal{H}_{ X } \to L^{ 2 } ( X ) $ is the inclusion operator, whose adjoint is given by
+                \begin{equation*}
+                    \iota_{ X }^{ * } ( f ) = ( x \mapsto \mean_{ X } [ f ( X ) k_{ X } ( X, x ) ] )
+                ,\end{equation*}
+                with $ k_{ X } : \mathbb{X} \times \mathbb{X} \to \R $ being the kernel associated with $ \mathcal{H}_{ X } $.
+                Then $ \mathcal{T} = \mathcal{T} \circ \iota_{ X } \iota_{ X }^{ * } $ and we can directly apply the result on KIV's paper, since $ \mathcal{T} \circ i_{ X } $ can be seen as the restriction of $ \mathcal{T} $ to $ \mathcal{H}_{ X } $.
+                We then also need the further hypothesis that $ \operatorname{Im} ( \mathcal{T} \circ \iota_{ X } ) \subseteq \mathcal{H}_{ Z } $, or something like this (because, rigorously speaking, $ \mathcal{T}f $ is an equivalence class of functions, so in what way can we say that this equivalence class is ``in $ \mathcal{H}_{ Z } $''?).
+                This hypothesis is implicitly made in the KIV paper, when they say that $ E : \mathcal{H_{ X }} \to \mathcal{H}_{ Z } $ without providing any assumptions on $ \mathcal{H}_{ X } $ and $ \mathcal{H}_{ Z } $, other than saying that they are RKHS.
+                Who can guarantee that $ (z \mapsto \mean [ f ( X ) \mid Z = z ]) \in \mathcal{H}_{ Z } $ for every $ f \in \mathcal{H}_{ X } $?
+            }
 
         \item Find way to estimate $ r_{ 0 } $ which gives estimate on $ \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( Z ) } $.
             Maybe use the same estimation technique we have for $ \mathcal{T} $ as an operator from $ L^2 ( Y ) \to L^2 ( Z ) $ applied to the identity and employ the same bound?
