@@ -26,11 +26,16 @@ class DensityRatio(BaseEstimator):
 
     def __call__(self, w):
         assert self.fitted
-        assert len(w.shape) == 1
-        assert w.shape[0] == self.dim
+        if len(w.shape) == 1:
+            assert w.shape[0] == self.dim
+            w = w.reshape(1, -1)
+        elif len(w.shape) == 2:
+            assert w.shape[1] == self.dim
+        else:
+            raise ValueError
 
-        w = w.reshape(1, -1)
-        return np.sum(self.theta * self.kernel(self.support_points, w))
+        # return np.sum(self.theta * self.kernel(self.support_points, w))
+        return (self.kernel(w, self.support_points) @ self.theta).ravel()
 
 
     def kernel(w_1: np.ndarray, w_2: np.ndarray):
@@ -109,7 +114,7 @@ class DensityRatio(BaseEstimator):
             self.theta = np.linalg.solve(
                 H_hat + self.regularization_weight * np.eye(n_samples), h_hat
             )
-        else:
+        elif regularization == "rkhs":
             self.theta = np.linalg.solve(
                 H_hat + self.regularization_weight * K, h_hat
             )
