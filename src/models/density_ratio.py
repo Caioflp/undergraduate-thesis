@@ -25,6 +25,9 @@ class DensityRatio(BaseEstimator):
         self.fitted = False
 
     def __call__(self, w):
+        return self.predict(w)
+
+    def predict(self, w):
         assert self.fitted
         if len(w.shape) == 1:
             assert w.shape[0] == self.dim

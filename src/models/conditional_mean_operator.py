@@ -46,45 +46,57 @@ class ConditionalMeanOperator(BaseEstimator):
         squared_distances = distance_matrix(z_1, z_2)**2
         return np.exp(- self.lengthscale * squared_distances)
 
-        def loop_fit(z_train: np.ndarray, z_loop: np.ndarray):
-            assert len(z_train.shape) == len(z_loop.shape) == 2
-            assert z_train.shape[1] == z_loop.shape[1]
-            self.n_samples = z_train.shape[0]
-            self.loop_weights = np.linalg.solve(
-                (
-                    self.kernel(z_train, z_train)
-                    + self.regularization_weight*np.eye(n_samples)
-                ),
-                self.kernel(z_train, z_loop)
+    def loop_fit(self, z_train: np.ndarray, z_loop: np.ndarray):
+        assert len(z_train.shape) == len(z_loop.shape) == 2
+        assert z_train.shape[1] == z_loop.shape[1]
+        self.n_samples = z_train.shape[0]
 
-            )
-            self.loop_fitted = True
+        median = np.median(
+            np.ravel(distance_matrix(z_train, z_train))
+        )
+        self.lengthscale = 1 / median
 
-        def fit(z_samples: np.ndarray):
-            self.z_samples = z_samples
-            self.n_samples = z_samples.shape[0]
-            self.kernel_gramian_regularized = (
-                self.kernel(z_samples, z_samples)
+        self.loop_weights = np.linalg.solve(
+            (
+                self.kernel(z_train, z_train)
                 + self.regularization_weight*np.eye(n_samples)
-            )
+            ),
+            self.kernel(z_train, z_loop)
 
-        def loop_predict(f_samples: np.ndarray, it: int):
-            """Predict method for use within the loop in the main model.
-            `it` is the iteration number, starting from 0.
+        )
+        self.loop_fitted = True
 
-            f_samples must be one dimensional
+    def fit(self, z_samples: np.ndarray):
+        self.z_samples = z_samples
+        self.n_samples = z_samples.shape[0]
 
-            """
-            assert len(f_samples.shape) == 1
-            assert f_samples.size == self.n_samples
-            return self.loop_weights[:, it] @ f_samples
+        median = np.median(
+            np.ravel(distance_matrix(z_samples, z_samples))
+        )
+        self.lengthscale = 1 / median
 
-        def predict(f_samples: np.ndarray, z: np.ndarray):
-            assert len(z.shape) == 1
-            assert len(f_samples.shape) == 1
-            assert f_samples.size == self.n_samples
-            weights = np.linalg.solve(
-                self.kernel_gramian_regularized,
-                self.kernel(self.z_samples, z.reshape(1, -1))
-            )
-            return weights @ f_samples
+        self.kernel_gramian_regularized = (
+            self.kernel(z_samples, z_samples)
+            + self.regularization_weight*np.eye(n_samples)
+        )
+
+    def loop_predict(self, f_samples: np.ndarray, it: int):
+        """Predict method for use within the loop in the main model.
+        `it` is the iteration number, starting from 0.
+
+        f_samples must be one dimensional
+
+        """
+        assert len(f_samples.shape) == 1
+        assert f_samples.size == self.n_samples
+        return self.loop_weights[:, it] @ f_samples
+
+    def predict(self, f_samples: np.ndarray, z: np.ndarray):
+        assert len(z.shape) == 1
+        assert len(f_samples.shape) == 1
+        assert f_samples.size == self.n_samples
+        weights = np.linalg.solve(
+            self.kernel_gramian_regularized,
+            self.kernel(self.z_samples, z.reshape(1, -1))
+        )
+        return weights @ f_samples
