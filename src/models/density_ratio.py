@@ -14,11 +14,9 @@ from sklearn.base import BaseEstimator
 class DensityRatio(BaseEstimator):
     def __init__(
         self,
-        lengthscale: float,
         regularization: str,
         regularization_weight: float,
     ):
-        self.lengthscale = lengthscale
         self.regularization = regularization
         self.regularization_weight = regularization_weight
         self.dim = None
@@ -97,10 +95,18 @@ class DensityRatio(BaseEstimator):
             "The dimension of numerator samples and denominator samples " +
             "must match."
         )
-        condition_dim = numerator_samples.shape[1] == denominator_samples.shape[1]
+
+        numerator_dim = numerator_samples.shape[1]
+        denominator_dim = denominator_samples.shape[1]
+        condition_dim = (numerator_dim == denominator_dim)
         assert condition_dim, msg_dim
 
-        assert self.regularization in ["l2", "rkhs"], "Unknown regularization type"
+        assert self.regularization in ["l2", "rkhs"], "Unknown regularization"
+
+        median = np.median(
+            np.ravel(distance_matrix(numerator_samples, numerator_samples))
+        )
+        self.lengthscale = 1 / median
 
         n_samples, self.dim = numerator_samples.shape
         self.support_points = numerator_samples

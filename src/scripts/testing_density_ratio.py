@@ -24,10 +24,7 @@ sample_independent = np.concatenate(
     axis=1
 )
 
-lengthscale = 1 / np.median(np.ravel(distance_matrix(sample_joint, sample_joint)))
-
 model = DensityRatio(
-    lengthscale=lengthscale,
     regularization="rkhs",
     regularization_weight=0.01
 )
