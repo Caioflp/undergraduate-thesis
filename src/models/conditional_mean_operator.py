@@ -59,7 +59,7 @@ class ConditionalMeanOperator(BaseEstimator):
         self.loop_weights = np.linalg.solve(
             (
                 self.kernel(z_train, z_train)
-                + self.regularization_weight*np.eye(n_samples)
+                + self.regularization_weight*np.eye(self.n_samples)
             ),
             self.kernel(z_train, z_loop)
 
@@ -77,7 +77,7 @@ class ConditionalMeanOperator(BaseEstimator):
 
         self.kernel_gramian_regularized = (
             self.kernel(z_samples, z_samples)
-            + self.regularization_weight*np.eye(n_samples)
+            + self.regularization_weight*np.eye(self.n_samples)
         )
 
     def loop_predict(self, f_samples: np.ndarray, it: int):

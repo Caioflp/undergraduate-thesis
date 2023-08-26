@@ -83,18 +83,18 @@ class FunctionalSGD(BaseEstimator):
         # Fit DensityRatio Model
         density_ratio = DensityRatio(
             regularization="l2",
-            regularization_weight=0.1,
+            regularization_weight=0.01,
         )
         joint_samples = np.concatenate([X, Z], axis=1)
         independent_samples = np.concatenate(
             [X, np.roll(Z, 1)],
             axis=1,
         )
-        density_ratio.fit(join_samples, independent_samples)
+        density_ratio.fit(joint_samples, independent_samples)
 
         # Fit ConditionalMeanOperator model
         conditional_mean = ConditionalMeanOperator(
-            regularization_weight=0.1,
+            regularization_weight=0.01,
         )
         conditional_mean.loop_fit(Z, Z_loop)
 
@@ -116,7 +116,7 @@ class FunctionalSGD(BaseEstimator):
             joint_x_and_current_z = np.concatenate(
                 (x_domain.all_points, z_i), axis=1
             )
-            ratio_of_densities = density_ratio.predict(join_x_and_current_z)
+            ratio_of_densities = density_ratio.predict(joint_x_and_current_z)
 
             # Compute the stochastic estimates for the functional loss gradient
             functional_grad = (
