@@ -15,9 +15,11 @@ class DensityRatio(BaseEstimator):
     def __init__(
         self,
         lengthscale: float,
+        regularization: str,
         regularization_weight: float,
     ):
-        self.lenghtscale = lengthscale
+        self.lengthscale = lengthscale
+        self.regularization = regularization
         self.regularization_weight = regularization_weight
         self.dim = None
         self.theta = None
@@ -28,7 +30,7 @@ class DensityRatio(BaseEstimator):
         assert self.fitted
         if len(w.shape) == 1:
             assert w.shape[0] == self.dim
-            w = w.reshape(1, -1)
+            w = w.reshape(1, self.dim)
         elif len(w.shape) == 2:
             assert w.shape[1] == self.dim
         else:
@@ -38,7 +40,7 @@ class DensityRatio(BaseEstimator):
         return (self.kernel(w, self.support_points) @ self.theta).ravel()
 
 
-    def kernel(w_1: np.ndarray, w_2: np.ndarray):
+    def kernel(self, w_1: np.ndarray, w_2: np.ndarray):
         """Kernel used for fiting.
 
         Computes the gramiam matrix of the kernel with respect to both vectors.
@@ -57,13 +59,13 @@ class DensityRatio(BaseEstimator):
         """
         assert len(w_1.shape) == len(w_2.shape) == 2
         squared_distances = distance_matrix(w_1, w_2)**2
-        return np.exp(- self.lenghscale * squared_distances)
+        return np.exp(- self.lengthscale * squared_distances)
 
 
     def fit(
+        self,
         numerator_samples: np.ndarray,
         denominator_samples: np.ndarray,
-        regularization: str
     ):
         """Fits estimator to provided samples.
 
@@ -79,8 +81,6 @@ class DensityRatio(BaseEstimator):
             Array with shape `(n_samples, dim)`.
         denominator_samples: np.ndarray
             Array with shape `(n_samples, dim)`.
-        regularization: string in ["l2", "rkhs"]
-            Whether to use l2 norm of `theta` as regularizer or the RKHS norm
             of the estimator.
 
         """
@@ -100,7 +100,7 @@ class DensityRatio(BaseEstimator):
         condition_dim = numerator_samples.shape[1] == denominator_samples.shape[1]
         assert condition_dim, msg_dim
 
-        assert regularization in ["l2", "rkhs"], "Unknown regularization"
+        assert self.regularization in ["l2", "rkhs"], "Unknown regularization type"
 
         n_samples, self.dim = numerator_samples.shape
         self.support_points = numerator_samples
@@ -110,11 +110,11 @@ class DensityRatio(BaseEstimator):
         cross_K = self.kernel(numerator_samples, denominator_samples)
         H_hat = cross_K @ cross_K.T / n_samples
 
-        if regularization == "l2":
+        if self.regularization == "l2":
             self.theta = np.linalg.solve(
                 H_hat + self.regularization_weight * np.eye(n_samples), h_hat
             )
-        elif regularization == "rkhs":
+        elif self.regularization == "rkhs":
             self.theta = np.linalg.solve(
                 H_hat + self.regularization_weight * K, h_hat
             )
