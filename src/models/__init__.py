@@ -1,4 +1,4 @@
-from .functional_sgd import FunctionalSGD
+from .functional_sgd import NaiveFunctionalSGD
 from .functional_sgd_with_hacks import FunctionalSGDWithHacks
 from .utils import (
     Estimates,

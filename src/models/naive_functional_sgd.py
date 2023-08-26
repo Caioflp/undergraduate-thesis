@@ -24,7 +24,7 @@ from src.models.utils import (
 )
 
 
-class FunctionalSGD(BaseEstimator):
+class NaiveFunctionalSGD(BaseEstimator):
     """Regressor based on a variant of stochastic gradient descent.
 
     Parameters
