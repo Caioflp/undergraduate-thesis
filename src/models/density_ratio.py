@@ -148,8 +148,11 @@ class DensityRatio(BaseEstimator):
         denominator_samples: np.ndarray,
         n_splits: int = 5,
         weights: list = [10**(-i) for i in range(-2, 3)],
+        current_iter = 0,
     ) -> float:
         """Uses K-Fold cross validation to choose regularization weight.
+
+        Uses a recursion mechanism to better choose the regularization weight.
 
         """
         assert numerator_samples.shape == denominator_samples.shape
@@ -170,7 +173,20 @@ class DensityRatio(BaseEstimator):
             for weight, losses in fold_losses_by_weight.items()
         }
         best_weight = min(cv_loss_by_weight, key=cv_loss_by_weight.get)
-        best_weight_loss = cv_loss_by_weight[best_weight]
-        self.regularization_weight = best_weight
-        return best_weight, best_weight_loss
+        if current_iter == 2:
+            best_weight_loss = cv_loss_by_weight[best_weight]
+            self.regularization_weight = best_weight
+            return best_weight, best_weight_loss
+        else:
+            log_10 = lambda x: np.log(x)/np.log(10)
+            base_offset = np.power(10, np.floor(log_10(best_weight)) - 1)
+            new_weights = [best_weight + k*base_offset for k in range(-2, 3)]
+            return self.find_best_regularization_weight(
+                numerator_samples,
+                denominator_samples,
+                n_splits,
+                new_weights,
+                current_iter+1,
+            )
+
 
