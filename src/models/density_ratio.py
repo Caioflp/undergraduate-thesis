@@ -59,6 +59,7 @@ class DensityRatio(BaseEstimator):
 
         """
         assert len(w_1.shape) == len(w_2.shape) == 2
+        assert w_1.shape[1] == w_2.shape[1]
         squared_distances = distance_matrix(w_1, w_2)**2
         return np.exp(- self.lengthscale * squared_distances)
 
@@ -106,8 +107,9 @@ class DensityRatio(BaseEstimator):
 
         assert self.regularization in ["l2", "rkhs"], "Unknown regularization"
 
-        median = np.median(
-            np.ravel(distance_matrix(numerator_samples, numerator_samples))
+        median = np.quantile(
+            np.ravel(distance_matrix(numerator_samples, numerator_samples)),
+            .5
         )
         self.lengthscale = 1 / median
 
@@ -137,7 +139,7 @@ class DensityRatio(BaseEstimator):
         assert numerator_samples.shape == denominator_samples.shape
         assert self.fitted
         loss = np.mean(
-            np.square(self.predict(numerator_samples))
+            np.square(self.predict(numerator_samples))/2
             - self.predict(denominator_samples)
         )
         return loss
@@ -148,7 +150,9 @@ class DensityRatio(BaseEstimator):
         denominator_samples: np.ndarray,
         n_splits: int = 5,
         weights: list = [10**(-i) for i in range(-2, 3)],
+        base_offset = None,
         current_iter = 0,
+        max_iter = 2,
     ) -> float:
         """Uses K-Fold cross validation to choose regularization weight.
 
@@ -173,20 +177,34 @@ class DensityRatio(BaseEstimator):
             for weight, losses in fold_losses_by_weight.items()
         }
         best_weight = min(cv_loss_by_weight, key=cv_loss_by_weight.get)
-        if current_iter == 2:
+        if current_iter == max_iter:
             best_weight_loss = cv_loss_by_weight[best_weight]
             self.regularization_weight = best_weight
             return best_weight, best_weight_loss
-        else:
+        elif current_iter == 0:
             log_10 = lambda x: np.log(x)/np.log(10)
             base_offset = np.power(10, np.floor(log_10(best_weight)) - 1)
-            new_weights = [best_weight + k*base_offset for k in range(-2, 3)]
+            new_weights = [best_weight + k*base_offset for k in range(-5, 6)]
             return self.find_best_regularization_weight(
                 numerator_samples,
                 denominator_samples,
                 n_splits,
                 new_weights,
+                base_offset,
                 current_iter+1,
+                max_iter,
+            )
+        else:
+            new_base_offset = base_offset / 10
+            new_weights = [best_weight + k*new_base_offset for k in range(-5, 6)]
+            return self.find_best_regularization_weight(
+                numerator_samples,
+                denominator_samples,
+                n_splits,
+                new_weights,
+                new_base_offset,
+                current_iter+1,
+                max_iter,
             )
 
 

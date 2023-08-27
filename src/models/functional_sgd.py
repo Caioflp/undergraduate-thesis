@@ -89,32 +89,41 @@ class FunctionalSGD(BaseEstimator):
             [X, np.roll(Z, 1)],
             axis=1,
         )
-        best_weight, best_loss = density_ratio.find_best_regularization_weight(
-            joint_samples,
-            independent_samples,
-        )
-        print(f"Density ratio loss: {best_loss}, with weight {best_weight}")
+        best_weight_density_ratio, best_loss_density_ratio = \
+                density_ratio.find_best_regularization_weight(
+                    joint_samples,
+                    independent_samples,
+                )
+        print(f"Best density ratio loss: {best_loss_density_ratio}, " +
+              f"with weight {best_weight_density_ratio}")
         density_ratio.fit(joint_samples, independent_samples)
 
         # Fit ConditionalMeanOperator model
-        conditional_mean_XZ = ConditionalMeanOperator(
-            regularization_weight=5,
-        )
-        conditional_mean_XZ.loop_fit(Z, Z_loop)
+        # For E[X | Z]
+        conditional_mean_xz = ConditionalMeanOperator()
+        best_weight_xz, best_loss_xz = \
+                conditional_mean_xz.find_best_regularization_weight(Z, X)
+        print(f"Best conditional mean XZ loss: {best_loss_xz}, with weight " +
+              f"{best_weight_xz}")
+        conditional_mean_xz.loop_fit(Z, Z_loop)
 
-        conditional_mean_YZ = ConditionalMeanOperator(
-            regularization_weight=5,
-        )
-        conditional_mean_YZ.loop_fit(Z, Z_loop)
+        # For E[Y | Z]
+        Y_array = Y.reshape(-1, 1)
+        conditional_mean_yz = ConditionalMeanOperator()
+        best_weight_yz, best_loss_yz = \
+                conditional_mean_yz.find_best_regularization_weight(Z, Y_array)
+        print(f"Best conditional mean YZ loss: {best_loss_yz}, with weight " +
+              f"{best_weight_yz}")
+        conditional_mean_yz.loop_fit(Z, Z_loop)
 
         for i in tqdm(range(n_iter)):
             # Project current estimate on Z, i.e., compute E [Th_{i-1}(X) | Z]
             projected_current_estimate = \
-                    conditional_mean_XZ.loop_predict(
+                    conditional_mean_xz.loop_predict(
                         estimates.on_observed_points[i], i
                     )
             # Project Y on current Z
-            projected_y = conditional_mean_YZ.loop_predict(Y, i)
+            projected_y = conditional_mean_yz.loop_predict(Y, i)
 
             pointwise_loss_grad = \
                     projected_current_estimate - projected_y

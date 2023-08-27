@@ -92,17 +92,23 @@ def plot_estimate(
         )
 
     ax.set_title(title)
-    ax.set_xlim(-4, 4)
+    # ax.set_xlim(-4, 4)
     ax.legend()
     fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
 
 @experiment("new_version/eval_deep_gmm_dataset")
+# @experiment("new_version/eval_poster_dataset")
 def main():
-    dataset = make_deep_gmm_dataset(n_samples=500, n_samples_only_z=500, response="sin")
-    model = FunctionalSGD()
+    response = "sin"
+    dataset = make_deep_gmm_dataset(n_samples=300, n_samples_only_z=300,
+                                    response=response)
+    # response = "case_3"
+    # dataset = make_poster_dataset(n_samples=500, n_samples_only_z=1000,
+    #                               response=response)
+    model = FunctionalSGD(lr="inv_sqrt", warm_up_duration=100)
     model.fit(dataset)
-    plot_estimate(model, dataset)
+    plot_estimate(model, dataset, title=f"Estimate for {response}")
 
 
 if __name__ == "__main__":

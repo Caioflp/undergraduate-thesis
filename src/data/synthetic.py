@@ -67,7 +67,7 @@ def make_poster_dataset(
     eps = sigma*(eta*W_2 + np.sqrt(1 - np.power(eta, 2))*W_3)
     Y = Y_denoised + eps
 
-    Z_loop = norm_cdf(rng.normal(loc=1, scale=1, size=n_samples_only_z))
+    Z_loop = norm_cdf(rng.normal(loc=0, scale=1, size=n_samples_only_z))
 
     return InstrumentalVariableDataset(
         X, Z, Z_loop, Y, Y_denoised, "poster dataset"
