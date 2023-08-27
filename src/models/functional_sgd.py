@@ -55,7 +55,7 @@ class FunctionalSGD(BaseEstimator):
         Z_loop = ensure_two_dimensional(Z_loop)
 
         n_samples = X.shape[0]
-        n_iter = n_samples
+        n_iter = Z_loop.shape[0]
 
         lr_dict = {
             "inv_n_samples": lambda i: 1/np.sqrt(n_samples),
@@ -83,36 +83,45 @@ class FunctionalSGD(BaseEstimator):
         # Fit DensityRatio Model
         density_ratio = DensityRatio(
             regularization="l2",
-            regularization_weight=0.01,
         )
         joint_samples = np.concatenate([X, Z], axis=1)
         independent_samples = np.concatenate(
             [X, np.roll(Z, 1)],
             axis=1,
         )
+        best_weight, best_loss = density_ratio.find_best_regularization_weight(
+            joint_samples,
+            independent_samples,
+        )
+        print(f"Density ratio loss: {best_loss}, with weight {best_weight}")
         density_ratio.fit(joint_samples, independent_samples)
 
         # Fit ConditionalMeanOperator model
-        conditional_mean = ConditionalMeanOperator(
-            regularization_weight=0.01,
+        conditional_mean_XZ = ConditionalMeanOperator(
+            regularization_weight=5,
         )
-        conditional_mean.loop_fit(Z, Z_loop)
+        conditional_mean_XZ.loop_fit(Z, Z_loop)
+
+        conditional_mean_YZ = ConditionalMeanOperator(
+            regularization_weight=5,
+        )
+        conditional_mean_YZ.loop_fit(Z, Z_loop)
 
         for i in tqdm(range(n_iter)):
             # Project current estimate on Z, i.e., compute E [Th_{i-1}(X) | Z]
             projected_current_estimate = \
-                    conditional_mean.loop_predict(
+                    conditional_mean_XZ.loop_predict(
                         estimates.on_observed_points[i], i
                     )
             # Project Y on current Z
-            projected_y = conditional_mean.loop_predict(Y, i)
+            projected_y = conditional_mean_YZ.loop_predict(Y, i)
 
             pointwise_loss_grad = \
                     projected_current_estimate - projected_y
 
             # Compute the ratio of densities p(x, z)/(p(x) * p(z)) which
             # appears in the functional gradient expression
-            z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z[i])
+            z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z_loop[i])
             joint_x_and_current_z = np.concatenate(
                 (x_domain.all_points, z_i), axis=1
             )
@@ -131,7 +140,6 @@ class FunctionalSGD(BaseEstimator):
         # Construct final estimate as average of sequence of estimates
         # Discard the first `self.warm_up_duration` samples if we have enough
         # estimates. If we don't, simply average them all.
-
         self.sequence_of_estimates = estimates
         if self.warm_up_duration < n_samples:
             self.estimate = FinalEstimate(

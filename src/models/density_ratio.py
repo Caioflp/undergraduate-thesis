@@ -9,16 +9,16 @@ import numpy as np
 
 from scipy.spatial import distance_matrix
 from sklearn.base import BaseEstimator
+from sklearn.model_selection import KFold
 
 
 class DensityRatio(BaseEstimator):
     def __init__(
         self,
         regularization: str,
-        regularization_weight: float,
     ):
         self.regularization = regularization
-        self.regularization_weight = regularization_weight
+        self.regularization_weight = 1
         self.dim = None
         self.theta = None
         self.support_points = None
@@ -128,3 +128,49 @@ class DensityRatio(BaseEstimator):
                 H_hat + self.regularization_weight * K, h_hat
             )
         self.fitted = True
+
+    def compute_loss(
+        self,
+        numerator_samples: np.ndarray,
+        denominator_samples: np.ndarray,
+    ) -> float:
+        assert numerator_samples.shape == denominator_samples.shape
+        assert self.fitted
+        loss = np.mean(
+            np.square(self.predict(numerator_samples))
+            - self.predict(denominator_samples)
+        )
+        return loss
+
+    def find_best_regularization_weight(
+        self,
+        numerator_samples: np.ndarray,
+        denominator_samples: np.ndarray,
+        n_splits: int = 5,
+        weights: list = [10**(-i) for i in range(-2, 3)],
+    ) -> float:
+        """Uses K-Fold cross validation to choose regularization weight.
+
+        """
+        assert numerator_samples.shape == denominator_samples.shape
+        Kf = KFold(n_splits=n_splits)
+        fold_losses_by_weight = {weight: np.empty(n_splits) for weight in weights}
+        for weight in weights:
+            for fold, (train_idx, test_idx) in enumerate(Kf.split(numerator_samples)):
+                numerator_train = numerator_samples[train_idx]
+                denominator_train = denominator_samples[train_idx]
+                numerator_test = numerator_samples[test_idx]
+                denominator_test = denominator_samples[test_idx]
+                self.regularization_weight = weight
+                self.fit(numerator_train, denominator_train)
+                loss = self.compute_loss(numerator_test, denominator_test)
+                fold_losses_by_weight[weight][fold] = loss
+        cv_loss_by_weight = {
+            weight: np.mean(losses)
+            for weight, losses in fold_losses_by_weight.items()
+        }
+        best_weight = min(cv_loss_by_weight, key=cv_loss_by_weight.get)
+        best_weight_loss = cv_loss_by_weight[best_weight]
+        self.regularization_weight = best_weight
+        return best_weight, best_weight_loss
+
