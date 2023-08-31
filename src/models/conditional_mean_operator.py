@@ -100,12 +100,12 @@ class ConditionalMeanOperator(BaseEstimator):
             np.ravel(distance_matrix(z_samples, z_samples)),
             .5
         )
-        self.lengthscale_z = 1 / median_z
+        self.lengthscale_z = 1 / median_z**2
         median_x = np.quantile(
             np.ravel(distance_matrix(x_samples, x_samples)),
             .5
         )
-        self.lengthscale_x = 1 / median_x
+        self.lengthscale_x = 1 / median_x**2
 
         self.kernel_gramian_regularized = (
             self.kernel_z(z_samples, z_samples)
@@ -124,14 +124,19 @@ class ConditionalMeanOperator(BaseEstimator):
         return self.loop_weights[:, it] @ f_samples
 
     def predict(self, f_samples: np.ndarray, z: np.ndarray):
-        assert len(z.shape) == 1
+        assert len(z.shape) == 2
         assert len(f_samples.shape) == 1
         assert f_samples.size == self.n_samples
         weights = np.linalg.solve(
             self.kernel_gramian_regularized,
-            self.kernel_z(self.z_samples, z.reshape(1, -1))
+            self.kernel_z(self.z_samples, z)
         )
-        return weights @ f_samples
+        # weights' shape is (f_samples.shape[0], z.shape[0])
+        result = weights.T @ f_samples
+        if result.size == 1:
+            return result[0]
+        else:
+            return result
 
     def compute_loss(
         self,

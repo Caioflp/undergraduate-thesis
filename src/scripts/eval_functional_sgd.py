@@ -86,8 +86,8 @@ def plot_estimate(
             dataset.X.flatten(),
             dataset.Y,
             c="k",
-            s=2,
-            alpha=0.6,
+            s=1,
+            alpha=0.2,
             label="Observed response",
         )
 
@@ -97,18 +97,21 @@ def plot_estimate(
     fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
 
-@experiment("new_version/eval_deep_gmm_dataset")
+@experiment("new_version/sandbox")
 # @experiment("new_version/eval_poster_dataset")
 def main():
-    response = "sin"
-    dataset = make_deep_gmm_dataset(n_samples=300, n_samples_only_z=300,
-                                    response=response)
-    # response = "case_3"
-    # dataset = make_poster_dataset(n_samples=500, n_samples_only_z=1000,
-    #                               response=response)
-    model = FunctionalSGD(lr="inv_sqrt", warm_up_duration=100)
+    # response = "abs"
+    # dataset = make_deep_gmm_dataset(n_samples=600, n_samples_only_z=2000,
+    #                                 response=response)
+    response = "case_3"
+    dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
+                                  response=response)
+    model = FunctionalSGD(lr="inv_n_samples", warm_up_duration=100, bound=10)
     model.fit(dataset)
-    plot_estimate(model, dataset, title=f"Estimate for {response}")
+    
+    # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))
+    # plt.show()
+    plot_estimate(model, dataset, title=f"Estimate for {response} in {dataset.name}")
 
 
 if __name__ == "__main__":

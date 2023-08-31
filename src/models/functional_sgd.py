@@ -20,6 +20,7 @@ from src.models.utils import (
     Domain,
     create_covering_grid,
     ensure_two_dimensional,
+    truncate,
 )
 
 
@@ -34,9 +35,11 @@ class FunctionalSGD(BaseEstimator):
         self,
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
         warm_up_duration: int = 50,
+        bound = 10,
     ):
         self.lr = lr
         self.warm_up_duration = 50
+        self.bound = bound
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:
         """Fits model to dataset.
@@ -81,18 +84,15 @@ class FunctionalSGD(BaseEstimator):
         estimates.on_all_points[0] = np.zeros(n_grid_points + n_samples)
 
         # Fit DensityRatio Model
-        density_ratio = DensityRatio(
-            regularization="l2",
-        )
+        density_ratio = DensityRatio(regularization="rkhs")
         joint_samples = np.concatenate([X, Z], axis=1)
-        independent_samples = np.concatenate(
-            [X, np.roll(Z, 1)],
-            axis=1,
-        )
+        independent_samples = np.concatenate([X, np.roll(Z, 2, axis=0)], axis=1)
         best_weight_density_ratio, best_loss_density_ratio = \
                 density_ratio.find_best_regularization_weight(
                     joint_samples,
                     independent_samples,
+                    weights=[10**k for k in range(-3, 3)],
+                    max_iter=3,
                 )
         print(f"Best density ratio loss: {best_loss_density_ratio}, " +
               f"with weight {best_weight_density_ratio}")
@@ -142,9 +142,14 @@ class FunctionalSGD(BaseEstimator):
             )
 
             # Take one step in the negative gradient direction
-            estimates.on_all_points[i+1] = (
-                estimates.on_all_points[i] - lr(i+1) * functional_grad
-            )
+            if self.bound is None:
+                estimates.on_all_points[i+1] = (
+                    estimates.on_all_points[i] - lr(i+1) * functional_grad
+                )
+            else:
+                estimates.on_all_points[i+1] = (
+                    truncate(estimates.on_all_points[i] - lr(i+1) * functional_grad, self.bound)
+                )
 
         # Construct final estimate as average of sequence of estimates
         # Discard the first `self.warm_up_duration` samples if we have enough

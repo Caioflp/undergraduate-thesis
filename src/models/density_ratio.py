@@ -37,8 +37,8 @@ class DensityRatio(BaseEstimator):
         else:
             raise ValueError
 
-        # return np.sum(self.theta * self.kernel(self.support_points, w))
-        return (self.kernel(w, self.support_points) @ self.theta).ravel()
+        return np.maximum((self.kernel(w, self.support_points) @ self.theta).ravel(), 0)
+        # return (self.kernel(w, self.support_points) @ self.theta).ravel()
 
 
     def kernel(self, w_1: np.ndarray, w_2: np.ndarray):
@@ -111,7 +111,7 @@ class DensityRatio(BaseEstimator):
             np.ravel(distance_matrix(numerator_samples, numerator_samples)),
             .5
         )
-        self.lengthscale = 1 / median
+        self.lengthscale = 1 / median**2
 
         n_samples, self.dim = numerator_samples.shape
         self.support_points = numerator_samples
@@ -139,8 +139,8 @@ class DensityRatio(BaseEstimator):
         assert numerator_samples.shape == denominator_samples.shape
         assert self.fitted
         loss = np.mean(
-            np.square(self.predict(numerator_samples))/2
-            - self.predict(denominator_samples)
+            np.square(self.predict(denominator_samples))/2
+            - self.predict(numerator_samples)
         )
         return loss
 
@@ -196,7 +196,7 @@ class DensityRatio(BaseEstimator):
             )
         else:
             new_base_offset = base_offset / 10
-            new_weights = [best_weight + k*new_base_offset for k in range(-5, 6)]
+            new_weights = [best_weight + k * new_base_offset for k in range(-5, 6)]
             return self.find_best_regularization_weight(
                 numerator_samples,
                 denominator_samples,

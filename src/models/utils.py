@@ -192,6 +192,12 @@ def default_density_estimator() -> KDE:
     return KDE(bandwidth=0.1)
 
 
+def truncate(arr: np.ndarray, M: float):
+    """Truncate the values of `arr` inside [-M, M]
+    """
+    return np.minimum(np.maximum(arr, 0), M) - np.minimum(np.maximum(-arr, 0), M)
+
+
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
