@@ -1,13 +1,10 @@
 ## To do
 
-* Implementation changes:
-    - Use three datasets: (X, Z), (Y, Z), (Z), although the first two
-      don't need to be independent from each other.
-    - Crop h inside [-M, M] after each update
-    - Write tests for uLSIF implementation
-    - Implement \hat{ r_0 } and \hat{ T } using kernel methods
-* Benchmark against KIV, DeepIV, DeepGMM, 2SLS.
+* Things that can be better:
+    - Choosing kernel through validation
+    - Choosing lengthscale through validation
 
+* Benchmark against KIV, DeepIV, DeepGMM, 2SLS.
 * Rewrite theory section of paper according to observations made in the
   document.
 
@@ -82,6 +79,12 @@
 
 ## Done
 
+* Implementation changes:
+    - Use three datasets: (X, Z), (Y, Z), (Z), although the first two
+      don't need to be independent from each other.
+    - Crop h inside [-M, M] after each update
+    - Write tests for uLSIF implementation
+    - Implement \hat{ r_0 } and \hat{ T } using kernel methods
 * Implement \hat{ Phi } using kernel methods
     - Read and underestand the closed form solutions
     - Understand how the regularization parameter is being chosen
