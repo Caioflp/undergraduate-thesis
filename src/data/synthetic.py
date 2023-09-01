@@ -17,6 +17,7 @@ LOGGER = logging.getLogger(__name__)
 
 def make_poster_dataset(
     n_samples: int = 500,
+    n_samples_only_z: int = 500,
     response: Literal["case_1", "case_2", "case_3"] = "case_1",
     sigma: float = 0.25,
     rho: float = 0.7,
@@ -25,7 +26,7 @@ def make_poster_dataset(
 ) -> InstrumentalVariableDataset:
     """Creates a dataset in which the instrument is uniformly distributed.
 
-    Problem was taken from a research poster by Yuri Saporito, Yuri Resende and
+    Problem was taken from a research poster by Yuri Saporito, Yuri Rezende and
     Rodrigo Targino.
 
     Parameters
@@ -66,13 +67,16 @@ def make_poster_dataset(
     eps = sigma*(eta*W_2 + np.sqrt(1 - np.power(eta, 2))*W_3)
     Y = Y_denoised + eps
 
+    Z_loop = norm_cdf(rng.normal(loc=0, scale=1, size=n_samples_only_z))
+
     return InstrumentalVariableDataset(
-        X, Z, Y, Y_denoised, "poster dataset"
+        X, Z, Z_loop, Y, Y_denoised, "poster dataset"
     )
     
 
 def make_deep_gmm_dataset(
     n_samples: int = 500, 
+    n_samples_only_z: int = 500,
     response: Literal["sin", "step", "abs", "linear"] = "sin",
     seed: int = None,
 ) -> InstrumentalVariableDataset:
@@ -116,8 +120,9 @@ def make_deep_gmm_dataset(
     X = Z[:, 0] + eps + gamma
     Y_denoised = response_func(X)
     Y = Y_denoised + eps + delta
+    Z_loop = rng.uniform(low=-3, high=3, size=(n_samples_only_z, 2))
     return InstrumentalVariableDataset(
-        X, Z, Y, Y_denoised, "deep gmm dataset"
+        X, Z, Z_loop, Y, Y_denoised, "deep gmm dataset"
     )
 
 if __name__ == "__main__":

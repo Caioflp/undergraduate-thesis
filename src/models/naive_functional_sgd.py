@@ -13,19 +13,32 @@ from sklearn.base import BaseEstimator
 from tqdm import tqdm
 
 from src.data.utils import InstrumentalVariableDataset
-from src.models import DensityRatio, ConditionalMeanOperator
 from src.models.utils import (
     Estimates,
     FinalEstimate,
     Domain,
     create_covering_grid,
     ensure_two_dimensional,
-    truncate,
+    default_regressor,
+    default_density_estimator,
 )
 
 
-class FunctionalSGD(BaseEstimator):
+class NaiveFunctionalSGD(BaseEstimator):
     """Regressor based on a variant of stochastic gradient descent.
+
+    Parameters
+    ----------
+    projector_y: BaseEstimator, default KNN.
+        Computes an estimate to E[Y|Z].
+    projector_estimate: BaseEstimator, default KNN.
+        Computes an estimate to E[h_i-1|Z].
+    density_estimator_x: BaseEstimator, default KDE.
+        Computes an estimate to p(x).
+    density_estimator_z: BaseEstimator, default KDE.
+        Computes an estimate to  p(z)
+    density_estimator_xz: BaseEstimator, default KDE.
+        Computes an estimate to p(x, z)
 
     """
 
@@ -34,12 +47,20 @@ class FunctionalSGD(BaseEstimator):
     def __init__(
         self,
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
+        projector_y: BaseEstimator = default_regressor(),
+        projector_estimate: BaseEstimator = default_regressor(),
+        density_estimator_x: BaseEstimator = default_density_estimator(),
+        density_estimator_z: BaseEstimator = default_density_estimator(),
+        density_estimator_xz: BaseEstimator = default_density_estimator(),
         warm_up_duration: int = 50,
-        bound = 10,
     ):
         self.lr = lr
+        self.projector_y = projector_y
+        self.projector_estimate = projector_estimate
+        self.density_estimator_x = density_estimator_x
+        self.density_estimator_z = density_estimator_z
+        self.density_estimator_xz = density_estimator_xz
         self.warm_up_duration = 50
-        self.bound = bound
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:
         """Fits model to dataset.
@@ -47,18 +68,17 @@ class FunctionalSGD(BaseEstimator):
         Parameters
         ----------
         dataset: InstrumentalVariableDataset
-            Dataset containing X, Z and Y.
+            Dataset containing X, Z and T.
 
         """
         self.fit_dataset_name = dataset.name
 
-        X, Z, Y, Z_loop = dataset.X, dataset.Z, dataset.Y, dataset.Z_loop
+        X, Z, Y = dataset.X, dataset.Z, dataset.Y
         X = ensure_two_dimensional(X)
         Z = ensure_two_dimensional(Z)
-        Z_loop = ensure_two_dimensional(Z_loop)
 
         n_samples = X.shape[0]
-        n_iter = Z_loop.shape[0]
+        n_iter = n_samples
 
         lr_dict = {
             "inv_n_samples": lambda i: 1/np.sqrt(n_samples),
@@ -83,58 +103,37 @@ class FunctionalSGD(BaseEstimator):
         )
         estimates.on_all_points[0] = np.zeros(n_grid_points + n_samples)
 
-        # Fit DensityRatio Model
-        density_ratio = DensityRatio(regularization="rkhs")
-        joint_samples = np.concatenate([X, Z], axis=1)
-        independent_samples = np.concatenate([X, np.roll(Z, 2, axis=0)], axis=1)
-        best_weight_density_ratio, best_loss_density_ratio = \
-                density_ratio.find_best_regularization_weight(
-                    joint_samples,
-                    independent_samples,
-                    weights=[10**k for k in range(-3, 3)],
-                    max_iter=3,
-                )
-        print(f"Best density ratio loss: {best_loss_density_ratio}, " +
-              f"with weight {best_weight_density_ratio}")
-        density_ratio.fit(joint_samples, independent_samples)
+        # Compute the projected values of Y onto Z.
+        projected_y = self.projector_y.fit(Z, Y).predict(Z)
 
-        # Fit ConditionalMeanOperator model
-        # For E[X | Z]
-        conditional_mean_xz = ConditionalMeanOperator()
-        best_weight_xz, best_loss_xz = \
-                conditional_mean_xz.find_best_regularization_weight(Z, X)
-        print(f"Best conditional mean XZ loss: {best_loss_xz}, with weight " +
-              f"{best_weight_xz}")
-        conditional_mean_xz.loop_fit(Z, Z_loop)
-
-        # For E[Y | Z]
-        Y_array = Y.reshape(-1, 1)
-        conditional_mean_yz = ConditionalMeanOperator()
-        best_weight_yz, best_loss_yz = \
-                conditional_mean_yz.find_best_regularization_weight(Z, Y_array)
-        print(f"Best conditional mean YZ loss: {best_loss_yz}, with weight " +
-              f"{best_weight_yz}")
-        conditional_mean_yz.loop_fit(Z, Z_loop)
+        # Fit the density estimators on X, Z and (X, Z)
+        densities_x = self.density_estimator_x.fit(X) \
+                .score_samples(x_domain.all_points)
+        densities_z = self.density_estimator_z.fit(Z).score_samples(Z)
+        self.density_estimator_xz.fit(np.concatenate((X, Z), axis=1))
 
         for i in tqdm(range(n_iter)):
             # Project current estimate on Z, i.e., compute E [Th_{i-1}(X) | Z]
-            projected_current_estimate = \
-                    conditional_mean_xz.loop_predict(
-                        estimates.on_observed_points[i], i
-                    )
-            # Project Y on current Z
-            projected_y = conditional_mean_yz.loop_predict(Y, i)
+            projected_current_estimate = self.projector_estimate \
+                                         .fit(Z, estimates.on_observed_points[i]) \
+                                         .predict([Z[i]])[0]
 
             pointwise_loss_grad = \
-                    projected_current_estimate - projected_y
+                    projected_current_estimate - projected_y[i]
 
             # Compute the ratio of densities p(x, z)/(p(x) * p(z)) which
             # appears in the functional gradient expression
-            z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z_loop[i])
+            # We apply the exponential because `score_samples` returns
+            # log densities.
+            z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z[i])
             joint_x_and_current_z = np.concatenate(
                 (x_domain.all_points, z_i), axis=1
             )
-            ratio_of_densities = density_ratio.predict(joint_x_and_current_z)
+            ratio_of_densities = np.exp(
+                self.density_estimator_xz.score_samples(joint_x_and_current_z)
+                - densities_x
+                - densities_z[i]
+            )
 
             # Compute the stochastic estimates for the functional loss gradient
             functional_grad = (
@@ -142,18 +141,14 @@ class FunctionalSGD(BaseEstimator):
             )
 
             # Take one step in the negative gradient direction
-            if self.bound is None:
-                estimates.on_all_points[i+1] = (
-                    estimates.on_all_points[i] - lr(i+1) * functional_grad
-                )
-            else:
-                estimates.on_all_points[i+1] = (
-                    truncate(estimates.on_all_points[i] - lr(i+1) * functional_grad, self.bound)
-                )
+            estimates.on_all_points[i+1] = (
+                estimates.on_all_points[i] - lr(i+1) * functional_grad
+            )
 
         # Construct final estimate as average of sequence of estimates
         # Discard the first `self.warm_up_duration` samples if we have enough
         # estimates. If we don't, simply average them all.
+
         self.sequence_of_estimates = estimates
         if self.warm_up_duration < n_samples:
             self.estimate = FinalEstimate(
@@ -166,7 +161,7 @@ class FunctionalSGD(BaseEstimator):
             )
         else:
             self.estimate = FinalEstimate(
-                on_observed_points=estimates.on_observed_points[1:].mean(axis=0),
+                on_observed_points=estimates.on_observed_points[1:] .mean(axis=0),
                 on_grid_points=estimates.on_grid_points[1:].mean(axis=0),
             )
         self.domain = x_domain

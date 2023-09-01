@@ -1,24 +1,17 @@
 ## To do
 
-* Finish proof:
-    - Use O_p (1) in bound of ||u_m||^2
-    - relate RKHS norm with L2(X \times Z) norm
-    - Use bounds on convergence of density ration estimates.
-    - Use bounds on Kernel Ridge Regression (for the expectation operator
-      and for E[Y|Z]).
-    - Formulate things in a "with high probability" way, not in an
-      "average loss" way.
-* Reimplement things using kernel methods.
-* Implement things even if we don't have exact bounds.
+* Things that can be better:
+    - Choosing kernel through validation
+    - Choosing lengthscale through validation
+
 * Benchmark against KIV, DeepIV, DeepGMM, 2SLS.
+* Rewrite theory section of paper according to observations made in the
+  document.
 
 
 * Implement way to save parameters in each execution
-* Setup a working logger
 * Take a look at the IV datasets that Moises sent me.
-* Implement the minimax estimator with a RKHS ball as $\mathcal{G}$,
-  or one of the other more recent IV estimation methods.
-* Implement Mirror Descent / Nesterov Acceleration
+* Setup a working logger
 
 
 ## Meeting 19/07
@@ -86,6 +79,17 @@
 
 ## Done
 
+* Implementation changes:
+    - Use three datasets: (X, Z), (Y, Z), (Z), although the first two
+      don't need to be independent from each other.
+    - Crop h inside [-M, M] after each update
+    - Write tests for uLSIF implementation
+    - Implement \hat{ r_0 } and \hat{ T } using kernel methods
+* Implement \hat{ Phi } using kernel methods
+    - Read and underestand the closed form solutions
+    - Understand how the regularization parameter is being chosen
+* Understand how to apply KIV's stage 1
+* Proof adaptation
 * Read material on density estimation and see if it gives us the results
   we need.
 * Redo all the calculations we did, in LaTeX (copy the neurips paper's

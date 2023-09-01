@@ -15,6 +15,7 @@ class InstrumentalVariableDataset:
     """
     X: np.ndarray
     Z: np.ndarray
+    Z_loop: np.ndarray
     Y: np.ndarray
     Y_denoised: np.ndarray
     name: str = None
