@@ -2,15 +2,15 @@
 
 The first problem is proving our sequence of estimates is, in fact, contained in $ L^{ 2 } ( X ) $.
 This amounts to proving $ u_{ m } \in L^{ 2 } ( X ) $ for every $ m $.
-It's not even immediate why $ u_{ h } ( x ) = \Phi ( x, Z ) \xi_{ h } ( Z ) $ (the unbiased gradient when we know $ r_{ 0 }, \Phi $ and $ \mathcal{T} $) belongs to $ L^{ 2 } ( X ) $\improvement{ We'll need to bound the norm of $ u_{ m } $ by a constant later in the proof. }
+It's not even immediate why $ u_{ h } ( x ) = \Phi ( x, Z ) \xi_{ h } ( Z ) $ (the unbiased gradient when we know $ r_{ 0 }, \Phi $ and $ \meanop $) belongs to $ L^{ 2 } ( X ) $\improvement{ We'll need to bound the norm of $ u_{ m } $ by a constant later in the proof. }
 
 After doing this, we check that $ \risk $ is convex in $ \mathcal{F} $:
 if $ h, g \in \mathcal{F} $ and $ \lambda \in [ 0, 1 ] $, then
 \begin{align*}
     \risk ( \lambda h + ( 1 - \lambda ) g )
-    &= \mean [ \loss ( r_{ 0 } ( Z ), \mathcal{T} [ \lambda h + ( 1 - \lambda ) g ] ( Z ) ) ] \\
-    &= \mean [ \loss ( r_{ 0 } ( Z ), \lambda \mathcal{T} [ h ] ( Z ) + ( 1 - \lambda ) \mathcal{T} [ g ] ( Z ) ) ] \\
-    &\leq \lambda \mean [ \loss ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) ] + ( 1 - \lambda ) \mean [ \loss ( r_{ 0 } ( Z ), \mathcal{T} [ g ] ( Z ) ) ] \\
+    &= \mean [ \loss ( r_{ 0 } ( Z ), \meanop [ \lambda h + ( 1 - \lambda ) g ] ( Z ) ) ] \\
+    &= \mean [ \loss ( r_{ 0 } ( Z ), \lambda \meanop [ h ] ( Z ) + ( 1 - \lambda ) \meanop [ g ] ( Z ) ) ] \\
+    &\leq \lambda \mean [ \loss ( r_{ 0 } ( Z ), \meanop [ h ] ( Z ) ) ] + ( 1 - \lambda ) \mean [ \loss ( r_{ 0 } ( Z ), \meanop [ g ] ( Z ) ) ] \\
     &= \lambda \risk ( h ) + ( 1 - \lambda ) \risk ( g )
 .\end{align*}
 To lighten the notation, the symbols $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \cdot } $, when written without a subscript to specify which space they refer to, will act as the norm and inner product, respectively, of $ L^2 ( X ) $.
@@ -98,7 +98,7 @@ We then treat each of the three terms in the RHS of the inequality above separat
 %             \right) D^2 + \frac{ 1 }{ 2 \alpha_{ 1 } } D^2 = \frac{ D^2 }{ 2 \alpha_{ M } }
 %         .\end{align*}
 %     \item[Second term]
-%         Define $ \mathcal{D} $ to be the set of all observed data, that is, all of the variables in $ \data_{ \Phi }, \data_{ r_{ 0 } }, \data_{ \mathcal{T} } $ and $ \left\{ \bz_{ i } \right\}_{ i=1 }^{ M } $.
+%         Define $ \mathcal{D} $ to be the set of all observed data, that is, all of the variables in $ \data_{ \Phi }, \data_{ r_{ 0 } }, \data_{ \meanop } $ and $ \left\{ \bz_{ i } \right\}_{ i=1 }^{ M } $.
 %         Let's evaluate $ \mean \left[ \norm{ u_{ m } }^2 \right] $:
 %         \begin{equation*}
 %             \mean \left[
@@ -109,7 +109,7 @@ We then treat each of the three terms in the RHS of the inequality above separat
 %                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
 %                     \partial_{ 2 } \loss \left(
 %                         \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
-%                         \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                         \hat{ \meanop [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \meanop } )
 %                     \right)^2
 %                 \right]
 %             \right]
@@ -122,7 +122,7 @@ We then treat each of the three terms in the RHS of the inequality above separat
 %                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
 %                     \partial_{ 2 } \loss \left(
 %                         \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
-%                         \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                         \hat{ \meanop [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \meanop } )
 %                     \right)^2
 %                 \right]
 %             \right] \\
@@ -130,7 +130,7 @@ We then treat each of the three terms in the RHS of the inequality above separat
 %             \mean_{ \data } \left[
 %                 \partial_{ 2 } \loss \left(
 %                     \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
-%                     \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                     \hat{ \meanop [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \meanop } )
 %                 \right)^2
 %                 \mean_{ X } \left[
 %                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
@@ -142,7 +142,7 @@ We then treat each of the three terms in the RHS of the inequality above separat
 %             &\mean_{ \data } \left[
 %                 \partial_{ 2 } \loss \left(
 %                     \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ),
-%                     \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                     \hat{ \meanop [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \meanop } )
 %                 \right)^2
 %                 \mean_{ X } \left[
 %                     \hat{ \Phi } ( X, \bz_{ m } ; \mathcal{D}_{ \Phi } )^2
@@ -151,7 +151,7 @@ We then treat each of the three terms in the RHS of the inequality above separat
 %             &\hspace{2cm}=
 %             \mean_{ \data } \left[
 %                 \left(
-%                     \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \mathcal{T} } )
+%                     \hat{ \meanop [ \hat{ h }_{ m-1 } ] } ( \bz_{ m } ; \mathcal{D}_{ \meanop } )
 %                     - \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } )
 %                 \right)^2
 %                 \mean_{ X } \left[
@@ -171,13 +171,13 @@ We then treat each of the three terms in the RHS of the inequality above separat
 %         .\end{equation*}
 %         The strategy employed on the SIP paper was to condition on the $ \sigma $-algebra generated by the training samples observed up until iteration iteration $ m - 1 $.
 %         In our case, that would be $ \bz_{ 1 }, \dots, \bz_{ m-1 } $.
-%         The problem which arises is that we no longer have measurability of $ \hat{ h }_{ m-1 } $ with respect to this $ \sigma $-algebra, as it depends on the datasets $ \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $, used to estimate $ \hat{ \Phi }, \hat{ \mathcal{T} } $ and $ \hat{ r }_{ 0 } $ in an offline manner.
+%         The problem which arises is that we no longer have measurability of $ \hat{ h }_{ m-1 } $ with respect to this $ \sigma $-algebra, as it depends on the datasets $ \data_{ \Phi }, \data_{ \meanop }, \data_{ r_{ 0 } } $, used to estimate $ \hat{ \Phi }, \hat{ \meanop } $ and $ \hat{ r }_{ 0 } $ in an offline manner.
 % 
-%         The other option would be to condition on more things, namely the $ \sigma $-algebra generated by $ \bz_{ 1 }, \dots, \bz_{ m - 1 }, \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $.
-%         We gain measurability of $ \hat{ h }_{ m-1 } $, but we are no longer integrating out $ \data_{ \Phi }, \data_{ \mathcal{T} }, \data_{ r_{ 0 } } $, which is needed to use some sort of unbiasedness of the estimators $ \hat{ \Phi }, \hat{ \mathcal{T} }, \hat{ r }_{ 0 } $.
+%         The other option would be to condition on more things, namely the $ \sigma $-algebra generated by $ \bz_{ 1 }, \dots, \bz_{ m - 1 }, \data_{ \Phi }, \data_{ \meanop }, \data_{ r_{ 0 } } $.
+%         We gain measurability of $ \hat{ h }_{ m-1 } $, but we are no longer integrating out $ \data_{ \Phi }, \data_{ \meanop }, \data_{ r_{ 0 } } $, which is needed to use some sort of unbiasedness of the estimators $ \hat{ \Phi }, \hat{ \meanop }, \hat{ r }_{ 0 } $.
 % 
 %         Let's try the latter and see what we end up with.
-%         Define $ \data_{ m-1 } \defeq \data_{ \Phi } \cup \data_{ \mathcal{T} } \cup \data_{ r_{ 0 } } \cup \left\{ \bz_{ 1 }, \dots, \bz_{ m-1 } \right\} $.
+%         Define $ \data_{ m-1 } \defeq \data_{ \Phi } \cup \data_{ \meanop } \cup \data_{ r_{ 0 } } \cup \left\{ \bz_{ 1 }, \dots, \bz_{ m-1 } \right\} $.
 %         Then,
 %         \begin{align*}
 %             \begin{split}
@@ -207,7 +207,7 @@ We then treat each of the three terms in the RHS of the inequality above separat
 %         .\end{align*}
 %         Now we must evaluate the expression inside the inner product.
 %         We restrict ourselves to the quadratic case.
-%         Define $ \psi ( z ) = \mathcal{T} [ \hat{ h }_{ m-1 } ] ( z ) - r_{ 0 } ( z ) $ and $ \hat{ \psi } ( z ; \dataproj ) = \hat{ \mathcal{T} [ \hat{ h }_{ m-1 } ] } ( z ; \data_{ \mathcal{T} } ) - \hat{ r }_{ 0 } ( z ; \data_{ r_{ 0 } } ) $, where $ \dataproj = \data_{ \mathcal{T} } \cup \data_{ r_{ 0 } } $.
+%         Define $ \psi ( z ) = \meanop [ \hat{ h }_{ m-1 } ] ( z ) - r_{ 0 } ( z ) $ and $ \hat{ \psi } ( z ; \dataproj ) = \hat{ \meanop [ \hat{ h }_{ m-1 } ] } ( z ; \data_{ \meanop } ) - \hat{ r }_{ 0 } ( z ; \data_{ r_{ 0 } } ) $, where $ \dataproj = \data_{ \meanop } \cup \data_{ r_{ 0 } } $.
 %         Then:
 %         \begin{align*}
 %             \begin{split}
@@ -284,7 +284,7 @@ We then treat each of the three terms in the RHS of the inequality above separat
 %         .\end{align*}
 % \end{description}
 
-% \subsection{Option 2: conditioning on $ \data_{ \Phi, \mathcal{T}, r_{ 0 } } $ and averaging with respect to $ z_{ 1 } , \dots, z_{ M } $}
+% \subsection{Option 2: conditioning on $ \data_{ \Phi, \meanop, r_{ 0 } } $ and averaging with respect to $ z_{ 1 } , \dots, z_{ M } $}
 % 
 % With this strategy, our aim isn't to get a convergence guarantee analogous to that of the SIP paper, but some sort of ``given $ \dataoff $, this inequality is true with high probability'' guarantee.
 % 
@@ -324,7 +324,7 @@ Therefore, what we wish to compute is
             \hat{ \Phi } ( X, \bz_{ m } )^2
             \partial_{ 2 } \ell \left(
                 \hat{ r_{ 0 } } ( \bz_{ m } ),
-                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
             \right)^2
         \right]
         \given{\Big} \dataoff
@@ -334,7 +334,7 @@ Therefore, what we wish to compute is
             \hat{ \Phi } ( X, \bz_{ m } )^2
             \partial_{ 2 } \ell \left(
                 \hat{ r_{ 0 } } ( \bz_{ m } ),
-                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
             \right)^2
             \given{\Big} \dataoff
         \right]
@@ -347,7 +347,7 @@ Since $ \bz_{ 1:m } $ is independent from $ \dataoff $, this is equal to
             \hat{ \Phi } ( X, \bz_{ m } )^2
             \partial_{ 2 } \ell \left(
                 \hat{ r_{ 0 } } ( \bz_{ m } ),
-                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
             \right)^2
         \right]
     \right]
@@ -359,7 +359,7 @@ Reversing back the expectations, we get
             \hat{ \Phi } ( X, \bz_{ m } )^2
             \partial_{ 2 } \ell \left(
                 \hat{ r_{ 0 } } ( \bz_{ m } ),
-                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
             \right)^2
         \right]
     \right] \\
@@ -370,7 +370,7 @@ Reversing back the expectations, we get
         \right]
         \partial_{ 2 } \ell \left(
             \hat{ r_{ 0 } } ( \bz_{ m } ),
-            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
         \right)^2
     \right]
 .\end{align*}
@@ -398,7 +398,7 @@ Therefore,
         \right]
         \partial_{ 2 } \ell \left(
             \hat{ r_{ 0 } } ( \bz_{ m } ),
-            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
         \right)^2
     \right] \\
     &\hspace{1cm}\leq
@@ -408,7 +408,7 @@ Therefore,
         \right]
         \partial_{ 2 } \ell \left(
             \hat{ r_{ 0 } } ( \bz_{ m } ),
-            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
         \right)^2
     \right] \\
     &\hspace{1cm}=
@@ -416,7 +416,7 @@ Therefore,
     \mean_{ \bz_{ 1:m } } \left[
         \partial_{ 2 } \ell \left(
             \hat{ r_{ 0 } } ( \bz_{ m } ),
-            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
         \right)^2
     \right]
 .\end{align*}
@@ -425,7 +425,7 @@ To bound the expectation, we assume\info{Assumption} the loss is quadratic and t
 \begin{align*}
     &\mean_{ \bz_{ 1:m } } \left[
         \left(
-            \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
             - \hat{ r_{ 0 } } ( \bz_{ m } )
         \right)^2
     \right] \\
@@ -434,8 +434,8 @@ To bound the expectation, we assume\info{Assumption} the loss is quadratic and t
         = \mean_{ \bz_{ 1:m } } \bigg[
             \Big(
                 \left(
-                    \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-                    - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                    \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                    - \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
                 \right)
                 + \left(
                     r_{ 0 } ( \bz_{ m } )
@@ -443,7 +443,7 @@ To bound the expectation, we assume\info{Assumption} the loss is quadratic and t
                 \right) \\
         &\hspace{4cm}
                 + \left(
-                    \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                    \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
                     - r_{ 0 } ( \bz_{ m } )
                 \right)
             \Big)^2
@@ -453,8 +453,8 @@ To bound the expectation, we assume\info{Assumption} the loss is quadratic and t
         &\hspace{1cm}
         \leq 3 \mean_{ \bz_{ 1:m } } \bigg[
             \left(
-                \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-                - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                - \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
             \right)^2
             + \left(
                 r_{ 0 } ( \bz_{ m } )
@@ -462,7 +462,7 @@ To bound the expectation, we assume\info{Assumption} the loss is quadratic and t
             \right)^2 \\
     &\hspace{3cm}
             + \left(
-                \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
                 - r_{ 0 } ( \bz_{ m } )
             \right)^2
         \bigg]
@@ -472,7 +472,7 @@ To bound the expectation, we assume\info{Assumption} the loss is quadratic and t
         = 3 \bigg\{
             \mean_{ \bz_{ 1:m-1 } }\left[
                 \norm{
-                ( \hat{ \mathcal{T} } - \mathcal{T} )
+                ( \hat{ \meanop } - \meanop )
                 [ \hat{ h }_{ m-1 } ]
             }_{ L^2 ( \mathbb{Z} ) }^2
             \right]
@@ -481,7 +481,7 @@ To bound the expectation, we assume\info{Assumption} the loss is quadratic and t
             \right]\\
         &\hspace{3cm}
             + \mean_{ \bz_{ 1:m-1 } }  \left[
-                \norm{ \mathcal{T} [ \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
+                \norm{ \meanop [ \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
             \right]
         \bigg\}
     \end{split}
@@ -489,17 +489,17 @@ To bound the expectation, we assume\info{Assumption} the loss is quadratic and t
 We treat each part of this expression separately.
 Firstly,
 \begin{align*}
-    \norm{ ( \hat{ \mathcal{T} } - \mathcal{T} ) [ \hat{ h }_{ m-1 } ] }_{ L^2 ( \mathbb{Z} ) }^2
-    \leq \norm{ \hat{ \mathcal{T} } - \mathcal{T} }_{ \mathrm{op} }^2 \norm{ \hat{ h }_{ m-1 } }_{ L^2 ( \mathbb{X} ) }^2
-    \leq M^2 \norm{ \hat{ \mathcal{T} } - \mathcal{T} }_{ \mathrm{op} }^2
+    \norm{ ( \hat{ \meanop } - \meanop ) [ \hat{ h }_{ m-1 } ] }_{ L^2 ( \mathbb{Z} ) }^2
+    \leq \norm{ \hat{ \meanop } - \meanop }_{ \mathrm{op} }^2 \norm{ \hat{ h }_{ m-1 } }_{ L^2 ( \mathbb{X} ) }^2
+    \leq M^2 \norm{ \hat{ \meanop } - \meanop }_{ \mathrm{op} }^2
 .\end{align*}
 We leave the second part as $ \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( \mathbb{Z} ) }^2 $.
 Finally, for the third part, we have
 \begin{align*}
-    \norm{ \mathcal{T} [ \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
+    \norm{ \meanop [ \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
     &= \mean_{ Z } \left[
         \left(
-            \mathcal{T} [ \hat{ h }_{ m-1 } ] ( Z ) - r_{ 0 } ( Z )
+            \meanop [ \hat{ h }_{ m-1 } ] ( Z ) - r_{ 0 } ( Z )
         \right)^2
     \right] \\
     &= \mean_{ Z } \left[
@@ -529,12 +529,12 @@ Putting everything together, what we conclude is
     \right]
     \leq
     3 \norm{ \hat{ \Phi } }_{ \rkhsw }^2 \left(
-        M^2 \norm{ \hat{ \mathcal{T} } - \mathcal{T} }_{ \mathrm{op} }^2
+        M^2 \norm{ \hat{ \meanop } - \meanop }_{ \mathrm{op} }^2
         + \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^2 ( \mathbb{Z} ) }^2
         + 2 \left( M^2 + \mean [ Y^2 ] \right)
     \right)
 .\end{align*}
-{\color{red} We still have to use convergence results for $ \hat{ \mathcal{T} } $ and $ \hat{ r_{ 0 } } $ to finish this bound.
+{\color{red} We still have to use convergence results for $ \hat{ \meanop } $ and $ \hat{ r_{ 0 } } $ to finish this bound.
 It doesn't need to be good, we only need to bound this by something which remains bounded as $ \abs{ \dataoff } $ and the number of iterations grow.
 Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, that is, almost surely finite, and rely on the (fast enough) decay of the learning rate to achieve convergence.}
 
@@ -542,7 +542,7 @@ Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, th
 %     &\norm{ \hat{ \Phi } }_{ \rkhsw }^2
 %     \mean_{ \bz_{ 1:m } } \left[
 %         \left(
-%             \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%             \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
 %             - \hat{ r_{ 0 } } ( \bz_{ m } )
 %         \right)^2
 %     \right] \\
@@ -554,8 +554,8 @@ Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, th
 %             \right]
 %             \cdot \Big(
 %                 \left(
-%                     \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-%                     - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                     \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                     - \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
 %                 \right) \\
 %                 &\hspace{5.5cm}
 %                 + \left(
@@ -564,7 +564,7 @@ Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, th
 %                 \right) \\
 %                 &\hspace{5.5cm}
 %                 + \left(
-%                     \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                     \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
 %                     - r_{ 0 } ( \bz_{ m } )
 %                 \right)
 %             \Big)^2
@@ -577,8 +577,8 @@ Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, th
 %                 \hat{ \Phi } ( X, \bz_{ m } )^2
 %             \right]
 %             \left(
-%                 \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-%                 - \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                 \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                 - \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
 %             \right)^2
 %             \\
 %             &\hspace{2.75cm}
@@ -595,7 +595,7 @@ Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, th
 %                 \hat{ \Phi } ( X, \bz_{ m } )^2
 %             \right]
 %             \left(
-%                 \mathcal{T} [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                 \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
 %                 - r_{ 0 } ( \bz_{ m } )
 %             \right)^2
 %         \bigg]
@@ -603,15 +603,15 @@ Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, th
 % .\end{align*}
 % 
 % {\color{red} Don't know what else to do with this for now.
-% My guess is well have to use some boundedness assumptions on the RKHSs used to estimate $ \Phi, \mathcal{T} $ and $ r_{ 0 } $ to uniformly bound this expression.
+% My guess is well have to use some boundedness assumptions on the RKHSs used to estimate $ \Phi, \meanop $ and $ r_{ 0 } $ to uniformly bound this expression.
 % The goal is to bound this uniformly with respect to $ \bz_{ 1 }, \bz_{ 2 }, \dots $ and in a way which does not explode as $ \abs{ \dataoff } $ and $ M $ grow.}
 
 
 \textbf{Third term }
 
 Our goal is to open up the inner product and make explicit the estimation errors of our model's different components, like we did before.
-Here, we define $ \Psi_{ m } ( Z ) \defeq \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \mathcal{T} [ \hat{ h }_{ m-1 } ] ( Z ) ) $.
-The hat version $ \hat{ \Psi }_{ m } $ is defined accordingly, replacing $ r_{ 0 } $ and $ \mathcal{T} $ by their estimators.
+Here, we define $ \Psi_{ m } ( Z ) \defeq \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \meanop [ \hat{ h }_{ m-1 } ] ( Z ) ) $.
+The hat version $ \hat{ \Psi }_{ m } $ is defined accordingly, replacing $ r_{ 0 } $ and $ \meanop $ by their estimators.
 {\allowdisplaybreaks
 \begin{align*}
     &\mean_{ \bz_{ 1:m } } \left[
@@ -805,18 +805,18 @@ We proceed to analyze each term separately:
     Furthermore, we can bound $ \norm{ \Psi_{ m } }_{ L^2 ( Z ) }^2 $ as follows:
     \begin{align*}
         \norm{ \Phi_{ m } }_{ L^2 ( Z ) }^2
-        &= \norm{ r_{ 0 } - \mathcal{T} [ \hat{ h }_{ m-1 } ] }_{ L^2 ( Z ) }^2 \\
+        &= \norm{ r_{ 0 } - \meanop [ \hat{ h }_{ m-1 } ] }_{ L^2 ( Z ) }^2 \\
         &\leq 2 \left(
             \norm{ r_{ 0 } }_{ L^{ 2 } ( Z ) }^2
-            + \norm{ \mathcal{T} [ \hat{ h }_{ m-1 } ] }_{ L^{ 2 } ( Z ) }^2
+            + \norm{ \meanop [ \hat{ h }_{ m-1 } ] }_{ L^{ 2 } ( Z ) }^2
         \right) \\
         &\leq 2 \left(
-            \mean [ Y^2 ] + \norm{ \mathcal{T} }_{ \mathrm{op} }^2 \norm{ \hat{ h }_{ m-1 } }_{ L^{ 2 } ( Z ) }^2
+            \mean [ Y^2 ] + \norm{ \meanop }_{ \mathrm{op} }^2 \norm{ \hat{ h }_{ m-1 } }_{ L^{ 2 } ( Z ) }^2
         \right) \\
         &\leq 2 \left(
             \mean [ Y^2 ] + M^2
         \right)
-        &&( \norm{ \mathcal{T} }_{ \mathrm{op} } \leq 1 )
+        &&( \norm{ \meanop }_{ \mathrm{op} } \leq 1 )
     .\end{align*}
     In total, what we have is
     \begin{align*}
@@ -854,16 +854,16 @@ We proceed to analyze each term separately:
             \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^{ 2 } ( Z ) }^2
             &= \norm{
                 \left(
-                    \mathcal{T} [ \hat{ h }_{ m-1 } ] - r_{ 0 }
+                    \meanop [ \hat{ h }_{ m-1 } ] - r_{ 0 }
                 \right)
                 - \left(
-                    \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ] - \hat{ r_{ 0 } }
+                    \hat{ \meanop } [ \hat{ h }_{ m-1 } ] - \hat{ r_{ 0 } }
                 \right)
             }_{ L^{ 2 } ( Z ) }^2 \\
             &= \norm{
                 \left(
-                    \mathcal{T} [ \hat{ h }_{ m-1 } ]
-                    - \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ]
+                    \meanop [ \hat{ h }_{ m-1 } ]
+                    - \hat{ \meanop } [ \hat{ h }_{ m-1 } ]
                 \right)
                 - \left(
                     r_{ 0 } - \hat{ r_{ 0 } }
@@ -871,15 +871,15 @@ We proceed to analyze each term separately:
             }_{ L^{ 2 } ( Z ) }^2 \\
             &\leq 2 \left(
                 \norm{
-                    \mathcal{T} [ \hat{ h }_{ m-1 } ]
-                    - \hat{ \mathcal{T} } [ \hat{ h }_{ m-1 } ]
+                    \meanop [ \hat{ h }_{ m-1 } ]
+                    - \hat{ \meanop } [ \hat{ h }_{ m-1 } ]
                 }_{ L^{ 2 } ( Z ) }^2
                 + \norm{
                     r_{ 0 } - \hat{ r_{ 0 } }
                 }_{ L^{ 2 } ( Z ) }^2
             \right) \\
             &\leq 2 \left(
-                \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} }^2
+                \norm{ \meanop - \hat{ \meanop } }_{ \mathrm{op} }^2
                 \norm{
                     \hat{ h }_{ m-1 }
                 }_{ L^{ 2 } ( Z ) }^2
@@ -888,7 +888,7 @@ We proceed to analyze each term separately:
                 }_{ L^{ 2 } ( Z ) }^2
             \right) \\
             &\leq 2 \left(
-                M^2 \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} }^2
+                M^2 \norm{ \meanop - \hat{ \meanop } }_{ \mathrm{op} }^2
                 + \norm{
                     r_{ 0 } - \hat{ r_{ 0 } }
                 }_{ L^{ 2 } ( Z ) }^2
@@ -905,7 +905,7 @@ We proceed to analyze each term separately:
             &\leq \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } }^2
             \mean_{ \bz_{ 1:m-1 } } \left[
                 2 \left(
-                    M^2 \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} }^2
+                    M^2 \norm{ \meanop - \hat{ \meanop } }_{ \mathrm{op} }^2
                     + \norm{
                         r_{ 0 } - \hat{ r_{ 0 } }
                     }_{ L^{ 2 } ( Z ) }^2
@@ -913,7 +913,7 @@ We proceed to analyze each term separately:
             \right] \\
             &= 2 \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } }^2
             \left(
-                M^2 \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} }^2
+                M^2 \norm{ \meanop - \hat{ \meanop } }_{ \mathrm{op} }^2
                 + \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( Z ) }^2
             \right)
         .\end{align*}
@@ -924,28 +924,28 @@ We proceed to analyze each term separately:
     \begin{itemize}
         \item Bound $ \norm{ \hat{ \Phi } }_{ \mathcal{R}_{ \mathbb{W} } } $. (May not be strictly necessary. This is finite, and since it multiplies something which is $ \bigO_{ p } $ of something which goes to zero, we may not need to further bound it.) 
 
-        \item Use some estimate on $ \norm{ \mathcal{T} - \hat{ \mathcal{T} } }_{ \mathrm{op} } $ (Adapt notation and setup in the KIV paper).
+        \item Use some estimate on $ \norm{ \meanop - \hat{ \meanop } }_{ \mathrm{op} } $ (Adapt notation and setup in the KIV paper).
 
             {\color{blue}
-                Conclusion (20/08/2023): We might need the extra hypothesis that $ \operatorname{Im} ( \operatorname{id}_{ L^2 ( X ) } - \iota_{ X } \iota_{ X }^{ * } ) \subseteq \ker \mathcal{T} $, where $ \iota_{ X } : \mathcal{H}_{ X } \to L^{ 2 } ( X ) $ is the inclusion operator, whose adjoint is given by
+                Conclusion (20/08/2023): We might need the extra hypothesis that $ \operatorname{Im} ( \operatorname{id}_{ L^2 ( X ) } - \iota_{ X } \iota_{ X }^{ * } ) \subseteq \ker \meanop $, where $ \iota_{ X } : \mathcal{H}_{ X } \to L^{ 2 } ( X ) $ is the inclusion operator, whose adjoint is given by
                 \begin{equation*}
                     \iota_{ X }^{ * } ( f ) = ( x \mapsto \mean_{ X } [ f ( X ) k_{ X } ( X, x ) ] )
                 ,\end{equation*}
                 with $ k_{ X } : \mathbb{X} \times \mathbb{X} \to \R $ being the kernel associated with $ \mathcal{H}_{ X } $.
-                Then $ \mathcal{T} = \mathcal{T} \circ \iota_{ X } \iota_{ X }^{ * } $ and we can directly apply the result on KIV's paper, since $ \mathcal{T} \circ i_{ X } $ can be seen as the restriction of $ \mathcal{T} $ to $ \mathcal{H}_{ X } $.
-                We then also need the further hypothesis that $ \operatorname{Im} ( \mathcal{T} \circ \iota_{ X } ) \subseteq \mathcal{H}_{ Z } $, or something like this (because, rigorously speaking, $ \mathcal{T}f $ is an equivalence class of functions, so in what way can we say that this equivalence class is ``in $ \mathcal{H}_{ Z } $''?).
+                Then $ \meanop = \meanop \circ \iota_{ X } \iota_{ X }^{ * } $ and we can directly apply the result on KIV's paper, since $ \meanop \circ i_{ X } $ can be seen as the restriction of $ \meanop $ to $ \mathcal{H}_{ X } $.
+                We then also need the further hypothesis that $ \operatorname{Im} ( \meanop \circ \iota_{ X } ) \subseteq \mathcal{H}_{ Z } $, or something like this (because, rigorously speaking, $ \meanop f $ is an equivalence class of functions, so in what way can we say that this equivalence class is ``in $ \mathcal{H}_{ Z } $''?).
                 This hypothesis is implicitly made in the KIV paper, when they say that $ E : \mathcal{H_{ X }} \to \mathcal{H}_{ Z } $ without providing any assumptions on $ \mathcal{H}_{ X } $ and $ \mathcal{H}_{ Z } $, other than saying that they are RKHS.
                 Who can guarantee that $ (z \mapsto \mean [ f ( X ) \mid Z = z ]) \in \mathcal{H}_{ Z } $ for every $ f \in \mathcal{H}_{ X } $?
             }
 
         \item Find way to estimate $ r_{ 0 } $ which gives estimate on $ \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( Z ) } $.
-            Maybe use the same estimation technique we have for $ \mathcal{T} $ as an operator from $ L^2 ( Y ) \to L^2 ( Z ) $ applied to the identity and employ the same bound?
+            Maybe use the same estimation technique we have for $ \meanop $ as an operator from $ L^2 ( Y ) \to L^2 ( Z ) $ applied to the identity and employ the same bound?
     \end{itemize}
     For the rest of the paper:
     \begin{itemize}
-        \item Create section which describes, in detail, how we are estimating $ \Phi $, $ \mathcal{T} $ and $ r_{ 0 } $, lists all the references, states the main convergence theorems and lists all of the assumptions that are being made.
+        \item Create section which describes, in detail, how we are estimating $ \Phi $, $ \meanop $ and $ r_{ 0 } $, lists all the references, states the main convergence theorems and lists all of the assumptions that are being made.
 
-        \item Adapt the algorithm section to use the KIV first stage, which directly estimates $ \mathcal{T} $.
+        \item Adapt the algorithm section to use the KIV first stage, which directly estimates $ \meanop $.
 
         \item Find better letter for either the number of iterations or the upper bound for the set $ \mathcal{F} $.
             Right now, both are being denoted by the letter $ M $.

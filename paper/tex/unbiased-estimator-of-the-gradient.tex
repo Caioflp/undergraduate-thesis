@@ -1,24 +1,25 @@
-\section{Unbiased estimator of the gradient}
+\section{Estimating the gradient}
 
 We have found that
 \begin{equation*}
     \nabla \risk ( h ) ( x )
-    = \mathcal{T}^{ * } [ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \mathcal{T} [ h ] ( \cdot ) ) ] ( x )
-    = \mean [ \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) \mid X = x ]
+    = \meanop^{ * } [ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \meanop [ h ] ( \cdot ) ) ] ( x )
+    = \mean [ \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \meanop [ h ] ( Z ) ) \mid X = x ]
 .\end{equation*}
 This turns out to be hard to estimate in practice, as we have two nested conditional expectation operators.
-Our objective in this section is to find a random element\unsure{Should we discuss this further?} $ u_{ h } \in L^{ 2 } ( X ) $ such that $ \mean [ u_{ h } ( x ) ] = \nabla \risk ( h ) ( x ) $, so we can replace $ \nabla \risk ( h ) ( x ) $ by $ u_{ h } ( x ) $ in a gradient descent algorithm, obtaining a stochastic version which will be easier to compute.
-
-Our strategy to obtain $ u_{ h } $ will be to write $ \nabla \risk ( h ) ( x ) = \mean [ \Phi ( x, Z ) \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \mathcal{T} [ h ] ( Z ) ) ] $, for some suitable kernel $ \Phi $.
-To ease the notation, define $ \xi_{ h } ( z ) \defeq \partial_{ 2 } \ell ( r_{ 0 } ( z ), \mathcal{T} [ h ] ( z ) ) $.
-Assuming that $ X $ and $ Z $ have a joint distribution which is absolutely continuous with respect to Lebesgue measure in $ \R^{ p + q } $, we can write
+Our objective in this section is to
+% find a random element\unsure{Should we discuss this further?} $ u_{ h } \in L^{ 2 } ( X ) $ such that $ \mean [ u_{ h } ( x ) ] = \nabla \risk ( h ) ( x ) $, so we can replace $ \nabla \risk ( h ) ( x ) $ by $ u_{ h } ( x ) $ in a gradient descent algorithm, obtaining a stochastic version which will be easier to compute\change{This is not our final goal. We won't compute the stochastic gradient, we'll compute an estimate for the stochastic gradient}.
+write $ \nabla \risk ( h ) ( x ) = \mean [ \Phi ( x, Z ) \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \meanop [ h ] ( Z ) ) ] $, for some suitable kernel $ \Phi $.
+Then, for a given sample of $ Z $, the function $ \Phi ( \cdot, Z ) \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \meanop [ h ] ( Z ) ) $ acts as an stochastic estimate for $ \nabla \risk ( h ) $.
+To ease the notation, define $ \Psi_{ h } ( z ) \defeq \partial_{ 2 } \ell ( r_{ 0 } ( z ), \meanop [ h ] ( z ) ) $.
+Assuming that $ X $ and $ Z $ have a joint distribution which is absolutely continuous with respect to Lebesgue measure in $ \R^{ p + q } $\info{Assumption}, we can write
 \begin{align*}
     \nabla \risk ( h ) ( x )
-    &= \mean [ \xi_{ h } ( Z ) \mid X = x ] \\
-    &= \int_{ \mathbb{Z} } p ( z \mid x ) \xi_{ h } ( z ) \drm z \\
-    &= \int_{ \mathbb{Z} } p ( z ) \frac{ p ( z \mid x ) }{ p ( z ) } \xi_{ h } ( z ) \drm z \\
+    &= \mean [ \Psi_{ h } ( Z ) \mid X = x ] \\
+    &= \int_{ \mathbb{Z} } p ( z \mid x ) \Psi_{ h } ( z ) \drm z \\
+    &= \int_{ \mathbb{Z} } p ( z ) \frac{ p ( z \mid x ) }{ p ( z ) } \Psi_{ h } ( z ) \drm z \\
     &= \mean \left[
-        \frac{ p ( Z \mid x ) }{ p ( Z ) } \xi_{ h } ( Z )
+        \frac{ p ( Z \mid x ) }{ p ( Z ) } \Psi_{ h } ( Z )
     \right]
 .\end{align*}
 Thus, we must take
@@ -28,4 +29,8 @@ Thus, we must take
     = \frac{ p ( x \mid z ) }{ p ( x ) }
     = \frac{ p ( x, z ) }{ p ( x ) p ( z ) }
 .\end{equation*}
-With this choice, setting $ u_{ h } ( x ) = \Phi ( x, Z ) \xi_{ h } ( Z ) $\improvement{Must discuss why $ u_{ h } \in L^{ 2 } ( X ) $.} we clearly have $ \mean [ u_{ h } ( x ) ] = \nabla \risk ( h ) ( x ) $.
+With this choice, setting $ u_{ h } ( x ) = \Phi ( x, Z ) \Psi_{ h } ( Z ) $\improvement{Must discuss why $ u_{ h } \in L^{ 2 } ( X ) $.}\unsure{Must we? Since we end up not using $ u_{ h } $, but an approximation which we know is in $ L^2 ( X ) $.} we clearly have $ \mean [ u_{ h } ( x ) ] = \nabla \risk ( h ) ( x ) $.
+
+An obvious obstacle for this approach is that we don't know how to analytically compute $ \Phi, r_{ 0 } $ nor $ \meanop $, se we will proceed with estimators $ \hat{ \Phi }, \hat{ r_{ 0 } } $ and $ \hat{ \meanop } $.
+In what follows, we remain agnostic to the exact form of these estimators and present the algorithm assuming we know how to compute them.
+Later, we'll show how the individual convergence rates of these three pieces come together to determine the convergence rate of our method.
