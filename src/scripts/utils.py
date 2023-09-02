@@ -25,7 +25,7 @@ def experiment(path: str = None):
         inner_output_dir = output_dir / now.strftime("%Y-%m-%d")
     else:
         inner_output_dir = output_dir / path.lower().replace(" ", "_")
-    run_dir = inner_output_dir / now.strftime("%H-%M-%S")
+    run_dir = inner_output_dir / now.strftime("%Y%m%d-%H-%M-%S")
     run_dir.mkdir(parents=True, exist_ok=False)
 
     def decorator(func: Callable) -> Callable:

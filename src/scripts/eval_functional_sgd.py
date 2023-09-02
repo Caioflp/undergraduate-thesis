@@ -100,12 +100,13 @@ def plot_estimate(
 @experiment("new_version/sandbox")
 # @experiment("new_version/eval_poster_dataset")
 def main():
-    # response = "abs"
-    # dataset = make_deep_gmm_dataset(n_samples=600, n_samples_only_z=2000,
-    #                                 response=response)
-    response = "case_3"
-    dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
-                                  response=response)
+    response = "sin"
+    dataset = make_deep_gmm_dataset(
+        n_samples=600, n_samples_only_z=2000, response=response
+    )
+    # response = "case_3"
+    # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
+    #                               response=response)
     model = FunctionalSGD(lr="inv_n_samples", warm_up_duration=100, bound=10)
     model.fit(dataset)
     

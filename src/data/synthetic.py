@@ -68,9 +68,14 @@ def make_poster_dataset(
     Y = Y_denoised + eps
 
     Z_loop = norm_cdf(rng.normal(loc=0, scale=1, size=n_samples_only_z))
+    Z_independent = norm_cdf(rng.normal(loc=0, scale=1, size=n_samples))
+    X_independent = norm_cdf(rng.normal(loc=0, scale=1, size=n_samples))
 
     return InstrumentalVariableDataset(
-        X, Z, Z_loop, Y, Y_denoised, "poster dataset"
+        X, X_independent,
+        Z, Z_independent, Z_loop,
+        Y, Y_denoised,
+        "poster dataset"
     )
     
 
@@ -120,9 +125,20 @@ def make_deep_gmm_dataset(
     X = Z[:, 0] + eps + gamma
     Y_denoised = response_func(X)
     Y = Y_denoised + eps + delta
+
     Z_loop = rng.uniform(low=-3, high=3, size=(n_samples_only_z, 2))
+    Z_independent = rng.uniform(low=-3, high=3, size=(n_samples, 2))
+    X_independent = (
+        rng.uniform(low=-3, high=3, size=n_samples)
+        + rng.normal(loc=0, scale=np.sqrt(0.1), size=n_samples)
+        + rng.normal(loc=0, scale=np.sqrt(0.1), size=n_samples)
+    )
+
     return InstrumentalVariableDataset(
-        X, Z, Z_loop, Y, Y_denoised, "deep gmm dataset"
+        X, X_independent,
+        Z, Z_independent, Z_loop,
+        Y, Y_denoised,
+        "deep gmm dataset"
     )
 
 if __name__ == "__main__":

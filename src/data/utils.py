@@ -14,7 +14,9 @@ class InstrumentalVariableDataset:
 
     """
     X: np.ndarray
+    X_independent: np.ndarray
     Z: np.ndarray
+    Z_independent: np.ndarray
     Z_loop: np.ndarray
     Y: np.ndarray
     Y_denoised: np.ndarray

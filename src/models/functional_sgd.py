@@ -52,9 +52,13 @@ class FunctionalSGD(BaseEstimator):
         """
         self.fit_dataset_name = dataset.name
 
-        X, Z, Y, Z_loop = dataset.X, dataset.Z, dataset.Y, dataset.Z_loop
+        X, Y, Z = dataset.X, dataset.Y, dataset.Z
+        X_indep, Z_indep = dataset.X_independent, dataset.Z_independent
+        Z_loop = dataset.Z_loop
         X = ensure_two_dimensional(X)
+        X_indep = ensure_two_dimensional(X_indep)
         Z = ensure_two_dimensional(Z)
+        Z_indep = ensure_two_dimensional(Z_indep)
         Z_loop = ensure_two_dimensional(Z_loop)
 
         n_samples = X.shape[0]
@@ -86,7 +90,7 @@ class FunctionalSGD(BaseEstimator):
         # Fit DensityRatio Model
         density_ratio = DensityRatio(regularization="rkhs")
         joint_samples = np.concatenate([X, Z], axis=1)
-        independent_samples = np.concatenate([X, np.roll(Z, 2, axis=0)], axis=1)
+        independent_samples = np.concatenate([X_indep, Z_indep], axis=1)
         best_weight_density_ratio, best_loss_density_ratio = \
                 density_ratio.find_best_regularization_weight(
                     joint_samples,
