@@ -7,7 +7,8 @@ Given $ X \in L^{ 2 } ( \Omega, \mathcal{A}, \prob ; \mathcal{X} \subseteq \R^{ 
 \begin{equation*}
     L^{ 2 } ( X ) \defeq \left\{ h : \mathcal{X} \to \R \ : \ \mean [ h ( X )^2 ] < \infty \right\}
 ,\end{equation*}
-that is, $ L^{ 2 } ( X ) = L^{ 2 } ( \mathcal{X}, \mathcal{B} ( \mathcal{X} ), \nu_{ X } ) $\footnote{We denote by $ \nu_{ X } $ the distribution of the r.v. $ X $ and by $ \mathcal{B} ( \mathcal{X} ) $ the Borel $ \sigma $-algebra in $ \mathcal{X} $.}, a Hilbert space equipped with the inner product $ \dotprod{ h, g }_{ L^{ 2 } ( X ) } = \mean [ h ( X ) g ( X ) ] $.
+that is, $ L^{ 2 } ( X ) = L^{ 2 } ( \mathcal{X}, \mathcal{B} ( \mathcal{X} ), \nu_{ X } ) $, where we denote by $ \nu_{ X } $ the distribution of the r.v. $ X $ and by $ \mathcal{B} ( \mathcal{X} ) $ the Borel $ \sigma $-algebra in $ \mathcal{X} $.
+This is a Hilbert space equipped with the inner product $ \dotprod{ h, g }_{ L^{ 2 } ( X ) } = \mean [ h ( X ) g ( X ) ] $.
 The regression problem we are interested in has the form
 \begin{equation}
     \label{eq: main problem}
@@ -63,6 +64,17 @@ We would like to solve
     \inf_{ h \in \mathcal{F} } \risk ( h )
 ,\end{equation*}
 where $ \mathcal{F} \subseteq L^{ 2 } ( X ) $ is a bounded, closed, convex set such that $ \hstar \in \mathcal{F} $ \info{Assumption}.
+A possible choice for the set $ \mathcal{F} $ is
+\begin{equation*}
+    \mathcal{F} = \left\{ h \in L^{ 2 } ( X ) : \norm{ h }_{ \infty } \leq A \right\}
+,\end{equation*}
+where $ A > 0 $ is a constant chosen \emph{a priori}.
+This set is obviously closed, convex and bounded in the $ L^2 ( X ) $ norm.
+Furthermore, the projection operator $ \pi_{ \mathcal{F} } $ is very easy to compute, as $ \pi_{ \mathcal{F} } [ h ] $ is obtained by cropping $ h $ inside $ [ -A, A ] $.
+More formally,
+\begin{equation*}
+    \pi_{ \mathcal{F} } [ h ] = h^{ + } \wedge A - h^{ - } \wedge A
+.\end{equation*}
 
 We now state all the assumptions needed about the function $ \ell $ for future reference:
 \begin{assumption}[Regularity of $ \ell $]

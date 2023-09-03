@@ -17,7 +17,8 @@ To lighten the notation, the symbols $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \
 By the Algorithm \ref{algo: functional sgd} procedure, we have
 \begin{align*}
     \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m } - \hstar }^2
-    &= \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m } - \hstar }^2 \\
+    &= \frac{ 1 }{ 2 } \norm{ \pi_{ \mathcal{F} } \left[ \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m } \right] - \hstar }^2 \\
+    &\leq \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m } - \hstar }^2 \\
     &= \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \hstar }^2
     - \alpha_{ m } \dotprod{ u_{ m }, \hat{ h }_{ m-1 } - \hstar }
     + \frac{ \alpha_{ m }^2 }{ 2 } \norm{ u_{ m } }^2

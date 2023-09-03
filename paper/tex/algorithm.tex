@@ -10,36 +10,26 @@ Having an estimator of the gradient, we can construct Functional GD algorithm fo
        %  $ \mathcal{D}_{ \Phi } = \left\{ ( \bx_{ i }, \bz_{ i } ) \right\}_{ i=1 }^{ N_{ xz } } \sim \prob_{ XZ } $,
        %  $ \mathcal{D}_{ r_{ 0 } } = \left\{ ( \by_{ j }, \bz_{ j } ) \right\}_{ j=1 }^{ N_{ yz } } \sim \prob_{ YZ } $,
        %  $ \mathcal{D}_{ z } = \left\{ \bz_{ m } \right\}_{ m=1 }^{ M } \sim \prob_{ Z } $ where $ M = N_{ xz } + N_{ yz } + N_{ z } $, initial estimator $ \hat{ h }_{ 0 } $,
-        Datasets $ \mathcal{D}_{ r_{ 0 } } = \left\{ ( y_{ i }, \bz_{ i } ) \right\} \iid \nu_{ YZ } $, $ \mathcal{D}_{ \Phi } = \left\{ ( \bx_{ i }, \bz_{ i } ) \right\} \iid \nu_{ XZ } $, $ \mathcal{D}_{ \meanop } = \left\{ ( \bx_{ i }, \bz_{ i } ) \right\} \iid \nu_{ XZ } $,
-        discretization $ \left\{ \bx_{ k } \right\}_{ k=1 }^{ K } $ of $ \mathcal{X} $ which contains the observed values of $ X $, sequence of learning rates $ ( \alpha_{ m } )_{ m=1 }^{ M } $.
+        Datasets $ \data_{ r_{ 0 } }, \data_{ \Phi } $ and $ \data_{ \meanop } $ for estimating $ r_{ 0 }, \Phi $ and $ \meanop $, respectively. 
+        Samples $ \left\{ ( \bz_{ m } ) \right\}_{ m=1 }^{ M } $ for the gradient descent loop.
+        Discretization $ \left\{ \bx_{ k } \right\}_{ k=1 }^{ K } $ of $ \mathcal{X} $ which contains the observed values of $ X $. Sequence of learning rates $ ( \alpha_{ m } )_{ m=1 }^{ M } $.
     }
-    \Output{ $ \left\{ \hat{ h } ( \bx_{ k } ) \right\}_{ k=1 }^{ K } $ }
-    Compute $ \left\{ \hat{ r_{ 0 } } ( \bz_{ m } ; \mathcal{D}_{ r_{ 0 } } ) \right\}_{ m=1 }^{ M } $ \;
-    Compute $ \hat{ \Phi } ( \bx, \bz ; \mathcal{D}_{ \Phi } ) $ \;
+    \Output{ $ \hat{ h } $ }
+    Compute $ \hat{ r_{ 0 } }, \hat{ \Phi }, \hat{ \meanop } $ using $ \data_{ r_{ 0 } }, \data_{ \Phi }, \data_{ \meanop } $, respectively \;
     \For{$ 1 \leq m \leq M $}{
-        Compute $ \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } ; \mathcal{D}_{ \meanop } ) $ \;
-    Set $ u_{ m } ( \bx_{ k } ) = \hat{ \Phi } ( \bx_{ k }, \bz_{ m } ) \partial_{ 2 } \ell \left( \hat{ r_{ 0 } } ( \bz_{ m }, \mathcal{D}_{ r_{ 0 } } ), \hat{ \meanop } [ \hat{ h }_{ m - 1 } ] ( \bz_{ m } ; \mathcal{D}_{ \meanop } ) \right) $ \quad for $ 1 \leq k \leq K $ \;
-        Set $ \hat{ h }_{ m } ( \bx_{ k } ) = \hat{ h }_{ m-1 } ( \bx_{ k } ) - \alpha_{ m } u_{ m } ( \bx_{ k } ) $ \quad for $ 1 \leq k \leq K $ \;
-    }
-    Set $ \hat{ h } = \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \hat{ h }_{ m } $ \;
+    Set $ u_{ m } = \hat{ \Phi } ( \cdot , \bz_{ m } ) \partial_{ 2 } \ell \left( \hat{ r_{ 0 } } ( \bz_{ m } ), \hat{ \meanop } [ \hat{ h }_{ m - 1 } ] ( \bz_{ m } ) \right) $ \;
+    Set $ \hat{ h }_{ m } ( \bx_{ k } )  = \pi_{ \mathcal{F} } \left[
+        \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m }  
+    \right] ( \bx_{ k } ) $ \quad for $ 1 \leq k \leq K $ \;
+}
+Set $ \hat{ h } = \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \hat{ h }_{ m } $ \;
 \end{algorithm}
 
-An option\unsure{Should we do this?} we have is to project onto the closed, convex, bounded set $ \mathcal{F} $ after applying the stochastic gradient, that is, constructing the new estimate as
-\begin{equation*}
-    \hat{ h }_{ m } = P_{ \mathcal{F} } \left[
-        \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m }
-    \right]
-.\end{equation*}
-From what I can see, this would require minor changes to the proof and would justify the assumption that $ \hat{ h }_{ m } \in \mathcal{F} $ for all $ m $.
+% An option\unsure{Should we do this?} we have is to project onto the closed, convex, bounded set $ \mathcal{F} $ after applying the stochastic gradient, that is, constructing the new estimate as
+% \begin{equation*}
+%     \hat{ h }_{ m } = P_{ \mathcal{F} } \left[
+%         \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m }
+%     \right]
+% .\end{equation*}
+% From what I can see, this would require minor changes to the proof and would justify the assumption that $ \hat{ h }_{ m } \in \mathcal{F} $ for all $ m $.
 
-A possible choice for the set $ \mathcal{F} $ is
-\begin{equation*}
-    \mathcal{F} \defeq \left\{ h \in L^{ 2 } ( X ) : \norm{ h }_{ \infty } \leq M \right\}
-,\end{equation*}
-where $ M > 0 $ is a constant chosen \emph{a priori}.
-This set is obviously closed, convex and bounded in the $ L^2 ( X ) $ norm.
-Furthermore, the operator $ P_{ \mathcal{F} } $ is very easy to compute, as $ P_{ \mathcal{F} } [ h ] $ is obtained by cropping $ h $ inside $ [ -M, M ] $.
-More formally,
-\begin{equation*}
-    P_{ \mathcal{F} } [ h ] = h^{ + } \wedge M - h^{ - } \wedge M
-.\end{equation*}
