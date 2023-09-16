@@ -1,3 +1,12 @@
+## My goal
+
+Put together the cool things I have studied while participated in the
+NPIV project in a single document, trying to link them together.
+This includes some non-linear functional analysis, optimization, RKHS
+methods, a bit of inverse problems theory and some econometrics
+(instrumental variable regression).
+
+
 ## What I want to include
 
 * Inverse problems
@@ -6,30 +15,66 @@
     * RKHS theory, representer theorem, Mercer's theorem
     Maybe some theory of random elements on hilbert spaces
 
+
 ## Structure
 
-
 * Introduction
-    * Talk about inverse problems in general, integral equations,
-      ill-posedness, examples, maybe cite the NeurIPS paper.
-    * Talk about Kernel methods and their applicability
-    * Focus a bit more on Instrumental Variable Regression
+    * Give a general perspective on the structure of the project,
+      guiding the reader through the initial idea, which was to expand
+      the SGD algorithm published in NIPS to NPIV regression, and how
+      that led naturaly to kernel methods.
 
 * Inverse problems
     * Define inverse problems in general
-    * Integral equations
+    * Ill posedness of a problem
+    * Integral equations of the first kind
     * Regularization methods
-    * ???
+    * Landweber iteration for tikhonov regularization, comment on
+      convergence
 
 * Kernel Methods
-    * Explain the ideia behind kernels in general, but make it clear we
-      are focusing on kernel ridge regression
     * Define RKHS and explain a bit of the theory
-    * Vector RKHS
-    * Random elements in Hilbert Spaces?
+    * Explain the idea of Kernel Ridge regression
+    * Vector RKHS, relationship with tensor products of Hilbert Spaces
+      and Hilbert-Schmidt operators between these spaces.
+    * Vector-valued kernel ridge regression
 
 * Application in econometrics: Instrumental Variable Regression
-    * Basic 2SLS
+    * Recap on what is instrumental variable regression
+        - Explaing cofounding and show why OLS estimates are biased
+        - Show a graphical example where endogeneity makes OLS be very
+          wrong
+        - Explaing what is an instrumental variable and how it can be
+          used to reduce bias.
+        - Basic 2SLS
+            - Explain the 2SLS algorithm and redo the cofounded example with
+              a 2SLS estimate.
+    * IV and inverse problems
+        - Link IV and inverse problems introducing the operator
+          language we'll need later.
     * Newey paper
+        - Explain the non-parametric idea of the paper, mentioning the
+          things newey discusses which are useful to us, e.g., conditions
+          which ensure identifiability.
     * KIV
+        - Explain in some detail the Kernel IV model. Give more focus to
+          the first stage procedure since this is what we are going to
+          use later. State the convergence theorems.
+        - Make conections to the kernel methods section, pointing out
+          which results are being used.
     * Our method
+        - Describe the whole method in detail and prove our convergence
+          guarantees. Comment on the main differences between this and
+          other methods.
+
+
+## Timeline
+
+From 16/09 to 25/11. 10 weeks.
+
+### Week 1
+
+* Backtrack and decide what to talk about in each subject.
+* Make a plan to write everything in ten weeks.
+* Create a working template for the document.
+* Start writing.
