@@ -74,9 +74,13 @@ methods, a bit of inverse problems theory and some econometrics
 
 From 16/09 to 25/11. 10 weeks.
 
-### Week 1
+### Weeks 1 - 3
 
-* Backtrack and decide what to talk about in each subject.
-* Make a plan to write everything in ten weeks.
-* Create a working template for the document.
-* Start writing.
+* Write the chapter about applications in IV.
+Take note of interesting things about inverse problems and kernel methods
+which would be nice to explain in the theoretical background chapters.
+
+* (Done) Backtrack and decide what to talk about in each subject.
+* (Done) Make a plan to write everything in ten weeks.
+* (Done) Create a working template for the document.
+* (Done) Start writing.

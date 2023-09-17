@@ -139,6 +139,34 @@
       \verb https://proceedings.neurips.cc/paper_files/paper/2019/file/17b3c7061788dbe82de5abe9f6fe22b3-Paper.pdf
       \endverb
     \endentry
+    \entry{wooldridge2001}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=c93aeef4998e670d5343b7e632c431dc}{%
+           family={Wooldridge},
+           familyi={W\bibinitperiod},
+           given={Jeffrey\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {The MIT Press}%
+      }
+      \strng{namehash}{c93aeef4998e670d5343b7e632c431dc}
+      \strng{fullhash}{c93aeef4998e670d5343b7e632c431dc}
+      \strng{bibnamehash}{c93aeef4998e670d5343b7e632c431dc}
+      \strng{authorbibnamehash}{c93aeef4998e670d5343b7e632c431dc}
+      \strng{authornamehash}{c93aeef4998e670d5343b7e632c431dc}
+      \strng{authorfullhash}{c93aeef4998e670d5343b7e632c431dc}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{9780262232197}
+      \field{title}{Econometric Analysis of Cross Section and Panel Data}
+      \field{year}{2001}
+    \endentry
   \enddatalist
 \endrefsection
 \endinput

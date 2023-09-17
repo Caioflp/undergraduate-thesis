@@ -1,20 +1,21 @@
 # Fdb version 4
-["biber .out/main"] 1694981018 ".out/main.bcf" ".out/main.bbl" ".out/main" 1694984244 0
-  "../bib/bibliography.bib" 1694981013 867 09181accb6f2097495978d5f9db7017a ""
-  ".out/main.bcf" 1694984244 112864 6ee8b31d6a6f9f60adda1bfb70092db4 "lualatex"
+["biber .out/main"] 1694994249 ".out/main.bcf" ".out/main.bbl" ".out/main" 1694994758 0
+  "../bib/bibliography.bib" 1694991291 1078 fc705b9408befe7d37037d500cd4fb34 ""
+  ".out/main.bcf" 1694994758 113071 9d0341883b4142e0347daa64b3525435 "lualatex"
   (generated)
   ".out/main.bbl"
   ".out/main.blg"
   (rewritten before read)
-["lualatex"] 1694984241 "main.tex" ".out/main.pdf" "main" 1694984244 0
-  ".out/main.aux" 1694984244 8379 fa28671e98b004e612e20cdf8568b46d "lualatex"
-  ".out/main.bbl" 1694981021 5386 c076cb2f6f66ea26e8e63fc57e69a222 "biber .out/main"
+["lualatex"] 1694994755 "main.tex" ".out/main.pdf" "main" 1694994758 0
+  ".out/main.aux" 1694994758 9611 3e33c62db13775571b7e702daa041dc5 "lualatex"
+  ".out/main.bbl" 1694994252 6542 4e4f6c23113e429a17718b7dd9a78791 "biber .out/main"
   ".out/main.ind" 1694960671 0 d41d8cd98f00b204e9800998ecf8427e "makeindex .out/main.idx"
-  ".out/main.lof" 1694984244 59 e432f59b0ceabbfc612531c7cd147396 "lualatex"
-  ".out/main.lot" 1694984244 59 e432f59b0ceabbfc612531c7cd147396 "lualatex"
-  ".out/main.run.xml" 1694984244 2554 36d265baf3a8c8e2aa044063e044b76b "lualatex"
-  ".out/main.toc" 1694984244 1595 f4ef1ad2d1fce7d3ccbf7c78bea9292f "lualatex"
+  ".out/main.lof" 1694994758 59 e432f59b0ceabbfc612531c7cd147396 "lualatex"
+  ".out/main.lot" 1694994758 59 e432f59b0ceabbfc612531c7cd147396 "lualatex"
+  ".out/main.run.xml" 1694994758 2554 36d265baf3a8c8e2aa044063e044b76b "lualatex"
+  ".out/main.toc" 1694994758 1593 6896ec22aef78e3d955facf86afaf249 "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmmono12-regular.luc" 1694907571 81772 230ee77bda1f5e7ad3f9f6f5b8bbf446 ""
+  "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-italic.luc" 1692639408 136312 0853009ccd3f419d3c73a3ff97e7b924 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-bold.luc" 1685725424 128299 b151497b293cf2f51c7db1d2ff6e9c88 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-italic.luc" 1685725424 135243 2d11e9c3ff706b7ed6248c1b844987f4 ""
@@ -27,6 +28,7 @@
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmsans17-regular.luc" 1692808615 127862 582b02d6a00bc64715c8297b4ad27ad8 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1694907539 368260 3dcbf693681628f7ff1663c2d447d401 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmmono12-regular.otf" 1255129361 63012 5db69ad3c177ae338e5504d80d9e9eb6 ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-italic.otf" 1255129361 118828 4d461c73423fe2666dad2ff0dfc3ca68 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf" 1255129361 111536 ae9d1b331000d544f47e5223081b7b54 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf" 1255129361 110496 b9c8767d4cc3bf3f4b21f676bf89aa78 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-italic.otf" 1255129361 117732 558aeb4ada25b652cc2e9bcf0771e962 ""
@@ -65,6 +67,13 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/rsfs/rsfs10.tfm" 1229303445 688 37338d6ab346c2f1466b29e195316aa4 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/rsfs/rsfs5.tfm" 1229303445 684 3a51bd4fd9600428d5264cf25f04bb9a ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/rsfs/rsfs7.tfm" 1229303445 692 1b6510779f0f05e9cbf03e0f6c8361e6 ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb" 1248133631 36741 fa121aac0049305630cf160b86157ee4 ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb" 1248133631 35469 70d41d2b9ea31d5d813066df7c99281c ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1248133631 32722 d7379af29a190c3f453aba36302ff5a9 ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1248133631 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1248133631 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
   "/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/local/texlive/2023/texmf-dist/tex/generic/babel-english/english.ldf" 1496785618 7008 9ff5fdcc865b01beca2b0fe4a46231d4 ""
   "/usr/local/texlive/2023/texmf-dist/tex/generic/babel-portuges/brazil.ldf" 1625860693 6591 308dec8ccec5a8d302be8a046d473dd3 ""
@@ -314,11 +323,11 @@
   "/usr/local/texlive/2023/texmf-var/web2c/luahbtex/lualatex.fmt" 1685627356 11878523 2b8a1901742a4edff1e9481006137752 ""
   "chapters/appendix.tex" 1694907753 0 d41d8cd98f00b204e9800998ecf8427e ""
   "chapters/conclusion.tex" 1694975193 46 f34a43e58ce78e5df568e356cc17de9a ""
-  "chapters/instrumental-variable.tex" 1694984240 932 31145636d6015dc2ca0b9c200f7762b1 ""
+  "chapters/instrumental-variable.tex" 1694994751 4614 7dae5150eff2c9e244f06885db76728e ""
   "chapters/introduction.tex" 1694981007 74 1bdb632f69f47ddd0cf200592edd03a7 ""
-  "local-macros.sty" 1694955799 2902 0fd09ad72c4c76972bf9f5e0ab2542c1 ""
+  "local-macros.sty" 1694991851 3044 206a6d4232186cf7ccab31955c7e6e87 ""
   "main.tex" 1694979214 3954 8924a4b6a1a9ceac57da92c3b93ecd39 ""
-  "preamble.tex" 1694979147 7211 65ef8110b5a7eef300f27b0fe459caf2 ""
+  "preamble.tex" 1694994620 7242 2ca9cdbdb512563a609df8e3d8d2d85a ""
   "structure/capa-folha-rosto.tex" 1694959539 1626 7a4c5ba62b432ff6b92389fccf15b7f1 ""
   "structure/dedicatoria-agradecimentos.tex" 1694974931 458 991e415f5a785183b46e5a3fb4df4152 ""
   "structure/ficha-catalografica.tex" 1694960936 976 5d477fdec73c9c6f66ee2061b8171059 ""
@@ -335,8 +344,8 @@
   ".out/main.run.xml"
   ".out/main.toc"
   (rewritten before read)
-["makeindex .out/main.idx"] 1694960671 ".out/main.idx" ".out/main.ind" ".out/main" 1694984244 0
-  ".out/main.idx" 1694984243 0 d41d8cd98f00b204e9800998ecf8427e "lualatex"
+["makeindex .out/main.idx"] 1694960671 ".out/main.idx" ".out/main.ind" ".out/main" 1694994758 0
+  ".out/main.idx" 1694994757 0 d41d8cd98f00b204e9800998ecf8427e "lualatex"
   (generated)
   ".out/main.ilg"
   ".out/main.ind"
