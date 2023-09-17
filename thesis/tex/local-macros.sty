@@ -1,0 +1,100 @@
+\ProvidesPackage{local-macros}
+
+\usepackage{amsmath, mathtools, amssymb, amsfonts, amsthm, mathrsfs}
+\usepackage{centernot}
+
+% \newcommand{\R}{\mathbb{R}}
+% \newcommand{\Z}{\mathbb{Z}}
+% \newcommand{\N}{\mathbb{N}}
+% \newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Z}{\mathbf{Z}}
+\newcommand{\N}{\mathbf{N}}
+\newcommand{\Q}{\mathbf{Q}}
+
+\newcommand{\rr}{R_{r}}
+\newcommand{\tq}{ : }
+\newcommand{\mdc}{\text{mdc}}
+\newcommand{\mmc}{\text{mmc}}
+% \newcommand{\defeq}{\vcentcolon=}
+\newcommand{\defeq}{\triangleq}
+\newcommand{\comp}{\mathscr{C}}
+\newcommand{\dotprod}[1]{\langle #1 \rangle}
+\newcommand{\prob}{\mathbb{P}}
+\newcommand{\ind}{\mathbf{1}}
+\newcommand{\mean}{\mathbb{E}}
+\DeclareMathOperator{\var}{Var}
+\newcommand{\trp}{\mathsf{T}}
+
+%% Upper and Lower Integrals
+\newcommand{\loint}[4]{
+    \lefteqn{\int_{ #1 }^{ #2 } #3 \ }\lefteqn{\hspace{0.0ex}\rule[-2.25ex]{1.1ex}{.05ex}} \phantom{\int_{ #1 }^{ #2 } #3 \ }\mathrm{d}#4
+}
+\newcommand{\upint}[4]{
+    \lefteqn{\int_{ #1 }^{ #2 } #3 \ }\lefteqn{\hspace{1.2ex}\rule[ 3.35ex]{1.1ex}{.05ex}} \phantom{\int_{ #1 }^{ #2 } #3 \ }\mathrm{d}#4
+}
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+\DeclareMathOperator{\sen}{sen}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator{\intt}{int}
+\DeclareMathOperator{\cl}{cl}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\ddiv}{div}
+
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the 
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+%
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+% Bold names
+\newcommand{\bx}{\boldsymbol x}
+\newcommand{\by}{\boldsymbol y}
+\newcommand{\bz}{\boldsymbol z}
+\newcommand{\bg}{\boldsymbol g}
+\newcommand{\be}{\boldsymbol e}
+\newcommand{\bv}{\boldsymbol v}
+\newcommand{\bw}{\boldsymbol w}
+
+\newcommand{\bzero}{\mathbf 0}
+\newcommand{\drm}{\ \mathrm{d}}
+\newcommand{\ddrm}{\mathrm{d}}
+
+\newcommand{\bigO}{\mathcal{O}}
+
+\newcommand{\goesto}{\longrightarrow}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\tr}{tr}
+
+% Statistical Independence
+\newcommand{\indep}{\perp\mkern-9.5mu\perp}
+\newcommand{\notindep}{\centernot{\indep}}
+
+% Dashed integral
+\def\Xint#1{\mathchoice
+{\XXint\displaystyle\textstyle{#1}}%
+{\XXint\textstyle\scriptstyle{#1}}%
+{\XXint\scriptstyle\scriptscriptstyle{#1}}%
+{\XXint\scriptscriptstyle\scriptscriptstyle{#1}}%
+\!\int}
+\def\XXint#1#2#3{{\setbox0=\hbox{$#1{#2#3}{\int}$ }
+\vcenter{\hbox{$#2#3$ }}\kern-.6\wd0}}
+\def\ddashint{\Xint=}
+\def\dashint{\Xint-}
+
+\newcommand{\KL}{D_{ \mathrm{KL} }}
+\newcommand{\dbar}{\;||\;}
+
+\newcommand{\given}[1]{\ #1\lvert \ }

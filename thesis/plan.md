@@ -22,7 +22,7 @@ methods, a bit of inverse problems theory and some econometrics
     * Give a general perspective on the structure of the project,
       guiding the reader through the initial idea, which was to expand
       the SGD algorithm published in NIPS to NPIV regression, and how
-      that led naturaly to kernel methods.
+      that naturally led to kernel methods.
 
 * Inverse problems
     * Define inverse problems in general
@@ -41,13 +41,13 @@ methods, a bit of inverse problems theory and some econometrics
 
 * Application in econometrics: Instrumental Variable Regression
     * Recap on what is instrumental variable regression
-        - Explaing cofounding and show why OLS estimates are biased
+        - Explain confounding and show why OLS estimates are biased
         - Show a graphical example where endogeneity makes OLS be very
           wrong
-        - Explaing what is an instrumental variable and how it can be
+        - Explain what is an instrumental variable and how it can be
           used to reduce bias.
         - Basic 2SLS
-            - Explain the 2SLS algorithm and redo the cofounded example with
+            - Explain the 2SLS algorithm and redo the confounded example with
               a 2SLS estimate.
     * IV and inverse problems
         - Link IV and inverse problems introducing the operator
@@ -60,12 +60,14 @@ methods, a bit of inverse problems theory and some econometrics
         - Explain in some detail the Kernel IV model. Give more focus to
           the first stage procedure since this is what we are going to
           use later. State the convergence theorems.
-        - Make conections to the kernel methods section, pointing out
+        - Make connections to the kernel methods section, pointing out
           which results are being used.
     * Our method
         - Describe the whole method in detail and prove our convergence
           guarantees. Comment on the main differences between this and
           other methods.
+
+* Appendixes if necessary
 
 
 ## Timeline
