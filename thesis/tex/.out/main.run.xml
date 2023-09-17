@@ -55,10 +55,16 @@
       <file>blx-compat.def</file>
       <file>biblatex.def</file>
       <file>standard.bbx</file>
-      <file>numeric.bbx</file>
-      <file>numeric.cbx</file>
+      <file>abnt.bbx</file>
+      <file>authoryear-comp.cbx</file>
+      <file>abnt.cbx</file>
       <file>biblatex.cfg</file>
+      <file>brazilian.lbx</file>
+      <file>brazilian-abnt.lbx</file>
+      <file>brazil.lbx</file>
+      <file>brazil-abnt.lbx</file>
       <file>english.lbx</file>
+      <file>english-abnt.lbx</file>
     </requires>
   </internal>
   <external package="biblatex" priority="5" active="0">
@@ -78,6 +84,9 @@
     </provides>
     <requires type="dynamic">
       <file>main.bcf</file>
+    </requires>
+    <requires type="editable">
+      <file>../bib/bibliography.bib</file>
     </requires>
   </external>
 </requests>

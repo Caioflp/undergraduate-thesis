@@ -1,12 +1,184 @@
-\usepackage{local-macros}
-\usepackage{biblatex}
-\usepackage{csquotes}
-\usepackage{enumitem}
-\usepackage{microtype} % Minor typographic improvements
-\usepackage{hyperref}
+%------------------------------------------------
+% Packages
+%------------------------------------------------
 
-% Remove left margin in description environment
-\setlist[description]{leftmargin=0pt}
+% \usepackage{microtype} % para melhorias de justificação
+\usepackage{indentfirst}
+\usepackage{csquotes}
+
+
+% Gráficos 
+\usepackage{color}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\graphicspath{{../images/}}
+
+% Matemáticos 
+\usepackage{bbm}
+\usepackage{amsthm, amssymb, amsmath, mathtools}
+
+% Outros 
+\setlength{\marginparwidth}{2cm} % This will be overruled later, but is needed to that todonotes does't issue a warning
+\usepackage[
+    colorinlistoftodos,
+    prependcaption,
+    textsize=tiny,
+    textwidth=15mm,
+]{todonotes}
+\usepackage{xargs}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{lstbayes}
+\usepackage{silence} % Silence annoying warnings
+
+% Citações 
+%\usepackage[brazilian,hyperpageref]{backref}
+%\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
+\usepackage[style=abnt]{biblatex}
+\addbibresource{../bib/bibliography.bib}  
+\WarningsOff[biblatex]
+
+% My local macros
+\usepackage{local-macros}
+
+% \renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+% % Texto padrão antes do número das páginas
+% \renewcommand{\backref}{}
+% % Define os textos da citação
+% \renewcommand*{\backrefalt}[4]{
+% 	\ifcase #1 %
+% 		Nenhuma citação no texto.%
+% 	\or
+% 		Citado na página #2.%
+% 	\else
+% 		Citado #1 vezes nas páginas #2.%
+% 	\fi}%
+% ---
+
+% % Changes title font to latex default
+% \renewcommand{\ABNTEXchapterfont}{\fontfamily{ptm}\fontseries{b}\selectfont}
+
+\input{structure/capa-folha-rosto}
+
+\titulo{Linear Inverse Problems and Nonparametric Regression Methods in Instrumental Variable Estimation}
+\autor{Caio F. Lins Peixoto}
+\local{Rio de Janeiro}
+\data{2023}
+\instituicao{%
+  Fundação Getulio Vargas \\
+  \par
+  School of Applied Mathematics
+}
+\tipotrabalho{Bachelor's Dissertation (Undergraduate)}
+
+\preambulo{Bachelor's dissertation presented to the School of Applied
+Mathematics (FGV/EMAp) to obtain the Bachelor's degree in Applied Mathematics.
+\\ \\ Area of Study: Linear Inverse Problems, Kernel Methods, Machine Learning, Nonparametric Statistics, Instrumental Variable Regression.}
+
+\orientador{Yuri F. Saporito}
+
+% Se o seu texto tem subtítulo. 
+% Se não tiver, altere o arquivo capa_folha_rosto_tex
+% \subtitulo{This is my subtitle}
+
+%---------------------------------------------
+%-------------------- PDF --------------------
+%---------------------------------------------
+
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+
+% informações do PDF
+\makeatletter
+\hypersetup{
+     	%pagebackref=true,
+		pdftitle={\@title}, 
+		pdfauthor={\@author},
+    	pdfsubject={\imprimirpreambulo},
+	    pdfcreator={LaTeX with abnTeX2},
+		pdfkeywords={abnt}{latex}{abntex}{abntex2}{trabalho acadêmico}, 
+		colorlinks=true,       		% false: boxed links; true: colored links
+    	linkcolor=blue,          	% color of internal links
+    	citecolor=blue,        		% color of links to bibliography
+    	filecolor=magenta,      		% color of file links
+		urlcolor=blue,
+		bookmarksdepth=4
+}
+\makeatother
+
+% Posiciona figuras e tabelas no topo da página quando adicionadas sozinhas
+% em um página em branco. Ver https://github.com/abntex/abntex2/issues/170
+\makeatletter
+\setlength{\@fptop}{5pt} % Set distance from top of page to first float
+\makeatother
+
+%---------------------------------------
+%--------- Mais configurações-----------
+%---------------------------------------
+
+% Possibilita criação de Quadros e Lista de quadros.
+% Ver https://github.com/abntex/abntex2/issues/176
+\newcommand{\quadroname}{Quadro}
+\newcommand{\listofquadrosname}{Lista de quadros}
+
+\newfloat[chapter]{quadro}{loq}{\quadroname}
+\newlistof{listofquadros}{loq}{\listofquadrosname}
+\newlistentry{quadro}{loq}{0}
+
+% configurações para atender às regras da ABNT
+\setfloatadjustment{quadro}{\centering}
+\counterwithout{quadro}{chapter}
+\renewcommand{\cftquadroname}{\quadroname\space} 
+\renewcommand*{\cftquadroaftersnum}{\hfill--\hfill}
+
+\setfloatlocations{quadro}{hbtp} % Ver https://github.com/abntex/abntex2/issues/176
+
+%-----------------------------------------------------
+%--------------------- Margens -----------------------
+%-----------------------------------------------------
+
+\setlrmarginsandblock{3cm}{2cm}{*} % The correct is 3/2
+\setulmarginsandblock{3cm}{2cm}{*}
+\checkandfixthelayout
+
+%-----------------------------------------------------
+%------ Espaçamentos entre linhas e parágrafos -------
+%-----------------------------------------------------
+
+% O tamanho do parágrafo é dado por:
+\setlength{\parindent}{1.3cm}
+
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+% compila o índice
+\makeindex
+
+%------------------------------------------------------
+% Personal Macros
+%------------------------------------------------------
+
+\renewcommand{\quadroname}{Chart}
+
+
+% % Removes paragraph indenting in description environments
+% \setlist[description]{leftmargin=0pt}
+
+
+%------------------------------------------------------
+% Todo notes
+%------------------------------------------------------
+
+\WarningsOff[todonotes]
+
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 
 % ------------------------------------------------------------ 
 % Theorem-like environments
@@ -41,12 +213,3 @@
         {}  % Theorem head spec (can be left empty, meaning ‘normal’)
 \theoremstyle{plain}
 \newtheorem{rem}{Remark}
-
-
-% ------------------------------------------------------------ 
-% Document information
-% ------------------------------------------------------------ 
-
-\title{Linear Inverse Problems and Kernel Regression Applied to Instrumental Variable Estimation}
-\author{Caio Lins}
-\date{\today}
