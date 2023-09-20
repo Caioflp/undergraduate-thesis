@@ -63,7 +63,7 @@
 
 \input{structure/capa-folha-rosto}
 
-\titulo{Linear Inverse Problems and Nonparametric Regression Methods in Instrumental Variable Estimation}
+\titulo{Nonparametric Instrumental Variable Regression Through Kernel Methods and Stochastic Gradients}
 \autor{Caio F. Lins Peixoto}
 \local{Rio de Janeiro}
 \data{2023}
@@ -76,7 +76,7 @@
 
 \preambulo{Bachelor's dissertation presented to the School of Applied
 Mathematics (FGV/EMAp) to obtain the Bachelor's degree in Applied Mathematics.
-\\ \\ Area of Study: Linear Inverse Problems, Kernel Methods, Machine Learning, Nonparametric Statistics, Instrumental Variable Regression.}
+\\ \\ Area of Study: Nonparametric Regression, Instrumental Variables, Kernel Methods, Stochastic Optimization, Machine Learning.}
 
 \orientador{Yuri F. Saporito}
 
@@ -164,8 +164,10 @@ Mathematics (FGV/EMAp) to obtain the Bachelor's degree in Applied Mathematics.
 \renewcommand{\quadroname}{Chart}
 
 
-% % Removes paragraph indenting in description environments
+% Removes paragraph indenting in description environments
 \setlist[description]{leftmargin=0pt, font={\bfseries\sffamily}}
+% Sets enumeration type
+\setlist[enumerate]{label=(\roman*)}
 
 
 %------------------------------------------------------
@@ -183,33 +185,38 @@ Mathematics (FGV/EMAp) to obtain the Bachelor's degree in Applied Mathematics.
 % ------------------------------------------------------------ 
 % Theorem-like environments
 % ------------------------------------------------------------ 
-\newtheoremstyle{default} % name
-        {0.7em}                    % Space above
-        {0.5em}                    % Space below
-        {\itshape}                   % Body font
-        {}                           % Indent amount
-        {\bfseries}                   % Theorem head font
-        {}                          % Punctuation after theorem head
-        {0.5em}                       % Space after theorem head
-        {}  % Theorem head spec (can be left empty, meaning ‘normal’)
-\theoremstyle{default} % default
-\newtheorem{thm}{Theorem}
-\newtheorem*{thm*}{Theorem}
-\newtheorem{lemm}{Lemma}
-\newtheorem*{lemm*}{Lemma}
-\newtheorem{prop}{Proposition}
-\newtheorem*{prop*}{Proposition}
-\newtheorem{cor}{Corollary}
-\newtheorem{corr}{Corollary}
-\newtheorem*{axiom}{Axiom}
-\newtheoremstyle{plain} % name
+\newtheoremstyle{fancy} % name
         {0.7em}                    % Space above
         {0.5em}                    % Space below
         {\normalfont}                   % Body font
         {}                           % Indent amount
-        {\bfseries}                   % Theorem head font
+        {\bfseries\sffamily}                   % Theorem head font
         {}                          % Punctuation after theorem head
         {0.5em}                       % Space after theorem head
         {}  % Theorem head spec (can be left empty, meaning ‘normal’)
-\theoremstyle{plain}
-\newtheorem{rem}{Remark}
+\newtheoremstyle{regular} % name
+        {0.7em}                    % Space above
+        {0.5em}                    % Space below
+        {}                   % Body font
+        {}                           % Indent amount
+        {\bfseries\sffamily}                   % Theorem head font
+        {}                          % Punctuation after theorem head
+        {0.5em}                       % Space after theorem head
+        {}  % Theorem head spec (can be left empty, meaning ‘normal’)
+\swapnumbers
+
+\theoremstyle{fancy} % default
+% \newtheorem{name}[shared counter]{text}[upper counter]
+\newtheorem{thm}{Theorem}[chapter]
+\newtheorem*{thm*}{Theorem}
+\newtheorem{lemm}[thm]{Lemma}
+\newtheorem*{lemm*}{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem*{prop*}{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{corr}[thm]{Corollary}
+
+\theoremstyle{regular}
+\newtheorem{deff}[thm]{Definition}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem*{axiom}{Axiom}

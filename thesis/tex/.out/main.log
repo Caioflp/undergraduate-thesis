@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.6.1)  17 SEP 2023 20:52
+This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.6.1)  19 SEP 2023 22:15
  restricted system commands enabled.
  file:line:error style messages enabled.
 **main.tex
@@ -1406,12 +1406,7 @@ Sidefootvsep and sidefootheight: 14.5pt and 590.14995pt
 \openout6 = main.idx
 Writing index file main.idx 
 \c@thm=\count534
-\c@lemm=\count535
-\c@prop=\count536
-\c@cor=\count537
-\c@corr=\count538
 )
-\c@rem=\count539
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 Package csquotes Info: Adjusting default style.
@@ -1448,16 +1443,16 @@ Package hyperref Info: Link coloring ON on input line 41.
 \myptabboxwidth=\skip290
  (/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count540
+\scratchcounter=\count535
 \scratchdimen=\dimen339
 \scratchbox=\box77
-\nofMPsegments=\count541
-\nofMParguments=\count542
+\nofMPsegments=\count536
+\nofMParguments=\count537
 \everyMPshowfont=\toks68
-\MPscratchCnt=\count543
+\MPscratchCnt=\count538
 \MPscratchDim=\dimen340
-\MPnumerator=\count544
-\makeMPintoPDFobject=\count545
+\MPnumerator=\count539
+\makeMPintoPDFobject=\count540
 \everyMPtoPDFconversion=\toks69
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -1477,7 +1472,7 @@ Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
 )
 Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 ))
-\c@lstlisting=\count546
+\c@lstlisting=\count541
 Package biblatex Info: Trying to load language 'brazil' -> 'brazil-abnt'...
 Package biblatex Info: ... file 'brazil-abnt.lbx' found.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/biblatex-abnt/brazil-abnt.lbx
@@ -1569,7 +1564,7 @@ Package biblatex Info: ... file 'main.bbl' found.
  (./.out/main.bbl)
 Package biblatex Info: Reference section=0 on input line 41.
 Package biblatex Info: Reference segment=0 on input line 41.
-\c@num=\count547
+\c@num=\count542
  [1
 
 {/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
@@ -1614,7 +1609,7 @@ warning  (pdf backend): ignoring duplicate destination with the name 'page.1'
 
 
 ]
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 4.
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 5.
  [13
 
 ]) (./chapters/conclusion.tex [14]) [15
@@ -1646,19 +1641,19 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 )
 
 Here is how much of LuaTeX's memory you used:
- 41115 strings out of 478285
+ 41095 strings out of 478285
  125081,1977958 words of node,token memory allocated
- 6242 words of node memory still in use:
-   96 hlist, 11 vlist, 2 rule, 3 disc, 6 local_par, 130 glue, 7 kern, 11 penalty, 49 glyph, 690 attribute, 207 glue_spec, 347 attribute_list, 10 write, 6 save_pos, 201 pdf_literal, 1 pdf_dest, 2 pdf_action, 6 pdf_colorstack nodes
-   avail lists: 1:1,2:1922,3:709,4:85,5:401,6:47,7:5787,8:101,9:584,10:73,11:360
- 59610 multiletter control sequences out of 65536+600000
+ 7330 words of node memory still in use:
+   108 hlist, 11 vlist, 2 rule, 11 disc, 6 local_par, 6 math, 158 glue, 12 kern, 16 penalty, 135 glyph, 698 attribute, 207 glue_spec, 351 attribute_list, 10 write, 6 save_pos, 201 pdf_literal, 1 pdf_dest, 6 pdf_colorstack nodes
+   avail lists: 1:1,2:1204,3:466,4:84,5:417,6:47,7:5827,8:41,9:485,10:46,11:424
+ 59587 multiletter control sequences out of 65536+600000
  82 fonts using 6015007 bytes
  104i,12n,118p,1148b,4448s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmmono12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-italic.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman8-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-italic.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans10-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans17-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (18 pages, 123221 bytes).
+Output written on main.pdf (18 pages, 126597 bytes).
 
-PDF statistics: 310 PDF objects out of 1000 (max. 8388607)
- 247 compressed objects within 3 object streams
- 57 named destinations out of 1000 (max. 131072)
- 144 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 319 PDF objects out of 1000 (max. 8388607)
+ 256 compressed objects within 3 object streams
+ 60 named destinations out of 1000 (max. 131072)
+ 152 words of extra memory for PDF output out of 10000 (max. 100000000)
 

@@ -1,24 +1,22 @@
-\chapter{Application in Econometrics: Instrumental Variable Regression}
+\chapter{Instrumental Variable Regression}
 
-In this chapter, we turn our attention back to the main application being considered in this thesis: instrumental variable  regression.
-We start by characterizing the type of problem this econometric approach was developed to solve, and then present one of the most well-known and employed\unsure{Is it?} estimation procedures for conducting it: two stages least squares (2SLS).
-Nextly, we show how an IV regression problem can be formulated as a linear inverse problem and discuss the seminal nonparametric method of Newey and Powell \cite{newey2003}, followed by a more recent nonparametric approach called Kernel Instrumental Variable (KIV) \cite{singh2019}.
-We finish with an in-depth analysis of our own method\improvement{Name of the method.}, pointing out its relationship to the others, as well as its strengths and weaknesses.
+Our goal with this chapter is to provide an introduction to instrumental variables for mathematicians and statisticians unfamiliar with the topic.
+We assume throughout that all random variables are define on the same probability space $ ( \Omega, \mathcal{F}, \prob ) $.
+By ``random variable'' we mean scalar or vector valued measurable functions with $ \Omega $ as their domain.\improvement{Rewrite chapter introduction.}
+% we turn our attention back to the main application being considered in this thesis: instrumental variable  regression.
+% We start by characterizing the type of problem this econometric approach was developed to solve, and then present one of the most well-known and employed\unsure{Is it?} estimation procedures for conducting it: two stages least squares (2SLS).
+% Nextly, we show how an IV regression problem can be formulated as a linear inverse problem and discuss the seminal nonparametric method of Newey and Powell \cite{newey2003}, followed by a more recent nonparametric approach called Kernel Instrumental Variable (KIV) \cite{singh2019}.
+% We finish with an in-depth analysis of our own method\improvement{Name of the method.}, pointing out its relationship to the others, as well as its strengths and weaknesses.
 
-\section{The Role of Instrumental Variables}
+\section{Endogeneity}
 
-Our first goal is to introduce the problem of endogenous covariates.
+We start by introducing the problem of endogenous covariates.
 The structural equation we consider is the following:
 \begin{equation}
     \label{eq: structural equation}
     Y = \hstar ( X ) + \varepsilon
 ,\end{equation}
 where $ X $ is a $ d $-dimensional vector of explanatory variables, $ Y $ is the scalar response, $ \varepsilon $ is a zero mean noise and the function $ \hstar $ is the structural parameter we would like to estimate.
-% In what follows, we restrict ourselves to linear models, and thus assume $ \hstar $ has the following parametric form:
-% \begin{equation}
-%     \label{eq: hstar is affine}
-%     \hstar ( \bx ) = \beta_{ 0 } + \beta_{ 1 } \bx_{ 1 } + \cdots + \beta_{ d } \bx_{ d } = \beta^{ \trp } \bx
-% .\end{equation}
 The simplest estimation method for this model specification --- and, therefore, one we would like to be able to use --- is ordinary least squares (OLS), which works by finding, within a given class of functions $ \mathcal{H} $, the element which minimizes the mean squared error:
 \begin{equation}
     \label{eq: ols estimate}
@@ -32,8 +30,8 @@ Expanding $ Y $ through (\ref{eq: structural equation}), we find that $ \hat{ h 
 Hence, if $ \mean [ \varepsilon \mid X ] $ is not identically null, we have introduced bias in our estimation.
 
 This is one of the problems which appear when $ \mean [ \varepsilon \mid X ] \neq 0 $, or, more generally, when $ X $ and $ \varepsilon $ are correlated in some way.
-When this happens, we say that $ X $ i\emph{endogenous}.
-There are several causes for endogenous covariates, the most common of  which are \cite{wooldridge2001}\unsure{Provide one example for each}:
+When this happens, we say that $ X $ is \emph{endogenous}.
+There are several causes for endogenous covariates, the most common of  which are \cite{wooldridge2001}\unsure{Provide one example for each?}:
 \begin{description}
     \item[Omitted Variables] This means $ \varepsilon $ can be decomposed as $ \gstar ( W ) + \eta $, where $ \mean [ \eta \mid X, W ] = 0 $ a.s. and $ X $ and $ W $ are correlated.
         Hence, when we don't observe $ W $ and leave it to the error term, we end up estimating $ \hstar ( X ) + \mean [ \gstar ( W ) \mid X ] $.
@@ -46,4 +44,29 @@ There are several causes for endogenous covariates, the most common of  which ar
 Bias in the estimation procedure is only one of the problems which arise when there are endogenous covariates.
 It's well known that the OLS estimate for linear regression fails to be consistent if any one of the covariates is endogenous \cite{wooldridge2001}.
 To overcome endogeneity a few approaches exist, but by far the one most used by empirical economic research is instrumental variable estimation \cite{wooldridge2001}.
+
+\section{Instrumental Variables}
+
+\begin{deff}
+    \label{def: iv}
+    An \emph{instrumental variable} for regression problem (\ref{eq: structural equation}) is a random variable $ Z $ such that
+    \begin{enumerate}
+        \item There is some influence of $ Z $ upon $ X $, that is, the marginal distribution of $ X $ is not the same as the distribution of $ X $ conditioned on $ Z $; \label{en: Z influences X}
+        \item The conditional mean of $ \varepsilon $ given $ Z $ is almost surely null, i.e., $ \mean [ \varepsilon \mid Z ] = 0 $. \label{en: Z is exogenous}
+    \end{enumerate}
+\end{deff}
+
+\improvement{Causal graph, discuss strength of $ \mean[\varepsilon \mid Z] = 0$, discuss $ Z $ only influences $ Y $ through $ X $.}
+
+The idea behind an instrumental variable is that it is exogenous \ref{en: Z is exogenous} while still influencing $ Y $ through $ X $ \ref{en: Z influences X}.
+An exogenous covariate, in contrast to an endogenous one, as a variable that is determined outside of the system described by (\ref{eq: structural equation}).
+The examples ahead will clarify how instrumental variables may be chosen in practice.
+
+Condition \ref{en: Z is exogenous} is only one of the possible meanings for the statement that $ Z $ is exogenous.
+Two possible alternatives are requiring that $ Z $ be (1) independent from, or (2) uncorrelated with $ \varepsilon $.
+Of course, (1) is a much more strict requirement which implies \ref{en: Z is exogenous}, while (2) is a softer condition, implied by \ref{en: Z is exogenous}.
+Independence is almost always impossible to verify in real scenarios, so (1) is not a good option.
+In contrast, there are situations where condition (2) is enough for ensuring good properties of IV estimators, including one we will present shortly, the linear model \cite{wooldridge2001}.
+However, in order to prepare grounds for the nonparametric methods that will come later, we chose to use the definition which serves both.
+
 
