@@ -19,6 +19,39 @@
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global}
+    \entry{hernan2020}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=4bfbae7bd65c55b2dceaaa88a09d6acc}{%
+           family={Hernán},
+           familyi={H\bibinitperiod},
+           given={Miguel\bibnamedelima A.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7a2ba958c4a9112b1e74732b9c35f016}{%
+           family={Robins},
+           familyi={R\bibinitperiod},
+           given={James\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Chapman \& Hall/CRC}%
+      }
+      \strng{namehash}{6ea6158ad5289d6599bcc70dc89c5f03}
+      \strng{fullhash}{6ea6158ad5289d6599bcc70dc89c5f03}
+      \strng{bibnamehash}{6ea6158ad5289d6599bcc70dc89c5f03}
+      \strng{authorbibnamehash}{6ea6158ad5289d6599bcc70dc89c5f03}
+      \strng{authornamehash}{6ea6158ad5289d6599bcc70dc89c5f03}
+      \strng{authorfullhash}{6ea6158ad5289d6599bcc70dc89c5f03}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Causal Inference: What If}
+      \field{year}{2020}
+    \endentry
     \entry{newey2003}{article}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=058d74ae5e89fbd5a49ebdbe97b4c922}{%
