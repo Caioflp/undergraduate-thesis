@@ -1,7 +1,7 @@
 \chapter{Instrumental Variable Regression}
 
 Our goal with this chapter is to provide an introduction to instrumental variables for mathematicians and statisticians unfamiliar with the topic.
-We assume throughout that all random variables are define on the same probability space $ ( \Omega, \mathcal{F}, \prob ) $.
+We assume throughout that all random variables are define on the same probability space $ ( \Omega, \mathcal{A}, \prob ) $.
 By ``random variable'' we mean scalar or vector valued measurable functions with $ \Omega $ as their domain.\improvement{Rewrite chapter introduction.}
 % we turn our attention back to the main application being considered in this thesis: instrumental variable  regression.
 % We start by characterizing the type of problem this econometric approach was developed to solve, and then present one of the most well-known and employed\unsure{Is it?} estimation procedures for conducting it: two stages least squares (2SLS).
@@ -107,3 +107,62 @@ In this section, we restrict the structural function $ \hstar $ in (\ref{eq: str
 and assume to have access to a random variable $ Z $, taking values in $ \R^{ d_{ Z } } $, satisfying conditions \ref{def: iv} \ref{en: Z influences X} and \ref{en: Z is exogenous}, so that $ Z $ is a valid instrumental variable.
 Hence, our data is composed of $ n $ independent joint samples $ \left\{ ( X_{ i }, Z_{ i }, Y_{ i } ) \right\}_{ i=1 }^{ n } $.
 Let $ \bX \in \R^{ n \times (d_{ X } + 1) } $ and $ \bZ \in \R^{ n \times ( d_{ Z } + 1 ) } $ be the experiment design matrices with $ 1 $'s in the first column.
+\improvement{Finish this section. Explain 2SLS and give examples of good IVs, as well as numerical examples.}
+
+\section{Nonparametric Instrumental Variable Regression}
+
+In nonparametric regression, we do not specify \emph{a priori} a finite dimensional parametric form for the structural function (such as restricting it to be affine), and so we allow our search space to potentially be infinite dimensional.
+However, in doing this, we must still precisely define the infinite dimensional space where the solution will be searched for.
+Hence, we start by precisely defining the nonparametric regression problem given by (\ref{eq: structural equation})
+
+\subsection{Problem specification}
+\label{sec: problem specification}
+
+We assume there exists an underlying probability triplet $ ( \Omega, \mathcal{A}, \prob ) $.
+Assume that $ X : ( \Omega, \mathcal{A} ) \to ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ) ) $ and $ \varepsilon : ( \Omega, \mathcal{A} ) \to ( \R, \mathcal{B} ( \R ) ) $ are measurable\footnotemark~and, furthermore, that $ \varepsilon \in L^{ 1 } ( \Omega, \mathcal{A}, \prob ) $ with $ \mean [ \varepsilon ] = 0 $.
+\footnotetext{We denote by $ \mathcal{B} ( \R^{ k } ) $ the Borel $ \sigma $-algebra in $ \R^{ k } $.}
+We also assume that $ \mean [ \varepsilon \mid X ] $ is \emph{not} almost surely null and, hence, $ X $ is endogenous.
+Denote by $ \prob_{ X } $ the distribution of the random variable $ X $, that is, the pushforward measure $ \prob \circ X^{ -1 } $ defined on $ \mathcal{B} ( \R^{ d_{ X } } ) $.
+We write $ L^{ 2 } ( X ) $ as a shorthand for the space $ L^2 ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ), \prob_{ X } ) $ of real and square integrable (equivalence classes of) measurable functions defined on the measure space $ ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ), \prob_{ X } ) $.
+It's important to recall that the inner product and norm in $ L^{ 2 } ( X ) $ are given by $ \dotprod{ h, g }_{ L^{ 2 } ( X ) } = \mean [ h ( X ) g ( X ) ] $ and $ \norm{ h }_{ L^{ 2 } ( X ) }^2 = \dotprod{ h, h }_{ L^{ 2 } ( X ) } = \mean [ h ( X )^2 ] $.
+
+We assume there exists $ \hstar \in L^{ 2 } ( X ) $ such that (\ref{eq: structural equation}) holds, that is, $ Y = \hstar ( X ) + \varepsilon $.
+Finally, we assume there exists a random variable $ Z : ( \Omega, \mathcal{A} ) \to ( \R^{ d_{ Z } }, \mathcal{B} ( \R^{ d_{ Z } } ) ) $ such that $ Z $ qualifies as an instrumental variable, i.e., $ Z $ satisfies conditions \ref{def: iv} \ref{en: Z influences X} and \ref{en: Z is exogenous}.
+We define $ \prob_{ Z } $ and $ L^{ 2 } ( Z ) $ in an manner analogous to $ \prob_{ X } $ and $ L^{ 2 } ( X ) $.
+Our goal is to estimate $ \hstar $ based on i.i.d. samples from the joint distribution of $ X, Z $ and $ Y $.
+
+\subsection{Identification}
+
+An important question to ask after specifying the problem is whether the function $ \hstar $ is identified.
+The answer is negative without further assumptions, which will be presented in this subsection.
+This discussion was inspired on the introduction of \cite{newey2003}.
+
+Suppose there exists $ \delta \in L^{ 2 } ( X ) $ such that $ \delta \neq 0 $, but $ \mean [ \delta ( X ) \mid Z ] = 0 $.
+Without loss of generality, we can assume\footnotemark~ $ \delta ( X ) \neq \mean [ \varepsilon \mid X ] $.
+\footnotetext{If it happens to be the case that $ \mean \left[ \mean [ \varepsilon \mid X ] \mid Z \right] $ = 0 (which is \emph{not} implied by our assumptions so far), we can simply take $ \delta ( X ) = \lambda \mean [ \varepsilon \mid X ] $, for some $ \lambda \in \R \setminus \left\{ 0, 1 \right\} $.
+Since, by hypothesis, $ \mean [ \varepsilon \mid X ] \neq 0 $, this satisfies our requirements and is different from $ \mean [ \varepsilon \mid X ] $.}
+Defining $ g \defeq \hstar + \delta $ and $ \eta \defeq \varepsilon - \delta ( X ) $, we have
+\begin{equation*}
+    Y = g ( X ) + \eta
+,\end{equation*}
+where $ \mean [ \eta \mid Z ] = 0 $ and $ \mean [ \eta \mid X ] \neq 0 $.
+Hence, $ g \neq \hstar $ but they are indistinguishable from the data generating process perspective.
+Reciprocally, suppose that the only member of $ L^{ 2 } ( X ) $ which has null mean conditioned on $ Z $ is the null function.
+Then, given $ g \in L^{ 2 } ( X ) $ such that
+\begin{equation*}
+    Y = g ( X ) + \eta
+\end{equation*}
+with $ \mean [ \eta \mid Z ] = 0 $, we have
+\begin{equation*}
+    0 = ( g - \hstar ) ( X ) + \eta - \varepsilon
+.\end{equation*}
+Conditioning on $ Z $, we get
+\begin{equation*}
+    \mean [ ( g - \hstar ) ( X ) \mid Z ] = 0
+,\end{equation*}
+which, by assumption, implies $ \hstar = g $.
+
+Therefore, a necessary and sufficient condition for identification of our regression problem is the following:
+\begin{assump*}[Identification]
+    If $ \delta \in L^{ 2 } ( X ) $ satisfies $ \mean [ \delta ( X ) \mid Z ] = 0 $, then $ \delta = 0 $.
+\end{assump*}
