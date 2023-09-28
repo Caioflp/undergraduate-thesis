@@ -118,7 +118,7 @@ Hence, we start by precisely defining the nonparametric regression problem given
 \subsection{Problem specification}
 \label{sec: problem specification}
 
-We assume there exists an underlying probability triplet $ ( \Omega, \mathcal{A}, \prob ) $.
+Let $ ( \Omega, \mathcal{A}, \prob ) $ be the underlying probability space.
 Assume that $ X : ( \Omega, \mathcal{A} ) \to ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ) ) $ and $ \varepsilon : ( \Omega, \mathcal{A} ) \to ( \R, \mathcal{B} ( \R ) ) $ are measurable\footnotemark~and, furthermore, that $ \varepsilon \in L^{ 1 } ( \Omega, \mathcal{A}, \prob ) $ with $ \mean [ \varepsilon ] = 0 $.
 \footnotetext{We denote by $ \mathcal{B} ( \R^{ k } ) $ the Borel $ \sigma $-algebra in $ \R^{ k } $.}
 We also assume that $ \mean [ \varepsilon \mid X ] $ is \emph{not} almost surely null and, hence, $ X $ is endogenous.
@@ -166,3 +166,95 @@ Therefore, a necessary and sufficient condition for identification of our regres
 \begin{assump*}[Identification]
     If $ \delta \in L^{ 2 } ( X ) $ satisfies $ \mean [ \delta ( X ) \mid Z ] = 0 $, then $ \delta = 0 $.
 \end{assump*}
+
+This condition has an interpretation in terms of the conditional expectation operator, which will be a key object in the construction of our estimator for $ \hstar $.
+Let $ h \in L^{ 2 } ( X ) $.
+Notice that, by Jensen's inequality,
+\begin{equation}
+    \label{eq: P is bounded}
+    \mean [ ( \mean [ h ( X ) \mid Z ] )^2 ]
+    \leq \mean [ \mean [ h ( X )^2 \mid Z ] ]
+    = \mean [ h ( X )^2 ]
+    < +\infty
+.\end{equation}
+Furthermore, since $ \mean [ h ( X ) \mid Z ] $ is a $ \sigma ( Z ) $-measurable\footnote{We denote by $ \sigma ( Z ) $ the smallest $ \sigma $-algebra in $ \Omega $ with respect to which $ Z $ is measurable.} random variable, by the Doob-Dynkin Lemma there exists a measurable function $ f_{ h } : ( \R^{ d_{ Z } }, \mathcal{B} ( \R^{ d_{ Z } } ) ) \to ( \R, \mathcal{B} ( \R ) ) $ such that
+\begin{equation*}
+    \mean [ h ( X ) \mid Z ] = f_{ h } ( Z )
+.\end{equation*}
+Under these conditions, we write $ \mean [ h ( X ) \mid Z = z ] $ for $ f_{ h } ( z ) $.
+The computation in (\ref{eq: P is bounded}) shows that $ f_{ h } \in L^2 ( Z ) $ for every $ h \in L^2 ( X ) $.
+Therefore, we can define the operator $ \meanop : L^2 ( X ) \to L^2 ( Z ) $ given by $ \meanop [ h ] = f_{ h } = \mean [ h ( X ) \mid Z = \cdot ] $.
+This operator, called the \emph{conditional expectation operator}, is clearly linear and, again by (\ref{eq: P is bounded}), also bounded, satisfying $ \norm{ \meanop }_{ \op } \leq 1 $.
+The identification assumption thus amounts to saying that the kernel of $ \meanop $ is trivial, i.e., $ \meanop $ is injective.
+
+It is hard to quantify how restrictive this condition is for arbitrary $ X $ and $ Z $, so we analyze it in a more familiar setting, the exponential family.
+We will use a classic completeness result for statistics in this family of distributions to reformulate the identification assumption in terms of more familiar objects.
+We first define completeness:
+\begin{deff}
+    \cite{lehmann59} We say that a family $ \mathscr{P} $ of probability distributions on a measurable space $ ( E, \mathcal{E} ) $ is \emph{complete} if
+    \begin{equation*}
+        \int_{ E } f ( x ) \ P ( \ddrm x ) = 0 \quad \text{for all} \quad P \in \mathscr{P}
+    \end{equation*}
+    implies $ f ( x ) = 0 $ $ \mathscr{P} $-a.e\footnote{We say that a statement $ Q ( x ) $ is true $ \mathscr{P} $-a.e. if there exists a set $ N \in \mathcal{E} $ such that $ Q ( x ) $ is true for $ x \in E \setminus N $ and $ P ( N ) = 0 $ for all $ P \in \mathscr{P} $.}.
+\end{deff}
+Then, a remarkable fact about the exponential family is the completeness of the natural statistics under a mild condition on the set of parameters:
+\begin{thm}
+    \label{thm: completeness of exp family}
+    \cite{lehmann59} Let $ \Xi $ be a subset of an Euclidian space with nonempty interior.
+    Let $ X $ be a random vector with distribution $ P^{ \theta } $ parametrized by $ \theta \in \Xi $ in the following manner:
+    \begin{equation*}
+        P^{ \theta } ( \ddrm x ) = C ( \theta ) \exp \left\{ \sum_{ i=1 }^{ s } \theta_{ i } T_{ i } ( x ) \right\} \mu ( \ddrm x )
+    ,\end{equation*}
+    where $ \mu $ is the underlying measure.
+    Then, the family $ \mathscr{P}_{ T } $, formed by the distributions of the random vector $ T ( X ) = ( T_{ 1 } ( X ), \dots, T_{ s } ( X ) ) $ as $ \theta $ ranges through $ \Xi $, is complete.
+\end{thm}
+
+Using this result and under suitable hypotheses, we can reformulate the identification condition.
+\begin{thm}
+    For $ z \in \R^{ d_{ z } } $, let $ \probq_{ z } : \mathcal{B} ( \R^{ d_{ X } } ) \to [0, 1] $ denote the conditional distribution of $ X $ given $ Z = z $.
+    Assume there exists $ U \in \borel ( R^{ d_{ Z } } ) $ such that $ \prob_{ Z } ( U ) = 1 $ and for all $ z \in U $ we have
+    \begin{equation*}
+        \probq_{ z } ( \ddrm x ) = C ( z ) \exp ( \alpha ( z )^{ \trp } T ( x ) ) \; \mu ( \ddrm x )
+    \end{equation*}
+    for an underlying measure $ \mu $ on $ \borel ( \R^{ d_{ X } } ) $ and some functions $ \alpha : \R^{ d_{ z } } \to \R^{ s } $ and $ T : \R^{ d_{ x } } \to \R^{ s } $.
+    Assume that $ T $ is injective and that the image of $ \alpha $ restricted to $ U $ contains an open set.
+    Then, $ \hstar $ is identified.
+\end{thm}
+\begin{proof}
+    Taking $ \Xi = \alpha ( U ) $ and $ \theta = \alpha ( z ) $, we see that the hypotheses of Theorem \ref{thm: completeness of exp family} are satisfied and, hence,
+    \begin{equation*}
+        \mathscr{P} \defeq \left\{ \probq_{ z } \circ T^{ -1 } : z \in U \right\}
+    \end{equation*}
+    is a complete family of probability distributions.
+    Let $ h \in L^2 ( X ) $ be such that $ \mean [ h ( X ) \mid Z ] = 0 $.
+    This means that the function
+    \begin{equation*}
+        z \longmapsto \int_{ \R^{ d_{ x } } } h ( x ) \ \probq_{ z } ( \ddrm x )
+    \end{equation*}
+    is null $ \prob_{ Z } $-a.s.
+    Without loss of generality, we may assume that its null on $ U $.
+    But notice that, since $ T $ is injective, we can rewrite this integral as
+    \begin{align*}
+        0 = \int_{ \R^{ d_{ x } } } h ( x ) \ \probq_{ z } ( \ddrm x )
+        &= \int_{ \R^{ d_{ x } } } ( h \circ T^{ -1 } ) ( T ( x ) ) \ \probq_{ z } ( \ddrm x ) \\
+        &= \int_{ \R^{ s } } ( h \circ T^{ -1 } ) ( t )  \ ( \probq_{ z } \circ T^{ -1 } ) ( \ddrm t )
+    \end{align*}
+    for all $ z \in U $.
+    By completeness of $ \mathscr{P} $, this implies $ h \circ T^{ -1 } ( t ) = 0 $ $ \mathscr{P} $-a.s. which, in turn, means that for all $ z \in U $ we have
+    \begin{align*}
+        1 = ( \probq_{ z } \circ T^{ -1 } ) [ ( h \circ T^{ -1 } ) ( t ) = 0 ]
+        &= \probq_{ z } [ ( h \circ T^{ -1 } ) ( T ( x ) ) = 0 ] \\
+        &= \probq_{ z } [ h ( x ) = 0 ]
+    .\end{align*}
+    Now, by the definition of conditional probability we have
+    \begin{align*}
+        \prob_{ X } [ h ( x ) = 0 ]
+        &= \int_{ \R^{ d_{ z } } } \probq_{ z } [ h ( x ) = 0 ] \ \prob_{ Z } ( \ddrm z ) \\
+        &= \int_{ U } \probq_{ z } [ h ( x ) = 0 ] \ \prob_{ Z } ( \ddrm z ) \\
+        &= 0
+    .\end{align*}
+    Therefore, $ h $ is the null function, which means $ \hstar $ is identified.
+\end{proof}
+\improvement{See what these conditions imply in the multivariate normal case.}
+
+

@@ -676,6 +676,7 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx7.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman7-regular.luc
+INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman6-regular.luc
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmmono12-regular.luc
@@ -691,6 +692,8 @@ INPUT ./.out/main.run.xml
 OUTPUT .out/main.run.xml
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb
@@ -705,3 +708,4 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/rsfs/rsfs10.pfb

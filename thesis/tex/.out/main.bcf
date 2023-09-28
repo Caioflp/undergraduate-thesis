@@ -2450,6 +2450,8 @@
     <bcf:citekey order="5" intorder="1">wooldridge2001</bcf:citekey>
     <bcf:citekey order="6" intorder="1">hernan2020</bcf:citekey>
     <bcf:citekey order="7" intorder="1">newey2003</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">lehmann59</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">lehmann59</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

@@ -52,6 +52,33 @@
       \field{title}{Causal Inference: What If}
       \field{year}{2020}
     \endentry
+    \entry{lehmann59}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=808b954963d0bddf6d17af82a209aaeb}{%
+           family={Lehmann},
+           familyi={L\bibinitperiod},
+           given={E.\bibnamedelimi L.},
+           giveni={E\bibinitperiod\bibinitdelim L\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {John Wiley \& Sons}%
+      }
+      \strng{namehash}{808b954963d0bddf6d17af82a209aaeb}
+      \strng{fullhash}{808b954963d0bddf6d17af82a209aaeb}
+      \strng{bibnamehash}{808b954963d0bddf6d17af82a209aaeb}
+      \strng{authorbibnamehash}{808b954963d0bddf6d17af82a209aaeb}
+      \strng{authornamehash}{808b954963d0bddf6d17af82a209aaeb}
+      \strng{authorfullhash}{808b954963d0bddf6d17af82a209aaeb}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Testing Statistical Hypotheses}
+      \field{year}{1959}
+    \endentry
     \entry{newey2003}{article}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=058d74ae5e89fbd5a49ebdbe97b4c922}{%
