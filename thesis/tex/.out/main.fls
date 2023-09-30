@@ -660,7 +660,6 @@ INPUT ./chapters/introduction.tex
 INPUT ./chapters/introduction.tex
 INPUT ./chapters/instrumental-variable.tex
 INPUT ./chapters/instrumental-variable.tex
-INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman8-regular.luc
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-bold.luc
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-italic.luc
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
@@ -672,6 +671,7 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmmib
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbsy10.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy8.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy6.tfm
+INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman8-regular.luc
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx7.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm
