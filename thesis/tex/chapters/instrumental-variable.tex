@@ -39,10 +39,19 @@ This is one of the problems which appear when $ \mean [ \varepsilon \mid X ] \ne
 When this happens, we say that $ X $ is \emph{endogenous}.
 There are several causes for endogenous covariates, the most common of  which are \cite{wooldridge2001}:
 \begin{description}
-    \item[Omitted Variables] This means $ \varepsilon $ can be decomposed as $ \gstar ( W ) + \eta $, where $ \mean [ \eta \mid X, W ] = 0 $ a.s. and $ X $ and $ W $ are correlated.
-        Hence, when we don't observe $ W $ and leave it to the error term, we end up estimating $ \hstar ( X ) + \mean [ \gstar ( W ) \mid X ] $.
-        For example, if we want to regress a persons wage solely on her number of schooling years, there are other variables unaccounted for which influence both wages and schooling, such as natural ability.
+    \item[Omitted Variables] This means $ \varepsilon $ can be decomposed as $ \gstar ( W ) + \eta $, where $ \mean [ \eta \mid X, W ] = 0 $ and $ X $ and $ W $ are correlated.
+        Hence, when we don't observe $ W $ and leave it to the error term, we end up estimating
+        \begin{align*}
+            \mean [ Y \mid X ]
+            &= \hstar ( X ) + \mean [ \varepsilon \mid X ] \\
+            &= \hstar ( X ) + \mean [ \gstar ( W ) + \eta \mid X ] \\
+            &= \hstar ( X ) + \mean [ \gstar ( W ) \mid X ] \\
+            &\neq \hstar ( X )
+        ,\end{align*}
+        if $ W $ is correlated with $ X $.
+        For example, if we want to regress a person's wage solely on her number of schooling years (this is $ X $), there are other variables, unaccounted for, which influence both wages and schooling, such as natural ability (this is $ W $).
         Innately skilled people may tend to be successful in school --- and, therefore, pursue higher levels of education --- as well as show higher performance in their future jobs, resulting in better wages.
+        Thus, we fail to estimate $ \hstar $.
     \item[Measurement Error] If we are unable to exactly measure one of the covariates, $ X_{ k } $, and instead measure $ X_{ k }' $ subject to some stochastic error, by using $ X_{ k }' $ in our regression instead of $ X_{ k } $ we are delegating to $ \varepsilon $ some measure of the difference between $ X_{ k } $ and $ X_{ k }' $.
         Depending on how these two variables are related, we may introduce endogeneity.
         For example, $ X_{ k } $ may be a marginal tax rate, but we may only have access to an average tax rate $ X_{ k }' $.
@@ -111,9 +120,171 @@ In this section, we restrict the structural function $ \hstar $ in (\ref{eq: str
     \hstar ( x ) = \beta_{ 0 } + \beta_{ 1 } x_{ 1 } + \cdots + \beta_{ d_{ X } } x_{ d_{ X } }
 ,\end{equation}
 and assume to have access to a random variable $ Z $, taking values in $ \R^{ d_{ Z } } $, satisfying conditions \ref{def: iv} \ref{en: Z influences X} and \ref{en: Z is exogenous}, so that $ Z $ is a valid instrumental variable.
-Hence, our data is composed of $ n $ independent joint samples $ \left\{ ( X_{ i }, Z_{ i }, Y_{ i } ) \right\}_{ i=1 }^{ n } $.
-Let $ \bX \in \R^{ n \times (d_{ X } + 1) } $ and $ \bZ \in \R^{ n \times ( d_{ Z } + 1 ) } $ be the experiment design matrices with $ 1 $'s in the first column, and let $ \bY \in \R^{ n } $ be the vector with all observations of $ Y $.
-\improvement{Finish this section. Explain 2SLS and give examples of good IVs, as well as numerical examples.}
+To ease the notation, we augment the variables $ X $ and $ Z $ to have a $ 1 $ as a first coordinate, so we may write $ \hstar ( X ) = \beta^{ \trp } X $, where $ \beta = ( \beta_{ 0 }, \dots, \beta_{ d_{ X } } ) $.
+Their new dimensions are $ d_{ X }' = d_{ X } + 1 $ and $ d_{ Z }' = d_{ Z } + 1 $.
+Our data is then composed of $ n $ independent joint samples $ \left\{ ( X_{ i }, Z_{ i }, Y_{ i } ) \right\}_{ i=1 }^{ n } $.
+Let $ \bX \in \R^{ n \times d_{ X }' } $ and $ \bZ \in \R^{ n \times d_{ Z }' } $ be the experiment design matrices with $ 1 $'s in the first column, and let $ \bY \in \R^{ n } $ be the vector with all observations of $ Y $.
+Each line of $ \bX $ and $ \bZ $ corresponds to one sample of the vectors $ X $ and $ Z $, respectively.
+The idea of 2SLS is to first perform a regression of $ X $ on $ Z $ (the \emph{first stage}) and then regress $ Y $ on the fitted values $ \hat{ X } $ (the \emph{second stage}).
+In what follows, we will derive this method and give some numerical examples to show its applicability.
+To avoid misunderstandings during computations, we explicitly state that all vectors are regarded as \emph{column} vectors.
+
+\subsection{Constructing the estimator}
+
+Since we have access to an exogenous covariate, a possible idea is to use this covariate to extract from $ X $ a component which is uncorrelated with $ \varepsilon $.
+The simplest way to do this is to perform the \emph{linear orthogonal projection} of $ X $ onto $ Z $, that is, to find the matrix $ P $ which minimizes the MSE:
+\begin{equation*}
+    P = \argmin_{ M \in \R^{ d_{ X }' \times d_{ Z }' } } \mean [ \norm{ X - M Z }^2 ] = \mathcal{L} ( M )
+.\end{equation*}
+A straightforward computation shows that $ \nabla \mathcal{L} ( M ) = M \mean [ Z Z^{ \trp } ] - \mean [ X Z^{ \trp } ] $.
+Since $ \mathcal{L} $ is clearly convex, we may find the optimal value by setting the gradient to $ 0 $:
+\begin{equation*}
+    \nabla \mathcal{L} ( P ) = 0 \iff P \mean [ Z Z^{ \trp } ] = \mean [ X Z^{ \trp } ]
+.\end{equation*}
+We now make the hypothesis that $ \mean [ Z Z ^{ \trp } ] $ is invertible.
+This means that the coordinates of $ Z $ are not linearly dependent, which is a standard requirement.
+With that assumption, we have
+\begin{equation}
+    \label{eq: projection matrix formula}
+    P = \mean [ X Z^{ \trp } ] \mean [ Z Z^{ \trp } ]^{ -1 }
+.\end{equation}
+Therefore, if we denote the fitted values $ PZ $ by $ \hat{ X } $, we may write 
+\begin{equation}
+    \label{eq: X on Z regression}
+    X = \hat{ X } + \eta
+,\end{equation}
+where $ \mean [ \hat{ X } \eta^{ \trp } ] = 0 $, that is, the residual is orthogonal to the projection.
+
+Now we go back to the structural equation, which, in the linear setting, is the following:
+\begin{equation}
+    \label{eq: linear structural equation}
+    Y = X^{ \trp }\beta + \varepsilon
+.\end{equation}
+If we substitute $ X $ using equation (\ref{eq: X on Z regression}), we get
+\begin{equation*}
+    Y = \hat{ X }^{ \trp } \beta + \eta^{ \trp } \beta + \varepsilon
+.\end{equation*}
+Multiply on the left by $ \hat{ X } $ and take expectations to obtain
+\begin{equation}
+    \label{eq: beta is identified}
+    \mean [ \hat{ X } Y ] = \mean [ \hat{ X } \hat{ X }^{ \trp } ] \beta + \mean [ \hat{ X } \eta^{ \trp } ] \beta + \mean [ \hat{ X } \varepsilon ]
+.\end{equation}
+We have already established that $ \mean [ \hat{ X } \eta^{ \trp } ] = 0 $.
+Notice also that
+\begin{equation*}
+    \mean [ \hat{ X } \varepsilon ]
+    = \mean [ PZ \varepsilon ]
+    = \mean [ \mean [ PZ \varepsilon \mid Z ] ]
+    = \mean [ PZ \mean [ \varepsilon \mid Z ] ]
+    = 0
+,\end{equation*}
+by our definition of instrumental variable.
+Equation (\ref{eq: beta is identified}) then reduces to
+\begin{equation*}
+    \mean [ \hat{ X } Y ] = \mean [ \hat{ X } \hat{ X }^{ \trp } ] \beta
+.\end{equation*}
+
+We would like to multiply both sides on the left by $ \mean [ \hat{ X } \hat{ X }^{ \trp } ]^{ -1 } $, but we must first check if this matrix is invertible.
+Expanding we have:
+\begin{equation*}
+    \mean [ \hat{ X } \hat{ X }^{ \trp } ]
+    = P \mean [ Z Z^{ \trp } ] P^{ \trp }
+    = \mean [ X Z^{ \trp } ] \mean [ Z Z^{ \trp } ]^{ -1 } \mean [ Z X^{ \trp } ]
+.\end{equation*}
+Therefore, if we require the rank of the matrix $ \mean [ Z X^{ \trp } ] $ to be $ d_{ X }' $, we have invertibility of $ \mean [ \hat{ X } \hat{ X }^{ \trp } ] $.
+Thus, we need to make two more assumptions: $ d_{ Z }' \geq d_{ X }' $, which is equivalent to $ d_{ Z } \geq d_{ X } $, and $ \rk \mean [ Z X^{ \trp } ] = d_{ X }' $.
+The first assumption is a requirement of the second, and means that we need at least as many exogenous covariates as endogenous covariates in order to identify $ \beta $.
+As for the second assumption, it is satisfied if $ X $ is sufficiently linearly related to $ Z $ \cite{wooldridge2001}. Under these conditions, we have
+\begin{align}
+    \label{eq: beta reduced}
+    \beta
+    &= \mean [ \hat{ X } \hat{ X }^{ \trp } ]^{ -1 } \mean [ \hat{ X } Y ] \\
+    &= \left[
+        \mean [ X Z^{ \trp } ] \mean [ Z Z^{ \trp } ]^{ -1 } \mean [ Z X^{ \trp } ]
+    \right]^{ -1 }
+    \mean [ X Z^{ \trp } ] \mean [ Z Z^{ \trp } ]^{ -1 } \mean [ Z Y ] \label{eq: beta expanded}
+.\end{align}
+
+The 2SLS estimator is then obtained by substituting the expectations by empirical versions, using the data in $ \bX, \bZ $ and $ \bY $.
+The analogue of expression (\ref{eq: beta expanded}) would be
+\begin{align}
+    \label{eq: beta hat expanded}
+    \begin{split}
+        \hat{ \beta }
+        &=
+        \left[
+            \left(
+                \frac{ 1 }{ n } \sum_{ i=1 }^{ n } X_{ i } Z_{ i }^{ \trp }
+            \right)
+            \left(
+                \frac{ 1 }{ n } \sum_{ i=1 }^{ n } Z_{ i } Z_{ i }^{ \trp }
+            \right)^{ -1 }
+            \left(
+                \frac{ 1 }{ n } \sum_{ i=1 }^{ n } Z_{ i } X_{ i }^{ \trp }
+            \right)
+        \right]^{ -1 } \\
+        &\hspace{2cm} \cdot
+        \left(
+            \frac{ 1 }{ n } \sum_{ i=1 }^{ n } X_{ i } Z_{ i }^{ \trp }
+        \right)
+        \left(
+            \frac{ 1 }{ n } \sum_{ i=1 }^{ n } Z_{ i } Z_{ i }^{ \trp }
+        \right)^{ -1 }
+        \left(
+            \frac{ 1 }{ n } \sum_{ i=1 }^{ n } Z_{ i } Y_{ i }
+        \right).
+    \end{split}
+\end{align}        
+Notice that all $ n^{ -1 } $ factors cancel out, so this may be equivalently written as
+\footnote{
+We remind the reader that the transpose sign changes place when writing the 2SLS estimator using data matrices, since each observation of $ X $ and $ Z $ is a \emph{line} in the corresponding matrix, not a column.
+}
+\begin{align*}
+    \begin{split}
+        \hat{ \beta }
+        &= 
+        \left[
+            \left(
+                \sum_{ i=1 }^{ n } X_{ i } Z_{ i }^{ \trp }
+            \right)
+            \left(
+                \sum_{ i=1 }^{ n } Z_{ i } Z_{ i }^{ \trp }
+            \right)^{ -1 }
+            \left(
+                \sum_{ i=1 }^{ n } Z_{ i } X_{ i }^{ \trp }
+            \right)
+        \right]^{ -1 } \\
+        &\hspace{2cm} \cdot
+        \left(
+            \sum_{ i=1 }^{ n } X_{ i } Z_{ i }^{ \trp }
+        \right)
+        \left(
+            \sum_{ i=1 }^{ n } Z_{ i } Z_{ i }^{ \trp }
+        \right)^{ -1 }
+        \left(
+            \sum_{ i=1 }^{ n } Z_{ i } Y_{ i }
+        \right)
+    \end{split} \\
+    &= \left[
+        \bX^{ \trp } \bZ ( \bZ^{ \trp } \bZ )^{ -1 } \bZ^{ \trp } \bX
+    \right]^{ -1 }
+    \bX^{ \trp } \bZ ( \bZ^{ \trp } \bZ )^{ -1 } \bZ^{ \trp } Y
+.\end{align*}
+Letting $ \hat{ \bX } $ denote $ \bX^{ \trp } \bZ ( \bZ^{ \trp } \bZ )^{ -1 } \bZ^{ \trp } $, we have
+\begin{equation*}
+    \hat{ \beta } = \left( \hat{ \bX } \hat{ \bX }^{ \trp } \right)^{ -1 } \hat{ \bX } \bY 
+,\end{equation*}
+which is the empirical analogue of equation (\ref{eq: beta reduced}).
+This final form makes it clear that the estimator $ \hat{ \beta } $ is obtained by first performing one linear regression of $ \bX $ onto $ \bZ $, and then taking the fitted values $ \hat{ \bX } $ and linearly regressing $ \bY $ on them.
+
+Using equation (\ref{eq: beta hat expanded}), together with the Law of Large Numbers and Slutsky's Theorem, one may prove the consistency of $ \hat{ \beta } $.
+Similar inspection allows one to establish asymptotic normality.
+For further theoretical properties of the 2SLS estimator, we refer the reader to \cite[Chapter~5]{wooldridge2001}, the main source consulted for this section.
+
+\subsection{Numerical examples}
+
+We now provide some numerical examples to strengthen our intuition about how the 2SLS estimator works.
+\improvement{Finish this section with numerical examples}
 
 \section{Nonparametric Instrumental Variable Regression}
 \label{sec: nonparametric}

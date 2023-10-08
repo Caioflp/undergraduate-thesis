@@ -1,19 +1,19 @@
 # Fdb version 4
-["biber .out/main"] 1695850918 ".out/main.bcf" ".out/main.bbl" ".out/main" 1695995718 0
+["biber .out/main"] 1696797826 ".out/main.bcf" ".out/main.bbl" ".out/main" 1696800176 0
   "../bib/bibliography.bib" 1695849457 1405 1559e1a666744509860d8b698e28250b ""
-  ".out/main.bcf" 1695995717 113269 dade6ecdf55bc063f70e44fa1c7f8358 "lualatex"
+  ".out/main.bcf" 1696800176 113409 a44dda75694bc14c4473a4eb622d5431 "lualatex"
   (generated)
   ".out/main.bbl"
   ".out/main.blg"
   (rewritten before read)
-["lualatex"] 1695995714 "main.tex" ".out/main.pdf" "main" 1695995718 0
-  ".out/main.aux" 1695995717 13484 809a9453886e451755f2f49f77682283 "lualatex"
-  ".out/main.bbl" 1695850921 5743 7c312ebacaf196e59d124c82551fb5a1 "biber .out/main"
+["lualatex"] 1696800173 "main.tex" ".out/main.pdf" "main" 1696800176 0
+  ".out/main.aux" 1696800176 15668 a7911a49a8d0d25e6c58b9e5ef80c3c5 "lualatex"
+  ".out/main.bbl" 1696797829 5743 7c312ebacaf196e59d124c82551fb5a1 "biber .out/main"
   ".out/main.ind" 1694960671 0 d41d8cd98f00b204e9800998ecf8427e "makeindex .out/main.idx"
-  ".out/main.lof" 1695995717 285 06bedf6d29b76ef2f2761bc0cd00651e "lualatex"
-  ".out/main.lot" 1695995717 59 e432f59b0ceabbfc612531c7cd147396 "lualatex"
-  ".out/main.run.xml" 1695995717 2554 36d265baf3a8c8e2aa044063e044b76b "lualatex"
-  ".out/main.toc" 1695995717 2000 69427fb6e118a3b5669aa20fae565a06 "lualatex"
+  ".out/main.lof" 1696800176 285 06bedf6d29b76ef2f2761bc0cd00651e "lualatex"
+  ".out/main.lot" 1696800176 59 e432f59b0ceabbfc612531c7cd147396 "lualatex"
+  ".out/main.run.xml" 1696800176 2554 36d265baf3a8c8e2aa044063e044b76b "lualatex"
+  ".out/main.toc" 1696800176 2186 07c7ad689bdada71358a107ac4dc3bcb "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmmono12-regular.luc" 1694907571 81772 230ee77bda1f5e7ad3f9f6f5b8bbf446 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-italic.luc" 1692639408 136312 0853009ccd3f419d3c73a3ff97e7b924 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
@@ -97,6 +97,7 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb" 1248133631 32734 69e00a6b65cedb993666e42eedb3d48f ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1248133631 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb" 1248133631 32587 1788b0c1c5b39540c96f5e42ccd6dae8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1248133631 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb" 1248133631 31764 459c573c03a4949a528c2cc7f557e217 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
@@ -367,9 +368,9 @@
   "/usr/local/texlive/2023/texmf-var/web2c/luahbtex/lualatex.fmt" 1685627356 11878523 2b8a1901742a4edff1e9481006137752 ""
   "chapters/appendix.tex" 1694907753 0 d41d8cd98f00b204e9800998ecf8427e ""
   "chapters/conclusion.tex" 1694975193 46 f34a43e58ce78e5df568e356cc17de9a ""
-  "chapters/instrumental-variable.tex" 1695995713 21311 5013af5bd1312355434ffe3979917b1d ""
+  "chapters/instrumental-variable.tex" 1696800170 29836 ba1586ed5ace43d4d948a68958f2cc3e ""
   "chapters/introduction.tex" 1694981007 74 1bdb632f69f47ddd0cf200592edd03a7 ""
-  "local-macros.sty" 1695858151 3206 9a0886443235d2b8180049333d18f271 ""
+  "local-macros.sty" 1696793748 3232 8bb9df6230eba0e1d812afe84de679d7 ""
   "main.tex" 1695923213 3954 8924a4b6a1a9ceac57da92c3b93ecd39 ""
   "preamble.tex" 1695828718 7605 e1f96c0317582c461505ab18cf85505c ""
   "structure/capa-folha-rosto.tex" 1694959539 1626 7a4c5ba62b432ff6b92389fccf15b7f1 ""
@@ -388,8 +389,8 @@
   ".out/main.run.xml"
   ".out/main.toc"
   (rewritten before read)
-["makeindex .out/main.idx"] 1694960671 ".out/main.idx" ".out/main.ind" ".out/main" 1695995718 0
-  ".out/main.idx" 1695995716 0 d41d8cd98f00b204e9800998ecf8427e "lualatex"
+["makeindex .out/main.idx"] 1694960671 ".out/main.idx" ".out/main.ind" ".out/main" 1696800176 0
+  ".out/main.idx" 1696800175 0 d41d8cd98f00b204e9800998ecf8427e "lualatex"
   (generated)
   ".out/main.ilg"
   ".out/main.ind"
