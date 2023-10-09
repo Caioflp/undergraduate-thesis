@@ -142,7 +142,7 @@ Since $ \mathcal{L} $ is clearly convex, we may find the optimal value by settin
     \nabla \mathcal{L} ( P ) = 0 \iff P \mean [ Z Z^{ \trp } ] = \mean [ X Z^{ \trp } ]
 .\end{equation*}
 We now make the hypothesis that $ \mean [ Z Z ^{ \trp } ] $ is invertible.
-This means that the coordinates of $ Z $ are not linearly dependent, which is a standard requirement.
+This means that the coordinates of $ Z $ are not almost surely linearly dependent, which is a standard requirement.
 With that assumption, we have
 \begin{equation}
     \label{eq: projection matrix formula}
@@ -268,7 +268,7 @@ We remind the reader that the transpose sign changes place when writing the 2SLS
     &= \left[
         \bX^{ \trp } \bZ ( \bZ^{ \trp } \bZ )^{ -1 } \bZ^{ \trp } \bX
     \right]^{ -1 }
-    \bX^{ \trp } \bZ ( \bZ^{ \trp } \bZ )^{ -1 } \bZ^{ \trp } Y
+    \bX^{ \trp } \bZ ( \bZ^{ \trp } \bZ )^{ -1 } \bZ^{ \trp } \bY
 .\end{align*}
 Letting $ \hat{ \bX } $ denote $ \bX^{ \trp } \bZ ( \bZ^{ \trp } \bZ )^{ -1 } \bZ^{ \trp } $, we have
 \begin{equation*}
