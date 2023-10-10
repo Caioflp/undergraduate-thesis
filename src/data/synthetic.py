@@ -18,7 +18,7 @@ LOGGER = logging.getLogger(__name__)
 def make_dummy_dataset(
     n_samples: int = 500,
     n_samples_only_z: int = 500,
-    response: Literal["affine", "quadratic"] = "affine",
+    noise: Literal["sensible", "absurd"] = "sensible",
     sigma: float = 0.25,
     rho: float = 0.7,
     eta: float = 0.4,
@@ -51,22 +51,23 @@ def make_dummy_dataset(
     rng = np.random.default_rng(seed)
     norm_cdf = scipy.stats.norm.cdf
 
-    response_dict = {
-        "affine": lambda x: .3 + .7*x,
-        "quadratic": lambda x: .3 + .2*x + x**2,
-    }
-    assert response in ["affine", "quadratic"]
-    response_func = response_dict[response]
+    assert noise in ["sensible", "absurd"]
+    response_func = lambda x: .3 + .7*x
 
     W = rng.normal(loc=0, scale=1, size=(n_samples, 3))
     W_1, W_2, W_3 = W[:, 0], W[:, 1], W[:, 2]
     Z = norm_cdf(W_1)
     X = norm_cdf(rho*W_1 + np.sqrt(1 - np.power(rho, 2))*W_2)
     Y_denoised = response_func(X)
-    eps = (
-        sigma*(eta*W_2 + np.sqrt(1 - np.power(eta, 2))*W_3)
-        + 3 * sigma * (W_2 - .7)*(W_2 > .7)
-    )
+    if noise == "sensible":
+        eps = sigma*(eta*W_2 + np.sqrt(1 - np.power(eta, 2))*W_3)
+    elif noise == "absurd":
+        eps = (
+            sigma*(eta*W_2 + np.sqrt(1 - np.power(eta, 2))*W_3)
+            + 5*sigma*(W_2 - 0.7)*(W_2 > 0.7)
+            + 2*sigma*(W_2 - 0.3)*(W_2 < 0.3)
+        )
+
     Y = Y_denoised + eps
 
     Z_loop = norm_cdf(rng.normal(loc=0, scale=1, size=n_samples_only_z))

@@ -4,7 +4,7 @@ regression
 Author: @Caioflp
 
 """
-import numpy as np
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
@@ -17,10 +17,13 @@ from src.data.synthetic import (
 )
 
 
+fig_path = Path("../thesis/fig/")
+
 colors = mcolors.CSS4_COLORS
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
+    "font.size": 12,
 })
 
 
@@ -39,18 +42,20 @@ def compute_ols_parameters(X, Y):
     return np.linalg.solve(X.T @ X, X.T @ Y)
 
 if __name__ == "__main__":
-    fig, axs = plt.subplots(nrows=1, ncols=2)
-    responses = ["quadratic", "affine"]
-    response_string = {
-        "quadratic": r"$h^{\star} (x) = 0.3 + 0.2x + x^2$",
-        "affine": r"$h^{\star} (x) = 0.3 + 0.7x$",
-    }
-    for response, ax in zip(responses, axs):
+    cm = 1/2.54
+    fig, axs = plt.subplots(
+        nrows=2,
+        ncols=1,
+        figsize=(16*cm, 16*cm),
+        layout="constrained",
+    )
+    noises = ["sensible", "absurd"]
+    for noise, ax in zip(noises, axs):
         dataset = make_dummy_dataset(
-            n_samples=500,
-            response=response,
-            eta=0.4,
-            rho=0.7,
+            n_samples=300,
+            noise=noise,
+            eta=0.6,
+            rho=0.8,
             sigma=0.1,
         )
         X, Z, Y, Y_denoised = \
@@ -81,24 +86,42 @@ if __name__ == "__main__":
             X[sorted_idx, 1].flatten(),
             Y_denoised[sorted_idx].flatten(),
             "r--",
-            label=response_string[response]
+            label=r"$h^{\star} (x)$"
         )
 
         # Plot TSLS estimate
+        tsls_estimate_string = \
+                fr"2SLS estimate: $y = {beta_tsls[0, 0]:.2f} + {beta_tsls[1, 0]:.2f}x$"
         ax.plot(
             X[sorted_idx, 1].flatten(),
             tsls_estimate[sorted_idx].flatten(),
             c=colors["cornflowerblue"],
-            label="TSLS fitted values"
+            label=tsls_estimate_string,
         )
 
         # Plot OLS estimate
+        ols_estimate_string = \
+                fr"OLS estimate: $y = {beta_ols[0, 0]:.2f} + {beta_ols[1, 0]:.2f}x$"
         ax.plot(
             X[sorted_idx, 1].flatten(),
             ols_estimate[sorted_idx].flatten(),
             c=colors["coral"],
-            label="OLS fitted values"
+            label=ols_estimate_string,
         )
         ax.legend()
-    plt.show()
+        if noise == "sensible":
+            ax.set_title(
+                r"Mild correlation between $X$ and $\varepsilon$",
+                fontsize=12,
+            )
+        elif noise == "absurd":
+            ax.set_title(
+                r"Strong correlation between $X$ and $\varepsilon$",
+                fontsize=12,
+            )
+    # fig.suptitle(
+    #     r"Two scenerios with endogeneity where $h^{\star}(x) = 0.3 + 0.7x$",
+    #     # fontsize=14,
+    # )
+    fig.savefig(fig_path / "tsls_examples.pdf")
 
