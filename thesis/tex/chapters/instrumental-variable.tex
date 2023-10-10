@@ -3,12 +3,13 @@
 This chapter provides an introduction to both parametric and nonparametric instrumental variable regression.
 It's goal is twofold.
 Firstly, we want to introduce the subject to readers unfamiliar with it.
-To make the exposition more fluid, we chose to delay the precise definition of all mathematical objects involved until Section \ref{sec: nonparametric}, which deals with the nonparametric version.
-Until then, only knowledge of non-measure theoretic probability theory is required.
-This is sufficient to understand the motivation behind instrumental variables, as well as the most widely used tool to perform regression using them: two stages least squares.
-The second goal is to precisely state the nonparametric regression problem which will be addressed in the remainder of this thesis and, in doing so, fixate our notation.
-From that point on, we assume the reader is familiar with measure theory and linear functional analysis.
-All of the less usual objects and results we make use of will be recalled in a corresponding appendix.
+To make the exposition more fluid, we chose to delay the precise definition of all mathematical objects involved until Section \ref{sec: nonparametric}, which deals with the nonparametric approach.
+% Until then, only knowledge of non-measure theoretic probability theory is required.
+% This is sufficient to understand the motivation behind instrumental variables, as well as the most widely used tool to perform regression using them: two stages least squares.
+The second goal is to precisely state the nonparametric regression problem which will be addressed in the remainder of this thesis.
+Along the exposition, we will cover the basics of Two Stages Least Squares, the most widely employed IV model, and of the nonparametric approach developed by Newey and Powell in their seminal paper \cite{newey2003}.
+% From that point on, we assume the reader is familiar with measure theory and linear functional analysis.
+% All of the less usual objects and results we make use of will be recalled in a corresponding appendix.
 % we turn our attention back to the main application being considered in this thesis: instrumental variable  regression.
 % We start by characterizing the type of problem this econometric approach was developed to solve, and then present one of the most well-known and employed\unsure{Is it?} estimation procedures for conducting it: two stages least squares (2SLS).
 % Nextly, we show how an IV regression problem can be formulated as a linear inverse problem and discuss the seminal nonparametric method of Newey and Powell \cite{newey2003}, followed by a more recent nonparametric approach called Kernel Instrumental Variable (KIV) \cite{singh2019}.
@@ -46,9 +47,8 @@ There are several causes for endogenous covariates, the most common of  which ar
             &= \hstar ( X ) + \mean [ \varepsilon \mid X ] \\
             &= \hstar ( X ) + \mean [ \gstar ( W ) + \eta \mid X ] \\
             &= \hstar ( X ) + \mean [ \gstar ( W ) \mid X ] \\
-            &\neq \hstar ( X )
-        ,\end{align*}
-        if $ W $ is correlated with $ X $.
+        \end{align*}
+        which is different from $ \hstar ( X ) $, if $ W $ is correlated with $ X $.
         For example, if we want to regress a person's wage solely on her number of schooling years (this is $ X $), there are other variables, unaccounted for, which influence both wages and schooling, such as natural ability (this is $ W $).
         Innately skilled people may tend to be successful in school --- and, therefore, pursue higher levels of education --- as well as show higher performance in their future jobs, resulting in better wages.
         Thus, we fail to estimate $ \hstar $.
@@ -59,7 +59,7 @@ There are several causes for endogenous covariates, the most common of  which ar
         For example, if we are regressing neighborhood murder rates using the size of the local task force as a covariate, there is a simultaneity problem, since larger murder rates in a place cause a larger task force to be allocated there.
 \end{description}
 
-Bias in the estimation procedure is only one of the problems which arise when there are endogenous covariates.
+As we have said, bias in the estimation procedure is only one of the problems which arise when there are endogenous covariates.
 It's well known that the OLS estimate for linear regression fails to be consistent if any one of the covariates is endogenous \cite{wooldridge2001}.
 To overcome endogeneity a few approaches exist, but by far the one most used by empirical economic research is instrumental variable estimation \cite{wooldridge2001}.
 
@@ -283,7 +283,7 @@ For further theoretical properties of the 2SLS estimator, we refer the reader to
 
 \subsection{Numerical examples}
 
-We now provide some numerical examples to strengthen our intuition about how the 2SLS estimator works. \the\textwidth
+We now provide some numerical examples to strengthen our intuition about how the 2SLS estimator works.
 \improvement{Finish this section with numerical examples}
 \begin{figure}[htb]
     \begin{center}
@@ -320,7 +320,7 @@ Our goal is to estimate $ \hstar $ based on i.i.d. samples from the joint distri
 
 An important question to ask after specifying the problem is whether the function $ \hstar $ is identified.
 The answer is negative without further assumptions, which will be presented in this subsection.
-This discussion was inspired on the second section of \cite{newey2003}.
+This discussion was inspired on \cite[Section~2]{newey2003}.
 
 Suppose there exists $ \delta \in L^{ 2 } ( X ) $ such that $ \delta \neq 0 $, but $ \mean [ \delta ( X ) \mid Z ] = 0 $.
 Without loss of generality, we can assume\footnotemark~ $ \delta ( X ) \neq \mean [ \varepsilon \mid X ] $.
