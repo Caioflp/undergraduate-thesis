@@ -676,6 +676,9 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx7.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman7-regular.luc
+INPUT ../fig//tsls_examples.pdf
+INPUT ../fig//tsls_examples.pdf
+INPUT ../fig//tsls_examples.pdf
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman6-regular.luc
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex

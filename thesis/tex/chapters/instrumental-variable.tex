@@ -142,7 +142,7 @@ Since $ \mathcal{L} $ is clearly convex, we may find the optimal value by settin
     \nabla \mathcal{L} ( P ) = 0 \iff P \mean [ Z Z^{ \trp } ] = \mean [ X Z^{ \trp } ]
 .\end{equation*}
 We now make the hypothesis that $ \mean [ Z Z ^{ \trp } ] $ is invertible.
-This means that the coordinates of $ Z $ are not almost surely linearly dependent, which is a standard requirement.
+This means that the coordinates of $ Z $ are almost surely linearly independent, which is easy to guarantee in practice.
 With that assumption, we have
 \begin{equation}
     \label{eq: projection matrix formula}
@@ -283,8 +283,15 @@ For further theoretical properties of the 2SLS estimator, we refer the reader to
 
 \subsection{Numerical examples}
 
-We now provide some numerical examples to strengthen our intuition about how the 2SLS estimator works.
+We now provide some numerical examples to strengthen our intuition about how the 2SLS estimator works. \the\textwidth
 \improvement{Finish this section with numerical examples}
+\begin{figure}[htb]
+    \begin{center}
+        \includegraphics{tsls_examples.pdf}
+    \end{center}
+    \caption{Bla}
+    \label{}
+\end{figure}
 
 \section{Nonparametric Instrumental Variable Regression}
 \label{sec: nonparametric}
@@ -433,6 +440,3 @@ Using this result and under suitable hypotheses, we can reformulate the identifi
     .\end{align*}
     Therefore, $ h $ is the null function, which means $ \hstar $ is identified.
 \end{proof}
-\unsure{Check multivariate normal case?}
-
-
