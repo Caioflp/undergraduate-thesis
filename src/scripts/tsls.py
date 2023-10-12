@@ -46,13 +46,13 @@ if __name__ == "__main__":
     fig, axs = plt.subplots(
         nrows=2,
         ncols=1,
-        figsize=(16*cm, 16*cm),
+        figsize=(16*cm, 17*cm),
         layout="constrained",
     )
     noises = ["sensible", "absurd"]
     for noise, ax in zip(noises, axs):
         dataset = make_dummy_dataset(
-            n_samples=300,
+            n_samples=250,
             noise=noise,
             eta=0.6,
             rho=0.8,
@@ -85,8 +85,9 @@ if __name__ == "__main__":
         ax.plot(
             X[sorted_idx, 1].flatten(),
             Y_denoised[sorted_idx].flatten(),
-            "r--",
-            label=r"$h^{\star} (x)$"
+            c=colors["red"],
+            linestyle="--",
+            label=r"$h^{\star} (x) = 0.3 + 0.7x$"
         )
 
         # Plot TSLS estimate
@@ -95,7 +96,7 @@ if __name__ == "__main__":
         ax.plot(
             X[sorted_idx, 1].flatten(),
             tsls_estimate[sorted_idx].flatten(),
-            c=colors["cornflowerblue"],
+            c=colors["blue"],
             label=tsls_estimate_string,
         )
 
@@ -105,18 +106,19 @@ if __name__ == "__main__":
         ax.plot(
             X[sorted_idx, 1].flatten(),
             ols_estimate[sorted_idx].flatten(),
-            c=colors["coral"],
+            c=colors["turquoise"],
+            linestyle="-.",
             label=ols_estimate_string,
         )
         ax.legend()
         if noise == "sensible":
             ax.set_title(
-                r"Mild correlation between $X$ and $\varepsilon$",
+                r"Mild codependence between $X$ and $\varepsilon$",
                 fontsize=12,
             )
         elif noise == "absurd":
             ax.set_title(
-                r"Strong correlation between $X$ and $\varepsilon$",
+                r"Strong codependence between $X$ and $\varepsilon$",
                 fontsize=12,
             )
     # fig.suptitle(

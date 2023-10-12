@@ -64,7 +64,7 @@ def make_dummy_dataset(
     elif noise == "absurd":
         eps = (
             sigma*(eta*W_2 + np.sqrt(1 - np.power(eta, 2))*W_3)
-            + 5*sigma*(W_2 - 0.7)*(W_2 > 0.7)
+            + 6*sigma*(W_2 - 0.7)*(W_2 > 0.7)
             + 2*sigma*(W_2 - 0.3)*(W_2 < 0.3)
         )
 

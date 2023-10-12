@@ -46,9 +46,9 @@ There are several causes for endogenous covariates, the most common of  which ar
             \mean [ Y \mid X ]
             &= \hstar ( X ) + \mean [ \varepsilon \mid X ] \\
             &= \hstar ( X ) + \mean [ \gstar ( W ) + \eta \mid X ] \\
-            &= \hstar ( X ) + \mean [ \gstar ( W ) \mid X ] \\
+            &= \hstar ( X ) + \mean [ \gstar ( W ) \mid X ]
         \end{align*}
-        which is different from $ \hstar ( X ) $, if $ W $ is correlated with $ X $.
+        which is likely different from $ \hstar ( X ) $, if $ W $ is correlated with $ X $.
         For example, if we want to regress a person's wage solely on her number of schooling years (this is $ X $), there are other variables, unaccounted for, which influence both wages and schooling, such as natural ability (this is $ W $).
         Innately skilled people may tend to be successful in school --- and, therefore, pursue higher levels of education --- as well as show higher performance in their future jobs, resulting in better wages.
         Thus, we fail to estimate $ \hstar $.
@@ -183,7 +183,6 @@ Equation (\ref{eq: beta is identified}) then reduces to
 \begin{equation*}
     \mean [ \hat{ X } Y ] = \mean [ \hat{ X } \hat{ X }^{ \trp } ] \beta
 .\end{equation*}
-
 We would like to multiply both sides on the left by $ \mean [ \hat{ X } \hat{ X }^{ \trp } ]^{ -1 } $, but we must first check if this matrix is invertible.
 Expanding we have:
 \begin{equation*}
@@ -279,18 +278,51 @@ This final form makes it clear that the estimator $ \hat{ \beta } $ is obtained 
 
 Using equation (\ref{eq: beta hat expanded}), together with the Law of Large Numbers and Slutsky's Theorem, one may prove the consistency of $ \hat{ \beta } $.
 Similar inspection allows one to establish asymptotic normality.
-For further theoretical properties of the 2SLS estimator, we refer the reader to \cite[Chapter~5]{wooldridge2001}, the main source consulted for this section.
+For further theoretical properties of the 2SLS estimator, we refer the reader to \cite[Chapter~5]{wooldridge2001}, this section's main reference.
 
 \subsection{Numerical examples}
 
-We now provide some numerical examples to strengthen our intuition about how the 2SLS estimator works.
-\improvement{Finish this section with numerical examples}
+We now provide numerical examples to strengthen our intuition about the differences between OLS and 2SLS.
+We present two scenarios with the same joint distribution for $ X $ and $ Z $, in which both are one dimensional.
+The scenarios also share the same structural function, which we set to be $ \hstar ( x ) = \beta_{ 0 } + \beta_{ 1 }x $, with $ \beta_{ 0 } = 0.3 $ and $ \beta_{ 1 } = 0.7 $.
+The difference between both experiments is the distribution of $ \varepsilon $, which is mildly codependent with that of $ X $ in the first experiment, and strongly codependent in the second.
+
+The data generating process we use for $ X $ and $ Z $ is the following:
+\begin{align*}
+    \delta_{ i } &\iid \mathcal{N} ( 0, 1 ), \quad i = 1, 2; \\
+    Z &= \Phi ( \delta_{ 1 } ); \\
+    X &= \Phi ( \rho \delta_{ 1 } + \sqrt{ 1 - \rho^2 } \delta_{ 2 } )
+,\end{align*}
+where $ \Phi $ is the cumulative distribution function of the standard normal and $ \rho \in ( 0, 1 ) $ is fixed at $ 0.8 $.
+For the first scenario, we generate $ \varepsilon $ as follows:
+\begin{align*}
+    \delta_{ 3 } &\sim \mathcal{N} ( 0, 1 ), \quad \delta_{ 3 } \indep ( \delta_{ 1 }, \delta_{ 2 } ); \\
+    \varepsilon &= \sigma \cdot ( \eta \delta_{ 2 } + \sqrt{ 1 - \eta^2 } \delta_{ 3 } )
+,\end{align*}
+where $ \sigma > 0 $ and $ \eta \in ( 0, 1 ) $ are set to be $ 0.1 $ and $ 0.6 $, respectively.
+For the second scenario, we introduce more interdependence between $ X $ and $ \varepsilon $:
+\begin{align*}
+    \varepsilon = \sigma \cdot \left(
+        \left[ \eta \delta_{ 2 } + \sqrt{ 1 - \eta^2 } \delta_{ 3 } \right]
+        + C_{ b } ( \delta_{ 2 } - b )^{ + } - C_{ a } ( \delta_{ 2 } - a )^{ - }
+    \right)
+.\end{align*}
+Here, $ \sigma $ and $ \eta $ have the same values as before.
+The additional terms are $ C_{ b } = 6, b = 0.7, C_{ a } = 2 $ and $ a = 0.3 $.
+Finally, in both formulations we have $ Y = \hstar ( x ) + \varepsilon $.
+
+The results of the experiments are in Figure \ref{fig: 2sls vs ols}.
+We can see that in both of them the 2SLS estimate is closer to the true values of $ \beta_{ 0 } $ and $ \beta_{ 1 } $ than the OLS estimate.
+As expected, the OLS estimate does not take endogeneity into account and, therefore, incorporates some bias into the final estimates.
+This effect worsens as the endogeneity becomes stronger.
+An important observation, which is not visible in the figure, is that, as the number of observations grows, the OLS estimate drifts further from the true values, while the 2SLS estimate becomes closer to them.
+
 \begin{figure}[htb]
     \begin{center}
         \includegraphics{tsls_examples.pdf}
     \end{center}
-    \caption{Bla}
-    \label{}
+    \caption{Comparison between OLS and 2SLS under two different levels of endogeneity.}
+    \label{fig: 2sls vs ols}
 \end{figure}
 
 \section{Nonparametric Instrumental Variable Regression}
