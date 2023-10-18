@@ -1,20 +1,20 @@
 # Fdb version 4
-["biber .out/main"] 1688441571 ".out/main.bcf" ".out/main.bbl" ".out/main" 1688442985 0
-  "../bib/bibliography.bib" 1688438360 1416 d9c70338f06bb38a85e34c8556d0fbf5 ""
-  ".out/main.bcf" 1688442984 107777 ad3ab51252b200c5cda6f14538a14a87 "lualatex"
+["biber .out/main"] 1688441571 ".out/main.bcf" ".out/main.bbl" ".out/main" 1697633959 0
+  "../bib/bibliography.bib" 1689802441 1416 d9c70338f06bb38a85e34c8556d0fbf5 ""
+  ".out/main.bcf" 1697633959 107777 ad3ab51252b200c5cda6f14538a14a87 "lualatex"
   (generated)
   ".out/main.bbl"
   ".out/main.blg"
   (rewritten before read)
-["lualatex"] 1688442981 "main.tex" ".out/main.pdf" "main" 1688442985 0
-  "../fig/estimate.pdf" 1688442108 23390 7e6d3b8526deac2143be3106bd3f614c ""
-  "../fig/logo.png" 1688431612 143221 a482f29cdb025df0e4194cfd37d94f47 ""
-  ".out/main.aux" 1688442984 5025 b9f2923bfd5abbf37bc2ab212269dd0d "lualatex"
-  ".out/main.bbl" 1688441573 4396 bb4a4f84d55ca7515dd9f5583affd9de "biber .out/main"
-  ".out/main.nav" 1688442984 2762 ea5ca0a059b51ecf6e3f5536cc88ea7a "lualatex"
-  ".out/main.out" 1688442984 543 982fb1705bd38edb6e3c98de6e25fa32 "lualatex"
-  ".out/main.run.xml" 1688442984 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
-  ".out/main.toc" 1688442984 199 ce62ad10f3e1ee4d6c7d3bb1f00163c7 "lualatex"
+["lualatex"] 1697633955 "main.tex" ".out/main.pdf" "main" 1697633959 0
+  "../fig/estimate.pdf" 1689802441 23390 7e6d3b8526deac2143be3106bd3f614c ""
+  "../fig/logo.png" 1689802441 143221 a482f29cdb025df0e4194cfd37d94f47 ""
+  ".out/main.aux" 1697633959 5025 b9f2923bfd5abbf37bc2ab212269dd0d "lualatex"
+  ".out/main.bbl" 1692646633 4396 bb4a4f84d55ca7515dd9f5583affd9de "biber .out/main"
+  ".out/main.nav" 1697633959 2762 ea5ca0a059b51ecf6e3f5536cc88ea7a "lualatex"
+  ".out/main.out" 1697633959 543 982fb1705bd38edb6e3c98de6e25fa32 "lualatex"
+  ".out/main.run.xml" 1697633959 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
+  ".out/main.toc" 1697633959 199 ce62ad10f3e1ee4d6c7d3bb1f00163c7 "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmmono10-regular.luc" 1688431261 81837 4defb7a479a5fd058bb0732d84253c7a ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmromancaps10-regular.luc" 1685737609 120247 3ff4b671d28c512cb65a1b736f9fe02a ""
@@ -23,8 +23,8 @@
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmsans12-regular.luc" 1685725424 128165 4e0429a412cc05a9da3167fe83b730ba ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmsans8-oblique.luc" 1688432684 129065 13d5bb7ad72ae09c4e445b95d5b370c5 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmsans8-regular.luc" 1688430081 127596 c6681aa8f04dcc62a60c86deb05b1537 ""
-  "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1685645277 368630 cef10b4c83a6dcad01321f431b18c742 ""
-  "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1688422735 2794 9f8e5cda4f3e2af1abf5ad6bcbfd2cbb ""
+  "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1694907539 368260 3dcbf693681628f7ff1663c2d447d401 ""
+  "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1691460808 2904 9df24d430eca38985b553313cd33a565 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmmono10-regular.otf" 1255129361 64684 15a2082c8e31f411875a86ea2d29a0ee ""
   "/usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmromancaps10-regular.otf" 1255129361 108740 82741d58d9334b5242a3acb1d982bd05 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans10-oblique.otf" 1255129361 101412 2b1e43c54178c5512dde7c8e2c96d5ba ""
@@ -304,8 +304,8 @@
   "/usr/local/texlive/2023/texmf-dist/tex/luatex/luaotfload/luaotfload.lua" 1664913378 13565 83bac25a8cf8630acccd6a7f8bb9f791 ""
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1685627427 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/luahbtex/lualatex.fmt" 1685627356 11878523 2b8a1901742a4edff1e9481006137752 ""
-  "main.tex" 1688442981 8934 f4682e5517c6570717081b6545df0c7f ""
-  "preamble.tex" 1688432783 1018 14a1312b92e2c2f7cd6ba42a910614b1 ""
+  "main.tex" 1697505543 8934 f4682e5517c6570717081b6545df0c7f ""
+  "preamble.tex" 1697633955 1046 0f987cf8b497f33332338caab75da5b7 ""
   (generated)
   ".out/main.aux"
   ".out/main.bcf"
