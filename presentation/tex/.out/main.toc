@@ -1,4 +1,4 @@
 \beamer@sectionintoc {1}{NPIV estimation}{2}{0}{1}
-\beamer@sectionintoc {2}{Our approach}{27}{0}{2}
-\beamer@sectionintoc {3}{Where we are at}{41}{0}{3}
-\beamer@sectionintoc {4}{Next steps}{45}{0}{4}
+\beamer@sectionintoc {2}{Our approach}{26}{0}{2}
+\beamer@sectionintoc {3}{Where we are at}{40}{0}{3}
+\beamer@sectionintoc {4}{Next steps}{44}{0}{4}

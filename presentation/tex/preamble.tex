@@ -3,6 +3,12 @@
 \graphicspath{{../fig}}
 \usepackage{algpseudocode, algorithm}
 \usepackage{biblatex}
+\usepackage{cancel}
+
+% \usetheme{Copenhagen}
+\setbeamertemplate{blocks}[rounded][shadow]
+\setbeamercolor{block body alerted}{bg=alerted text.fg!10}
+\setbeamercolor{block title alerted}{bg=alerted text.fg!20}
 
 \vfuzz=30pt
 
@@ -45,3 +51,6 @@
 \DeclareMathOperator{\diam}{diam}
 \newcommand{\data}{\mathcal{D}}
 \newcommand{\dataproj}{\mathcal{D}_{ \mathrm{proj} }}
+\newcommand{\meanop}{\mathcal{P}}
+
+\DeclareMathOperator{\mse}{MSE}

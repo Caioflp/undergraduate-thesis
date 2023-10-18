@@ -16,31 +16,33 @@
                 ,\end{equation*}
                 where $ \mean [ \varepsilon ] = 0 $ and we wish to estimate $ h^{ \star } $.
 
-                \item<2-> What happens if $ \varepsilon \not\kern-1pt\indep X $? That is, $ \mean [ \varepsilon \mid X ] \neq 0 $?
-                \item<3-> Minimizing $ \mean [ ( Y - h ( X ) )^2 ] $ over $ h $ gives biased results.
+                \item<2-> What happens if $ \varepsilon \not\kern-1pt\indep X $? More specifically, if $ \mean [ \varepsilon \mid X ] \neq 0 $?
+                \item<3-> Minimizing $ \mse ( h ) = \mean [ ( Y - h ( X ) )^2 ] $ over $ h $ gives biased results:
                 \uncover<4->{
                     \begin{equation*}
-                        Y = \underbrace{ \hstar ( X ) + \mean [ \varepsilon \mid X ] }_{ = \ f ( X )\text{ for some $ f $ } } + ( \varepsilon - \mean [ \varepsilon \mid X ] )
+                        \argmin_{ W = h ( X ) \text{ for some } h } \mean [ ( Y - W )^2 ]
+                        = \mean [ Y \mid X ]
+                        = \hstar ( X ) + \underbrace{\mean [ \varepsilon \mid X ]}_{\neq 0}
                     .\end{equation*}
                 }
-                \item<5-> We end up estimating $ f $ instead of $ \hstar $!
+                \item<5-> We end up estimating $ \hstar ( X ) + \mean [ \varepsilon \mid X ] $.
+                    Other problems may occur.
         \end{itemize}
     \end{frame}
 
-    \begin{frame}{Instrumental Variable}
+    \begin{frame}{Instrumental Variables}
         \begin{itemize}
             \item<1-> Suppose we have access to a variable $ Z $ such that
                 \begin{enumerate}
-                    \item<2-> $ Z \not\kern-1pt\indep X $, i.e., $ \mean [ X \mid Z ] $ is not constant,
-                    \item<3-> $ Z $ affects $ Y $ only through $ X $,
-                    \item<4-> $ \varepsilon \indep Z $, i.e., $ \mean [ \varepsilon \mid Z ] = 0 $.
+                    \item<2-> $ p_{ X\mid Z } ( x \mid z ) $ is not constant in $ z $, that is, $ Z $ influences $ X $;
+                    \item<3-> $ \varepsilon $ is uncorrelated with $ Z $, that is, $ \mean [ \varepsilon \mid Z ] = 0 $.
                 \end{enumerate}
                 \uncover<5->{$ Z $ is called an \emph{instrumental variable}.}
                 \item<6-> How does it help us?
         \end{itemize}
     \end{frame}
 
-    \begin{frame}{Instrumental Variable}
+    \begin{frame}{Instrumental Variables}
        \begin{itemize}
            \item<1->  Structural equation:
                \begin{equation*}
@@ -48,14 +50,40 @@
                ,\end{equation*}
                where $ \mean [ \varepsilon \mid Z ] = 0 $.
            \item<2-> Consider minimizing $ \risk ( h ) = \mean \left[ \left( \mean [ Y - h ( X ) \mid Z ] \right)^2 \right] $ over $ h $.
-            \item<3-> Since
+            \item<3-> Compare:
                 \begin{equation*}
-                    \mean [ Y \mid Z ] = \mean [ \hstar ( X ) + \varepsilon \mid Z ] = \mean [ \hstar ( X ) \mid Z ]
+                    {\color{red}
+                        \mse ( h ) = \mean [ ( Y - h ( X ) )^2 ]
+                    }
+                    \quad \text{v.s.} \quad
+                    {\color{blue}
+                        \risk ( h ) = \mean \left[ \left( \mean [ Y - h ( X ) \mid Z ] \right)^2 \right] 
+                    }
+                .\end{equation*}
+       \end{itemize} 
+    \end{frame}
+
+    \begin{frame}{Instrumental Variables}
+        \begin{itemize}
+            \item<1-> Since
+                \begin{equation*}
+                    \mean [ Y \mid Z ]
+                    = \mean [ \hstar ( X ) + \varepsilon \mid Z ]
+                    = \mean [ \hstar ( X ) \mid X ] + \cancelto{0}{\mean [ \varepsilon \mid Z ]}
+                    = \mean [ \hstar ( X ) \mid Z ]
                 ,\end{equation*}
-                \uncover<4->{
+                \uncover<2->{
                     We have
-                    \begin{equation*}
-                        \risk ( h ) = \mean \left[
+                    \begin{align*}
+                        \risk ( h )
+                        &= \mean \left[
+                            \left(
+                                \mean \left[
+                                    Y - h ( X ) \mid Z
+                                \right]
+                            \right)^2
+                        \right] \\
+                        &= \mean \left[
                             \left(
                                 \mean \left[
                                     ( \hstar - h ) ( X )
@@ -63,11 +91,10 @@
                                 \right]
                             \right)^2
                         \right]
-                    .\end{equation*}
+                    .\end{align*}
                 }
-                \item<5-> $ \risk ( h ) = 0 \iff \mean \left[ \left( \hstar - h \right) ( X ) \mid Z \right] = 0 \iff \mean [ \hstar ( X ) \mid Z ] = \mean [ h ( X ) \mid Z ] $.
-                \item<6-> Still does \emph{not} imply $ h = \hstar $, but reduces bias \emph{if $ Z $ is a good instrument}.
-       \end{itemize} 
+                \item<3-> $ \risk ( h ) = 0 \iff \mean \left[ \left( \hstar - h \right) ( X ) \mid Z \right] = 0 \iff \mean [ \hstar ( X ) \mid Z ] = \mean [ h ( X ) \mid Z ] $.
+        \end{itemize}
     \end{frame}
 
     \begin{frame}{Example}
@@ -79,7 +106,6 @@
             \item<3-> $ Z = \text{Lives close to school?} $
                 \begin{enumerate}
                     \item<4-> $ Z \not\kern-1pt\indep X $,
-                    \item<4-> $ Z $ affects $ Y $ only through $ X $, \uncover<5->{{\color{red}(Kind of)}}
                     \item<4-> $ \varepsilon \indep $ Z $ $.
                 \end{enumerate}
         \end{itemize}
@@ -97,32 +123,60 @@
     % Stochastic gradient computation
     % Pseudo algorithm
 
-    \begin{frame}{Problem formulation}
+    \begin{frame}{Problem Formulation}
         \begin{itemize}
             \item<1-> We have
-                \begin{equation*}
+                \begin{equation}
+                    \label{eq: structure}
                     Y = \hstar ( X ) + \varepsilon   
-                ,\end{equation*}
+                ,\end{equation}
                  where $ \mean [ \varepsilon \mid Z ] = 0 $, and want to estimate $ \hstar $.
-            \item<2-> Equivalently,
-                \begin{equation*}
-                    r_{ 0 } ( Z ) = \mathcal{T} [ \hstar ] ( Z )   
-                ,\end{equation*}
-                with
-                \begin{itemize}
-                    \item<3-> $ r_{ 0 } ( Z ) = \mean [ Y \mid Z ] $,
-                    \item<3-> $ \mathcal{T} [ h ] ( Z ) = \mean [ h ( X ) \mid Z ] $.
-                \end{itemize}
+             \item<2-> Let $ \meanop [ h ] = \mean [ h ( X ) \mid Z = \cdot ] $, that is
+                 \begin{equation*}
+                     \meanop [ h ] ( Z ) = \mean [ h ( X ) \mid Z ]
+                 .\end{equation*}
+             \item<3-> Let $ r_{ 0 } ( Z ) = \mean [ Y \mid Z ] $.
+                 Then (\ref{eq: structure}) is equivalent to:
+                 \begin{equation*}
+                     \mean [ Y \mid Z ] = \mean [ \hstar ( X ) \mid Z ] \iff r_{ 0 } = \meanop [ \hstar ]
+                 .\end{equation*}
+            \item<4-> We wish to ``invert'' $ \meanop $.
             \item<4-> Risk measure:
                 \begin{equation*}
                     \risk ( h ) = \mean \left[ \frac{ 1 }{ 2 } \left( \mean \left[ Y - h ( X ) \mid Z \right] \right)^2 \right] = \mean \left[ \frac{ 1 }{ 2 } \left( r_{ 0 } ( Z ) - \mathcal{T} [ h ] ( Z ) \right)^2 \right]
                 .\end{equation*}
         \end{itemize}
     \end{frame}
+    \begin{frame}{Problem Formulation}
+        \begin{itemize}
+            \item<1-> Our risk measure:
+                \begin{align*}
+                    \risk ( h )
+                    &= \frac{ 1 }{ 2 } \mean \left[
+                        \left(
+                            \mean \left[
+                                Y - h ( X ) \mid Z
+                            \right]
+                        \right)^2
+                    \right] \\
+                    &= \frac{ 1 }{ 2 } \mean \left[
+                        \left(
+                            r_{ 0 } ( Z ) - \meanop [ h ] ( Z )
+                        \right)^2
+                    \right] \\
+                    &= \frac{ 1 }{ 2 } \mean \left[
+                        ( r_{ 0 }  - \meanop [ h ] ) ( Z )^2
+                    \right]
+                .\end{align*}
+        \end{itemize}
+    \end{frame}
 
     \begin{frame}{Stochastic Gradients}
         \begin{itemize}
-            \item<1-> It turns out that $ \nabla \risk ( h ) ( X ) = \mathcal{T}^{ * } [ \mathcal{T} [ h ] - r_{ 0 } ] ( X ) $.
+            \item<1-> We showed that $ \nabla \risk ( h ) = \meanop^{ * } [ \meanop [ h ] - r_{ 0 } ] $, where
+                \begin{equation*}
+                    \meanop^{ * } [ f ] ( X ) = \mean [ f ( Z ) \mid X ]
+                .\end{equation*}
             \item<2-> Immediate idea:
                 \begin{equation*}
                     \begin{cases}
@@ -130,33 +184,42 @@
                         h_{ t } \leftarrow h_{ t-1 } - \alpha_{ t } \nabla \risk ( h_{ t-1 } ) \quad \text{for} $ t \geq 1 $.
                     \end{cases}
                 \end{equation*}
+                \item<3-> There are problems\dots
         \end{itemize}
     \end{frame}
 
     \begin{frame}{Stochastic Gradients}
         \begin{itemize}
-            \item<1-> Problem: \emph{We don't observe} $ r_{ 0 } $ \emph{neither know how to compute}  $ \mathcal{T}^{ * } $ \emph{nor} $ \mathcal{T} $.
-                \uncover<2->{We only have access to joint independent samples from $ X, Y $ and $ Z $.}
-            \item<3-> Solution 1: ``No problem, we estimate everything!'' \uncover<2->{\dots doable, but horrible, since $ \mathcal{T}^{ * } [ \mathcal{T} [ h ] - r_{ 0 } ] $ involves plugin estimates into other estimates.
-                Goodbye theoretical guarantees.}
-        \end{itemize}
-    \end{frame}
-
-    \begin{frame}{Stochastic Gradients}
-        \begin{itemize}
-            \item<1-> Solution 2: Notice that
-                \begin{equation*}
-                    \nabla \risk ( h ) ( X ) = \mean_{ Z } \left[ \Phi ( X, Z ) ( \mathcal{T} [ h ] ( Z ) - r_{ 0 } ( Z ) ) \right]
-                ,\end{equation*}
+            \item<1-> Another idea: notice that
+                \begin{align*}
+                    \meanop^{ * } [ f ] ( x )
+                    &= \mean \left[ f ( Z ) \mid X = x \right] \\
+                    &= \int_{ \mathcal{Z} } f ( z ) p ( z \mid x ) \ \mathrm{d}z \\
+                    &= \int_{ \mathcal{Z} } f ( z ) \frac{ p ( x, z ) }{ p ( x ) p ( z ) } p ( z ) \ \mathrm{d} z \\
+                    &= \mean \left[ f ( Z ) \Phi ( x, Z ) \right]
+                ,\end{align*}
                 where $ \Phi ( x, z ) = \frac{ p ( x, z ) }{ p ( x ) p ( z ) } $.
-            \item<2-> Second idea: \emph{Now} we estimate everything:
-                    \begin{equation*}
-                        \begin{cases}
-                            h_{ 0 } \equiv 0, \\
-                            h_{ t } \leftarrow \hat{ \Phi } ( \cdot, Z_{ i } ) \left( \hat{ \mathcal{T} [ h_{ t-1 } ] } ( Z_{ i } ) - \hat{ r_{ 0 } } ( Z_{ i } ) \right).
-                        \end{cases}
-                    \end{equation*}
-                \item<3-> \dots Not pretty, but manageable, since we no longer have iterated conditional expectations \uncover<4->{\color{red}(but must estimate ratio of densities)}.
+            \item<2-> In the spirit of SGD, $ f ( Z ) \Phi ( x, Z ) $ is a stochastic estimate for $ \meanop^{ * } [ f ] ( x ) $.
+        \end{itemize}
+    \end{frame}
+    \begin{frame}{Stochastic Gradients}
+        \begin{itemize}
+            \item<1-> Substitute $ \nabla \risk ( h ) = \meanop^{ * } [ \meanop [ h ] - r_{ 0 } ] $ for
+                \begin{equation*}
+                    \hat{ \Phi } ( \cdot, Z ) \left(
+                        \hat{ \meanop } [ h ] ( Z ) - \hat{ r_{ 0 } } ( Z )
+                    \right)
+                .\end{equation*}
+            \item<2-> New algorithm:
+                \begin{equation*}
+                    \begin{cases}
+                        h_{ 0 } \equiv 0, \\
+                        h_{ t } \leftarrow h_{ t-1 } - \alpha_{ t } \hat{ \Phi } ( \cdot, Z_{ t } ) \left(
+                            \hat{ \meanop } [ h ] ( Z_{ t } ) - \hat{ r_{ 0 } } ( Z_{ t } )
+                        \right) \quad \text{for} $ t \geq 1 $.
+                    \end{cases}
+                \end{equation*}
+                \item<3-> We chose to use RKHS (kernel) methods for computing $ \hat{ \Phi }, \hat{ \meanop } $ and $ \hat{ r_{ 0 } } $.
         \end{itemize}
     \end{frame}
 
