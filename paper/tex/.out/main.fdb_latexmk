@@ -1,18 +1,18 @@
 # Fdb version 4
-["biber .out/main"] 1693668723 ".out/main.bcf" ".out/main.bbl" ".out/main" 1693745203 0
+["biber .out/main"] 1693668723 ".out/main.bcf" ".out/main.bbl" ".out/main" 1697640460 0
   "../bib/bibliography.bib" 1689802492 272 e03da5a101c1309e4bc96fdb81373de4 ""
-  ".out/main.bcf" 1693745202 107911 b1efa07d949109d39adbfcefaa9c9b71 "lualatex"
+  ".out/main.bcf" 1697640460 107911 b1efa07d949109d39adbfcefaa9c9b71 "lualatex"
   (generated)
   ".out/main.bbl"
   ".out/main.blg"
   (rewritten before read)
-["lualatex"] 1693745200 "main.tex" ".out/main.pdf" "main" 1693745203 0
-  ".out/main.aux" 1693745202 7418 c46b5cc42fefdec7722c54b60d08fda9 "lualatex"
+["lualatex"] 1697640457 "main.tex" ".out/main.pdf" "main" 1697640460 0
+  ".out/main.aux" 1697640460 7418 c46b5cc42fefdec7722c54b60d08fda9 "lualatex"
   ".out/main.bbl" 1693668726 1958 331aa6cc7e40d118bdc1394658f03829 "biber .out/main"
-  ".out/main.out" 1693745202 923 a2e344e2011692a480136a2ffbe033af "lualatex"
-  ".out/main.run.xml" 1693745202 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
+  ".out/main.out" 1697640460 923 a2e344e2011692a480136a2ffbe033af "lualatex"
+  ".out/main.run.xml" 1697640460 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
-  "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1685645277 368630 cef10b4c83a6dcad01321f431b18c742 ""
+  "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1694907539 368260 3dcbf693681628f7ff1663c2d447d401 ""
   "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1691460808 2904 9df24d430eca38985b553313cd33a565 ""
   "/Users/caio/Library/texmf/tex/latex/packages/neurips_2023.sty" 1686686540 11306 7a0a622cd12ea31e106a743bb7d4c3c6 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/helvetic/phvr8r.tfm" 1136768653 4712 9ef4d7d106579d4b136e1529e1a4533c ""
@@ -324,8 +324,8 @@
   "algorithm.tex" 1693744701 2529 d04ca8ff39717d95cc7746683de14853 ""
   "gradient-computation.tex" 1693667267 3403 853f008e74a36b6b9b7d9f2868aabc1d ""
   "main.tex" 1689802492 269 f523274691a472500e89af7878806022 ""
-  "preamble.tex" 1693667267 2953 3b64f1db5046b3d929fda59d3777ebe9 ""
-  "problem-setup.tex" 1693745196 5355 800dd2c8ff04dbf82471787bd9ef8f9b ""
+  "preamble.tex" 1694976343 2953 3b64f1db5046b3d929fda59d3777ebe9 ""
+  "problem-setup.tex" 1693747899 5355 800dd2c8ff04dbf82471787bd9ef8f9b ""
   "proof-of-convergence.tex" 1693745035 41507 fb2c98ebc3490f2f8ba4c2ae87ce8334 ""
   "unbiased-estimator-of-the-gradient.tex" 1693668347 2933 8eaf8705051db5c1803fe74cbf376258 ""
   (generated)

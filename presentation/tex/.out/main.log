@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.6.1)  18 OCT 2023 11:39
+This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.6.1)  19 OCT 2023 14:38
  restricted system commands enabled.
  file:line:error style messages enabled.
 **main.tex
@@ -1142,36 +1142,50 @@ LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <5> not available
 
 ] [39
 
-] (./.out/main.toc) [40
+] [40
+
+] (./.out/main.toc) [41
 
 ]
-<../fig/estimate.pdf, id=1127, 505.89pt x 361.35pt>
-File: ../fig/estimate.pdf Graphic file (type pdf)
-<use ../fig/estimate.pdf>
-Package luatex.def Info: ../fig/estimate.pdf  used on input line 237.
-(luatex.def)             Requested size: 199.1693pt x 142.26578pt.
- [41
+<../fig/estimate_sin.pdf, id=1154, 505.89pt x 361.35pt>
+File: ../fig/estimate_sin.pdf Graphic file (type pdf)
+<use ../fig/estimate_sin.pdf>
+Package luatex.def Info: ../fig/estimate_sin.pdf  used on input line 237.
+(luatex.def)             Requested size: 239.00558pt x 170.72223pt.
+ [42
 
-<../fig/estimate.pdf>] [42
+<../fig/estimate_sin.pdf>]
+<../fig/estimate_pointy.pdf, id=1219, 505.89pt x 361.35pt>
+File: ../fig/estimate_pointy.pdf Graphic file (type pdf)
+<use ../fig/estimate_pointy.pdf>
+Package luatex.def Info: ../fig/estimate_pointy.pdf  used on input line 247.
+(luatex.def)             Requested size: 239.00558pt x 170.72223pt.
+ [43
 
-] [43
+<../fig/estimate_pointy.pdf>]
+<../fig/estimate_smooth.pdf, id=1284, 505.89pt x 361.35pt>
+File: ../fig/estimate_smooth.pdf Graphic file (type pdf)
+<use ../fig/estimate_smooth.pdf>
+Package luatex.def Info: ../fig/estimate_smooth.pdf  used on input line 258.
+(luatex.def)             Requested size: 239.00558pt x 170.72223pt.
+ [44
 
-] (./.out/main.toc) [44
-
-] [45
+<../fig/estimate_smooth.pdf>] [45
 
 ] [46
 
-] [47
+] (./.out/main.toc) [47
+
+] [48
 
 ]
 
 LaTeX Font Warning: Font shape `TU/lmss/m/sc' in size <10.95> not available
-(Font)              Font shape `TU/lmr/m/sc' tried instead on input line 260.
+(Font)              Font shape `TU/lmr/m/sc' tried instead on input line 295.
 
-[48
+[49
 
-] [49
+] [50
 
 ]
 \tf@nav=\write7
@@ -1185,26 +1199,26 @@ LaTeX Font Warning: Font shape `TU/lmss/m/sc' in size <10.95> not available
 \openout9 = main.snm
  (./.out/main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 982FB1705BD38EDB6E3C98DE6E25FA32;543.
+(rerunfilecheck)             Checksum: 7E7BC307CB39AD04057BE5307357C4A1;494.
 Package logreq Info: Writing requests to 'main.run.xml'.
 
 \openout1 = main.run.xml
 )
 
 Here is how much of LuaTeX's memory you used:
- 31734 strings out of 478285
+ 31766 strings out of 478285
  125161,1977958 words of node,token memory allocated
- 1261 words of node memory still in use:
-   14 hlist, 6 vlist, 2 rule, 1 local_par, 16 glue, 5 kern, 8 penalty, 10 glyph, 88 attribute, 76 glue_spec, 88 attribute_list, 4 write, 4 pdf_colorstack nodes
-   avail lists: 1:4,2:760,3:426,4:213,5:295,6:52,7:1736,8:53,9:565,10:16,11:91
- 50417 multiletter control sequences out of 65536+600000
+ 4429 words of node memory still in use:
+   145 hlist, 28 vlist, 7 rule, 1 local_par, 12 math, 79 glue, 30 kern, 8 penalty, 134 glyph, 145 attribute, 76 glue_spec, 145 attribute_list, 4 write, 4 pdf_colorstack nodes
+   avail lists: 1:4,2:688,3:426,4:214,5:267,6:53,7:1708,8:53,9:742,10:19,11:91
+ 50436 multiletter control sequences out of 65536+600000
  80 fonts using 6255887 bytes
- 128i,14n,115p,806b,1230s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,20n,115p,806b,1230s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmromancaps10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmmono10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans8-oblique.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans10-oblique.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans8-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/latxfont/line10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (49 pages, 401281 bytes).
+Output written on main.pdf (50 pages, 456617 bytes).
 
-PDF statistics: 1504 PDF objects out of 1728 (max. 8388607)
- 1367 compressed objects within 14 object streams
- 108 named destinations out of 1000 (max. 131072)
+PDF statistics: 1608 PDF objects out of 1728 (max. 8388607)
+ 1409 compressed objects within 15 object streams
+ 109 named destinations out of 1000 (max. 131072)
  56 words of extra memory for PDF output out of 10000 (max. 100000000)
 

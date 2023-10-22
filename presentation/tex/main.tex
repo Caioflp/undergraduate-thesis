@@ -114,7 +114,7 @@
     \begin{frame}{NPIV estimation}
         \begin{itemize}
             \item<1-> Stands for ``Nonparametric Instrumental Variable estimation''.
-            \item<2-> No assumptions on some parametric form for $ \hstar $.
+            \item<2-> No assumptions about some parametric form for $ \hstar $.
         \end{itemize}
     \end{frame}
 
@@ -196,7 +196,7 @@
                     &= \mean \left[ f ( Z ) \mid X = x \right] \\
                     &= \int_{ \mathcal{Z} } f ( z ) p ( z \mid x ) \ \mathrm{d}z \\
                     &= \int_{ \mathcal{Z} } f ( z ) \frac{ p ( x, z ) }{ p ( x ) p ( z ) } p ( z ) \ \mathrm{d} z \\
-                    &= \mean \left[ f ( Z ) \Phi ( x, Z ) \right]
+                    &= \mean_{ Z } \left[ f ( Z ) \Phi ( x, Z ) \right]
                 ,\end{align*}
                 where $ \Phi ( x, z ) = \frac{ p ( x, z ) }{ p ( x ) p ( z ) } $.
             \item<2-> In the spirit of SGD, $ f ( Z ) \Phi ( x, Z ) $ is a stochastic estimate for $ \meanop^{ * } [ f ] ( x ) $.
@@ -214,42 +214,77 @@
                 \begin{equation*}
                     \begin{cases}
                         h_{ 0 } \equiv 0, \\
-                        h_{ t } \leftarrow h_{ t-1 } - \alpha_{ t } \hat{ \Phi } ( \cdot, Z_{ t } ) \left(
-                            \hat{ \meanop } [ h ] ( Z_{ t } ) - \hat{ r_{ 0 } } ( Z_{ t } )
+                        h_{ t } \leftarrow h_{ t-1 } - \alpha_{ t } \hat{ \Phi } ( \cdot, z_{ t } ) \left(
+                            \hat{ \meanop } [ h ] ( z_{ t } ) - \hat{ r_{ 0 } } ( z_{ t } )
                         \right) \quad \text{for} $ t \geq 1 $.
                     \end{cases}
                 \end{equation*}
                 \item<3-> We chose to use RKHS (kernel) methods for computing $ \hat{ \Phi }, \hat{ \meanop } $ and $ \hat{ r_{ 0 } } $.
+                \item<4-> One dataset with samples from $ ( X, Z, Y ) $ to compute $ \hat{ \Phi }, \hat{ \meanop }, \hat{ r_{ 0 } } $, and one dataset with samples from $ Z $ to conduct SGD loop.
         \end{itemize}
     \end{frame}
 
-    \section{Where we are at}
+    \section{Results}
 
-    \begin{frame}{Prototype}
-        Prototype gave reasonable results
+    \begin{frame}{Practical Results}
         \begin{figure}[htb]
             \begin{center}
-                \includegraphics[width=.5\textwidth]{estimate.pdf}
-                \caption{In red we have $ \hstar = \sin $, in black we have $ h_{ N } $ and in blue, $ \frac{ 1 }{ N } \sum_{ t=1 }^{ N } h_{ N } $.}
-                \label{fig: prototype}
+                \includegraphics[width=.6\textwidth]{estimate_sin.pdf}
+                \caption{In red we have $ \hstar = \sin $, in black we have $ \hat{ h }_{ N } $ and in blue, $ h = \frac{ 1 }{ N } \sum_{ t=1 }^{ N } h_{ N } $.
+                Results produced with $ 600 $ joint samples of $ ( X, Z, Y ) $ and $ 2000 $ more samples of $ Z $ only.}
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{Practical Results}
+        \begin{figure}[htb]
+            \begin{center}
+                \includegraphics[width=.6\textwidth]{estimate_pointy.pdf}
+                \caption{In red we have $ \hstar ( x ) = \exp ( \abs{ x } ) $, in black we have $ \hat{ h }_{ N } $ and in blue, $ h = \frac{ 1 }{ N } \sum_{ t=1 }^{ N } h_{ N } $.
+                Results produced with $ 600 $ joint samples of $ ( X, Z, Y ) $ and $ 2000 $ more samples of $ Z $ only.}
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+
+    \begin{frame}{Practical Results}
+        \begin{figure}[htb]
+            \begin{center}
+                \includegraphics[width=.6\textwidth]{estimate_smooth.pdf}
+                \caption{In red we have $ \hstar ( x ) = 2 ( ( x - 1/2 )^{ + } )^2 + x/2 $, in black we have $ \hat{ h }_{ N } $ and in blue, $ h = \frac{ 1 }{ N } \sum_{ t=1 }^{ N } h_{ N } $.
+                Results produced with $ 600 $ joint samples of $ ( X, Z, Y ) $ and $ 2000 $ more samples of $ Z $ only.}
             \end{center}
         \end{figure}
     \end{frame}
 
     \begin{frame}{Theoretical properties}
-        \begin{itemize}
-            \item<1-> Still working on convergence guarantees.
-            \item<2-> This is helping us find better ways to estimate $ \Phi $ and $ \mathcal{T} $ (mainly RKHS methods).
-        \end{itemize}
+        Letting $ \bar{ h } = \frac{ 1 }{ N } \sum_{ t=1 }^{ N } h_{ t } $, we have
+        \begin{align*}
+            \begin{split}
+                \mean_{ z_{ 1:N } } \left[
+                    \risk \left(
+                        \bar{ h }
+                    \right)
+                \right]
+                &\leq \frac{ D^2 }{ 2 N \alpha_{ N } }
+                + \mathcal{O}_{ p } ( 1 ) \frac{ 1 }{ N } \sum_{ t=1 }^{ N } \alpha_{ t } \\
+                &\quad\quad\quad
+                + \mathcal{O}_{ p } ( 1 ) \left(
+                    \norm{ \hat{ \Phi } - \Phi }^2
+                    + \norm{ \hat{ r_{ 0 } } - r_{ 0 } }^2
+                    + \norm{ \hat{ \meanop } - \meanop }^2
+                \right)^{ 1/2 }.
+            \end{split}
+        \end{align*}
+        \uncover<2->{Choose $ ( \alpha_{ t } )_{ t=1 }^{ \infty } $ so that $ N \alpha_{ N } \to \infty $ but $ \frac{ 1 }{ N } \sum_{ t=1 }^{ N } \alpha_{ t } \to 0 $ as $ N \to \infty $.}
     \end{frame}
 
     \section{Next steps}
 
     \begin{frame}{Next steps}
         \begin{itemize}
-            \item<1-> Finalize convergence guarantees.
-            \item<2-> Implement modifications which the theory points to.
-            \item<3-> Benchmark against current methods.
+            \item<1-> Benchmark against current methods.
+            \item<1-> Discrete outcome models.
         \end{itemize}
     \end{frame}
 
