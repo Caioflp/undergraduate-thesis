@@ -21,7 +21,7 @@ We assume there exists $ Z \in L^{ 2 } ( \Omega, \mathcal{A}, \prob ; \mathcal{Z
     \item $ Z $ influences $ Y $ only through $ Z $;
     \item $ Z $ and $ \varepsilon $ are uncorrelated, that is, $ \mean [ \varepsilon \mid Z ] = 0 $.
 \end{enumerate}
-The space $ L^{ 2 } ( Z ) $ is defined accordingly.
+The space $ L^{ 2 } ( Z ) = L^{ 2 } ( \mathcal{Z}, \mathcal{B} ( \mathcal{Z} ), \nu_{ Z } ) $ is defined accordingly.
 This variable is called the \emph{instrumental variable}.
 The problem consists of estimating $ \hstar $ based on independent joint samples from $ X, Z $ and $ Y $.
 
@@ -57,7 +57,7 @@ We use the symbol $ \partial_{ 2 } $ to denote a derivative with respect to the 
 The example to keep in mind is the quadratic loss function $ \ell ( y, y' ) = \frac{ 1 }{ 2 } ( y - y' )^2 $.
 Given $ h \in L^{ 2 } ( X ) $, we define the \emph{populational risk} associated with it to be
 \begin{equation*}
-    \risk ( h ) \defeq \mean [ \ell ( r_{ 0 } ( Z ), \meanop h ( Z ) ) ]
+    \risk ( h ) \defeq \mean [ \ell ( r_{ 0 } ( Z ), \meanop [ h ] ( Z ) ) ]
 .\end{equation*}
 We would like to solve
 \begin{equation*}
@@ -76,21 +76,53 @@ More formally,
     \pi_{ \mathcal{F} } [ h ] = h^{ + } \wedge A - h^{ - } \wedge A
 .\end{equation*}
 
-We now state all the assumptions needed about the function $ \ell $ for future reference:
+We now state all the assumptions needed about the function $ \ell $:
 \begin{assumption}[Regularity of $ \ell $]
     \label{assumption loss}
     \begin{enumerate}
         \item[]
         \item The function $ \ell : \R \times \R \to \R $ is convex and $ C^2 $ with respect to its second argument;
-        \item There exists $ \theta_{ 0 } > 0 $ such that for all $ f, g \in L^2 ( X ) $
-            \begin{equation}
-                \label{eq: loss regularity}
-                \sup_{ \abs{ \theta } < \theta_{ 0 } }
-                \mean \left[
-                    \partial_{ 2 }^2 \ell ( r_{ 0 } ( Z ), \meanop [ g + \theta f ] ( Z ) ) \cdot \meanop [ f ] ( Z )^2
-                \right] < \infty
-            ;\end{equation}
-            \label{en: loss regularity}
+        \item The function $ \ell $ has Lipschitz first derivative with respect to the second coordinate, i.e., there exists $ L \geq 0 $ such that, for all $ y, y', u, u' \in \R $ we have
+            \begin{equation*}
+                \abs{ \partial_{ 2 } \ell ( y, y' ) - \partial_{ 2 } \ell ( u, u' ) }
+                \leq L ( \abs{ y - u } + \abs{ y' - u' } )
+            .\end{equation*}
+            \label{en: lipschitz gradients}
     \end{enumerate}
 \end{assumption}
-Assumption \ref{assumption loss}.\ref{en: loss regularity} is a mild integrability condition which can be easily shown to hold in the quadratic case.
+Some useful facts which follow immediately from these assumptions are:
+\begin{proposition}
+    \label{prop: loss properties}
+    Under Assumption \ref{assumption loss} we have:
+    \begin{enumerate}
+        \item \label{bounded growth} Setting $ C_{ 0 } = \abs{ \partial_{ 2 } \ell ( 0, 0 ) } $ we have
+            \begin{equation*}
+                \abs{ \partial_{ 2 } \ell ( y, y' ) } \leq C_{ 0 } + L ( \abs{ y } + \abs{ y' } )
+            \end{equation*}
+            for all $ y, y' \in \R $;
+        \item \label{continuous composition} The map $ f \mapsto \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), f ( \cdot ) ) $ from $ L^{ 2 } ( Z ) $ to $ L^{ 2 } ( Z ) $ is well-defined and $ L $-Lipschitz.
+        \item \label{bounded second derivative} The second derivative with respect to the second coordinate is bounded: $ \abs{ \partial_{ 2 }^{ 2 } \ell ( y, y' ) } \leq L $ for all $ y, y' \in \R $;
+    \end{enumerate}
+\end{proposition}
+\begin{proof}
+    \begin{enumerate}
+        \item[]
+        \item Write $ \partial_{ 2 } \ell ( y, y' ) = \partial_{ 2 } \ell ( y, y' ) - \partial_{ 2 } \ell ( 0, 0 ) + \partial_{ 2 } \ell ( 0, 0 ) $ and apply the triangle inequality as well as Assumption \ref{assumption loss}.\ref{en: lipschitz gradients}.
+        \item From the previous item we know this map is well-defined.
+            If $ f $ and $ g $ belong to $ L^{ 2 } ( Z ) $, we have
+            \begin{align*}
+                \norm{ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), f ( \cdot ) ) - \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), g ( \cdot ) ) }_{ L^2 ( Z ) }^2
+                &= \mean \left[
+                    \abs{ 
+                        \partial_{ 2 } ( r_{ 0 } ( Z ), f ( Z ) )
+                        - \partial_{ 2 } ( r_{ 0 } ( Z ), g ( Z ) )
+                    }^2
+                \right] \\
+                &\leq L^2 \mean \left[
+                    \abs{ f ( Z ) - g ( Z ) }^2
+                \right] \\
+                &= L^2 \norm{ f - g }_{ L^2 ( Z ) }^2
+            .\end{align*}
+        \item Follows from the definition of derivative and Assumption \ref{assumption loss}.\ref{en: lipschitz gradients}.
+    \end{enumerate}
+\end{proof}

@@ -34,3 +34,17 @@ With this choice, setting $ u_{ h } ( x ) = \Phi ( x, Z ) \Psi_{ h } ( Z ) $\imp
 An obvious obstacle for this approach is that we don't know how to analytically compute $ \Phi, r_{ 0 } $ nor $ \meanop $, se we will proceed with estimators $ \hat{ \Phi }, \hat{ r_{ 0 } } $ and $ \hat{ \meanop } $.
 In what follows, we will remain agnostic to the exact form taken by these estimators and will present the algorithm assuming we know how to compute them.
 Later, we will show how the individual convergence rates of these three pieces come together to determine the convergence rate of our method.
+
+We state here all the assumptions which we need from these estimators to bound the excess risk:
+\begin{assumption}
+    \label{estimator assumptions}
+    \begin{enumerate}
+        \item[] 
+        \item $ \hat{ r_{ 0 } } \in L^{ 2 } ( Z ) $;
+        \item $ \hat{ \meanop } : L^{ 2 } ( X ) \to L^{ 2 } ( Z ) $ is a bounded linear operator;
+        \item Letting $ \mathcal{W} = \mathcal{X} \times \mathcal{Z} $, we have
+            \begin{equation*}
+                \norm{ \hat{ \Phi } }_{ \infty } \defeq \sup_{ \bw \in \mathcal{W} } \abs{ \Phi ( \bw ) } < \infty
+            .\end{equation*}
+    \end{enumerate}
+\end{assumption}

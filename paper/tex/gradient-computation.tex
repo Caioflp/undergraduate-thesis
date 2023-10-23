@@ -35,8 +35,8 @@ We start by computing the directional derivative of $ \risk $ at $ h $ in the di
         \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \meanop [ h ] ( Z ) ) \cdot \meanop [ f ] ( Z )
     \right]
 ,\end{align*}
-where $ \theta \in \R $ is due to Taylor's formula and can be assumed\info{Assumption} to be inside a fixed interval $ ( -\theta_{ 0 }, \theta_{ 0 } ) $, with $ \theta_{ 0 } $ arbitrarily small.
-The last step is then due to Assumption \ref{assumption loss}.\ref{en: loss regularity}.
+where $ \theta \in \R $ is due to Taylor's formula.
+The last step is then due to Proposition \ref{prop: loss properties}.\ref{bounded second derivative}.
 
 We can in fact expand the calculation a bit more, as follows:
 \begin{align*}
@@ -46,11 +46,13 @@ We can in fact expand the calculation a bit more, as follows:
     \right] \\
     &= \dotprod{ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \meanop [ h ] ( \cdot ) ), \meanop [ f ] }_{ L^{ 2 } ( Z ) } \\
     &= \dotprod{ \meanop^{ * } [ \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \meanop [ h ] ( \cdot ) ) ], f }_{ L^{ 2 } ( X ) }
-,\end{align*}
-where we are assuming\info{Assumption} that $ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \meanop [ h ] ( \cdot ) ) \in L^{ 2 } ( Z ) $.
+.\end{align*}
 This shows that $ \risk $ is Gateux-differentiable, with Gateux derivative at $ h $ given by
 \begin{equation*}
     D \risk [ h ] = \meanop^{ * } [ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \meanop [ h ] ( \cdot ) ) ]
 .\end{equation*}
-If we assume\footnote{It is if $ \ell $ is quadratic.}\info{Assumption} that $ h \mapsto D \risk [ h ] $ is a continuous mapping from $ L^{ 2 } ( X ) $ to $ L^{ 2 } ( X ) $\improvement{Talk about which conditions $ \ell $ can satisfy so that this is continuous.}, then $ \risk $ is also Fréchet-differentiable, and both derivatives coincide.
-Therefore, under this assumption, which we henceforth make, $ \nabla \risk ( h ) = \meanop^{ * } [ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \meanop [ h ] ( \cdot ) ) ] $.
+By Proposition \ref{prop: loss properties}.\ref{continuous composition} we have that $ h \mapsto D \risk [ h ] $ is a continuous mapping from $ L^{ 2 } ( X ) $ to $ L^{ 2 } ( X ) $, which implies that $ \risk $ is also Fréchet-differentiable, and both derivatives coincide.\improvement{Cite a reference for this.}
+Therefore,
+\begin{equation*}
+   \nabla \risk ( h ) = \meanop^{ * } [ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), \meanop [ h ] ( \cdot ) ) ]  
+.\end{equation*}

@@ -1,10 +1,30 @@
 \section{Proof of convergence}
 
-The first problem is proving our sequence of estimates is, in fact, contained in $ L^{ 2 } ( X ) $.
-This amounts to proving $ u_{ m } \in L^{ 2 } ( X ) $ for every $ m $.
-It's not even immediate why $ u_{ h } ( x ) = \Phi ( x, Z ) \xi_{ h } ( Z ) $ (the unbiased gradient when we know $ r_{ 0 }, \Phi $ and $ \meanop $) belongs to $ L^{ 2 } ( X ) $\improvement{ We'll need to bound the norm of $ u_{ m } $ by a constant later in the proof. }
-
-After doing this, we check that $ \risk $ is convex in $ \mathcal{F} $:
+We start by proving that our sequence of estimates is, in fact, contained in $ L^{ 2 } ( X ) $.
+This is clear, since, by Assumption \ref{estimator assumptions} we have:
+\begin{align}
+    \norm{ u_{ m } }_{ L^{ 2 } ( X ) }^2
+    &= \norm{
+        \hat{ \Phi } ( \cdot, \bz_{ m } ) \partial_{ 2 } \ell \left(
+            \hat{ r_{ 0 } } ( \bz_{ m } ), \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+        \right)
+    }_{ L^{ 2 } ( X ) }^2 \nonumber \\
+    &= \mean_{ X } \left[
+        \abs{ 
+            \hat{ \Phi } ( X, \bz_{ m } ) \partial_{ 2 } \ell \left(
+                \hat{ r_{ 0 } } ( \bz_{ m } ),
+                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \right)
+        }^2
+    \right] \nonumber \\
+    &\leq \partial_{ 2 } \ell \left(
+                \hat{ r_{ 0 } } ( \bz_{ m } ),
+                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+    \right)^2
+    \norm{ \hat{ \Phi } }_{ \infty }^2 \label{ali: u_m bound} \\
+    &< \infty \nonumber
+.\end{align}
+Now, we check that $ \risk $ is convex in $ \mathcal{F} $:
 if $ h, g \in \mathcal{F} $ and $ \lambda \in [ 0, 1 ] $, then
 \begin{align*}
     \risk ( \lambda h + ( 1 - \lambda ) g )
@@ -52,7 +72,7 @@ Rearranging terms, we get
     &\hspace{1.5cm}+ \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2
     - \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
 .\end{align*}
-Finally, summing over $ 1 \leq m \leq M $ leads to
+Summing over $ 1 \leq m \leq M $ leads to
 \begin{align*}
     \sum_{ n=1 }^{ M } \left[
         \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hstar )
@@ -66,8 +86,23 @@ Finally, summing over $ 1 \leq m \leq M $ leads to
     &\hspace{1cm} - \sum_{ m=1 }^{ M }
     \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hstar }
 .\end{align*}
+Define $ \varepsilon_{ m } \defeq u_{ m } - \nabla \mathcal{R} ( \hat{ h }_{ m-1 } ) $, so what we have is
+\begin{align*}
+    \sum_{ n=1 }^{ M } \left[
+        \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hstar )
+    \right]
+    &\leq \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
+        \norm{ \hat{ h }_{ m-1 } - \hstar }^2
+        -
+        \norm{ \hat{ h }_{ m } - \hstar }^2
+    \right) \\
+    &\hspace{1cm} + \sum_{ m=1 }^{ M } \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2 \\
+    &\hspace{1cm} - \sum_{ m=1 }^{ M }
+    \dotprod{ \varepsilon_{ m }, \hat{ h }_{ m-1 } - \hstar }
+.\end{align*}
 
-We then treat each of the three terms in the RHS of the inequality above separately:
+The next step is to take the average of both sides with respect to $ \bz_{ 1:M } $, taking advantage of the independence between $ \bz_{ 1:M } $ and $ \data_{ r_{ 0 }, \Phi, \meanop } $.
+To better organize the argument, we treat each of the three summations in the RHS of the inequality above separately:
 
 % \subsection{Option 1: averaging with respect to everything}
 % 
@@ -291,7 +326,8 @@ We then treat each of the three terms in the RHS of the inequality above separat
 % 
 % We similarly treat each of the three terms separately.
 
-\textbf{First term }
+\textbf{First summation }
+This one admits a deterministic bound.
 By assumption, we have $ \diam \mathcal{F} = D < \infty $.
 Hence
 \begin{align*}
@@ -312,239 +348,296 @@ Hence
     \right) D^2 + \frac{ 1 }{ 2 \alpha_{ 1 } } D^2 = \frac{ D^2 }{ 2 \alpha_{ M } }
 .\end{align*}
 
-\textbf{Second term }
-We are fixing the offline data $ \dataoff $ and averaging with respect to the other samples of the instrumental variable.
-Therefore, what we wish to compute is
+\textbf{Second summation }
+The computation in equation (\ref{ali: u_m bound}) shows that
 \begin{align*}
     \mean_{ \bz_{ 1:M } } \left[
         \norm{ u_{ m } }^2
-        \given{} \dataoff
     \right]
-    &= \mean_{ \bz_{ 1:m } } \left[
-        \mean_{ X } \left[
-            \hat{ \Phi } ( X, \bz_{ m } )^2
-            \partial_{ 2 } \ell \left(
-                \hat{ r_{ 0 } } ( \bz_{ m } ),
-                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-            \right)^2
-        \right]
-        \given{\Big} \dataoff
-    \right] \\
-    &= \mean_{ X } \left[
-        \mean_{ \bz_{ 1:m } } \left[
-            \hat{ \Phi } ( X, \bz_{ m } )^2
-            \partial_{ 2 } \ell \left(
-                \hat{ r_{ 0 } } ( \bz_{ m } ),
-                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-            \right)^2
-            \given{\Big} \dataoff
-        \right]
-    \right]
-.\end{align*}
-Since $ \bz_{ 1:m } $ is independent from $ \dataoff $, this is equal to
-\begin{equation*}
-    \mean_{ X } \left[
-        \mean_{ \bz_{ 1:m } } \left[
-            \hat{ \Phi } ( X, \bz_{ m } )^2
-            \partial_{ 2 } \ell \left(
-                \hat{ r_{ 0 } } ( \bz_{ m } ),
-                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-            \right)^2
-        \right]
-    \right]
-.\end{equation*}
-Reversing back the expectations, we get
-\begin{align*}
-    &\mean_{ \bz_{ 1:m } } \left[
-        \mean_{ X } \left[
-            \hat{ \Phi } ( X, \bz_{ m } )^2
-            \partial_{ 2 } \ell \left(
-                \hat{ r_{ 0 } } ( \bz_{ m } ),
-                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-            \right)^2
-        \right]
-    \right] \\
-    &\hspace{1cm}=
-    \mean_{ \bz_{ 1:m } } \left[
-        \mean_{ X } \left[
-            \hat{ \Phi } ( X, \bz_{ m } )^2
-        \right]
+    \leq \norm{ \hat{ \Phi } }^2_{ \infty } \mean_{ \bz_{ 1:M } } \left[
         \partial_{ 2 } \ell \left(
             \hat{ r_{ 0 } } ( \bz_{ m } ),
             \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
         \right)^2
     \right]
 .\end{align*}
-Now we use Assumption 14.5.1 in \cite{sugiyama2012}, which states that
-\begin{equation*}
-    \sup_{ w \in \mathbb{W} } k ( \bw, \bw ) \leq 1
-,\end{equation*}
-where $ \mathbb{W} = \mathbb{X} \times \mathbb{Z} $, $ \bw = ( \bx, \bz ) $ and $ k : \mathbb{W} \times \mathbb{W} \to \R $ is the kernel corresponding to the RKHS used to estimate $ \Phi $, which we denote by $ \rkhsw $.
-This assumption implies
+Together with Proposition \ref{prop: loss properties}.\ref{bounded growth}, this implies
 \begin{align*}
-    &\hat{ \Phi } ( \bw )
-    = \dotprod{ \hat{ \Phi }, k ( \bw, \cdot ) }_{ \rkhsw }
-    \leq \norm{ \hat{ \Phi } }_{ \rkhsw } \norm{ k ( \bw, \cdot ) }_{ \rkhsw }
-    = \norm{ \hat{ \Phi } }_{ \rkhsw } \sqrt{ \dotprod{ k ( \bw, \cdot ), k ( \bw, \cdot ) } } = \\
-    &\hspace{1.6cm}
-    = \norm{ \hat{ \Phi } }_{ \rkhsw } \sqrt{ k ( \bw, \bw ) }
-    \leq \norm{ \hat{ \Phi } }_{ \rkhsw }
-\end{align*}
-for all $ \bw \in \mathbb{W} $.
-Therefore,
-\begin{align*}
-    &\mean_{ \bz_{ 1:m } } \left[
-        \mean_{ X } \left[
-            \hat{ \Phi } ( X, \bz_{ m } )^2
-        \right]
-        \partial_{ 2 } \ell \left(
-            \hat{ r_{ 0 } } ( \bz_{ m } ),
-            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-        \right)^2
-    \right] \\
-    &\hspace{1cm}\leq
-    \mean_{ \bz_{ 1:m } } \left[
-        \mean_{ X } \left[
-            \norm{ \hat{ \Phi } }_{ \rkhsw }^2
-        \right]
-        \partial_{ 2 } \ell \left(
-            \hat{ r_{ 0 } } ( \bz_{ m } ),
-            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-        \right)^2
-    \right] \\
-    &\hspace{1cm}=
-    \norm{ \hat{ \Phi } }_{ \rkhsw }^2
-    \mean_{ \bz_{ 1:m } } \left[
-        \partial_{ 2 } \ell \left(
-            \hat{ r_{ 0 } } ( \bz_{ m } ),
-            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-        \right)^2
+    \mean_{ \bz_{ 1:M } } \left[
+        \norm{ u_{ m } }^2
     \right]
-.\end{align*}
-
-To bound the expectation, we assume\info{Assumption} the loss is quadratic and then
-\begin{align*}
-    &\mean_{ \bz_{ 1:m } } \left[
-        \left(
-            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-            - \hat{ r_{ 0 } } ( \bz_{ m } )
-        \right)^2
-    \right] \\
-    \begin{split}
-        &\hspace{1cm}
-        = \mean_{ \bz_{ 1:m } } \bigg[
-            \Big(
-                \left(
-                    \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-                    - \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-                \right)
-                + \left(
-                    r_{ 0 } ( \bz_{ m } )
-                    - \hat{ r_{ 0 } } ( \bz_{ m } )
-                \right) \\
-        &\hspace{4cm}
-                + \left(
-                    \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-                    - r_{ 0 } ( \bz_{ m } )
-                \right)
-            \Big)^2
-        \bigg]
-    \end{split} \\
-    \begin{split}
-        &\hspace{1cm}
-        \leq 3 \mean_{ \bz_{ 1:m } } \bigg[
-            \left(
-                \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-                - \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-            \right)^2
-            + \left(
-                r_{ 0 } ( \bz_{ m } )
-                - \hat{ r_{ 0 } } ( \bz_{ m } )
-            \right)^2 \\
-    &\hspace{3cm}
-            + \left(
-                \meanop [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-                - r_{ 0 } ( \bz_{ m } )
-            \right)^2
-        \bigg]
-    \end{split} \\
-    \begin{split}
-        &\hspace{1cm}
-        = 3 \bigg\{
-            \mean_{ \bz_{ 1:m-1 } }\left[
-                \norm{
-                ( \hat{ \meanop } - \meanop )
-                [ \hat{ h }_{ m-1 } ]
-            }_{ L^2 ( \mathbb{Z} ) }^2
-            \right]
-            + \mean_{ \bz_{ 1:m } } \left[
-                \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^2 ( \mathbb{Z} ) }^2
-            \right]\\
-        &\hspace{3cm}
-            + \mean_{ \bz_{ 1:m-1 } }  \left[
-                \norm{ \meanop [ \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
-            \right]
-        \bigg\}
-    \end{split}
-.\end{align*}
-We treat each part of this expression separately.
-Firstly,
-\begin{align*}
-    \norm{ ( \hat{ \meanop } - \meanop ) [ \hat{ h }_{ m-1 } ] }_{ L^2 ( \mathbb{Z} ) }^2
-    \leq \norm{ \hat{ \meanop } - \meanop }_{ \mathrm{op} }^2 \norm{ \hat{ h }_{ m-1 } }_{ L^2 ( \mathbb{X} ) }^2
-    \leq M^2 \norm{ \hat{ \meanop } - \meanop }_{ \mathrm{op} }^2
-.\end{align*}
-We leave the second part as $ \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( \mathbb{Z} ) }^2 $.
-Finally, for the third part, we have
-\begin{align*}
-    \norm{ \meanop [ \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
-    &= \mean_{ Z } \left[
-        \left(
-            \meanop [ \hat{ h }_{ m-1 } ] ( Z ) - r_{ 0 } ( Z )
-        \right)^2
-    \right] \\
-    &= \mean_{ Z } \left[
-        \left(
-            \mean \left[ \hat{ h }_{ m-1 } ( X ) - Y \given{} Z \right]
-        \right)^2
-    \right] \\
-    &\leq \mean_{ ( X, Y ) } \left[
-        \left(
-            \hat{ h }_{ m-1 } ( X ) - Y
-        \right)^2
-    \right] \\
-    &\leq 2 \left(
-        \mean_{ X } \left[ \hat{ h }_{ m-1 } ( X )^2 \right]
-        + \mean \left[ Y^2 \right]
+    &\leq 3 \norm{ \hat{ \Phi } }^2_{ \infty } 
+    \left(
+        C_{ 0 }^2 + L^2 \left(
+            \norm{ \hat{ r_{ 0 } } }_{ L^2 ( Z ) }^2
+            + \norm{ \hat{ \meanop } [ \hat{ h }_{ m-1 } ] }_{ L^2 ( Z ) }^2
+        \right)
     \right) \\
-    &= 2 \left(
-        \norm{ \hat{ h }_{ m-1 } }_{ L^2 ( \mathbb{X} ) }^2
-        + \mean \left[ Y^2 \right]
+    &\leq 3 \norm{ \hat{ \Phi } }^2_{ \infty }
+    \left(
+        C_{ 0 }^2 + L^2 \left(
+            \norm{ \hat{ r_{ 0 } } }_{ L^2 ( Z ) }^2
+            + \norm{ \hat{ \meanop } }_{ \op }^2 \norm{ \hat{ h }_{ m-1 } }^2
+        \right)
     \right) \\
-    &\leq 2 \left( M^2 + \mean \left[ Y^2 \right] \right)
-.\end{align*}
-Putting everything together, what we conclude is
-\begin{align*}
-    \mean_{ \bz_{ 1:m } } \left[
-        \norm{ u_{ m } }_{ L^2 ( \mathbb{X} ) }^2 \given{} \dataoff
-    \right]
-    \leq
-    3 \norm{ \hat{ \Phi } }_{ \rkhsw }^2 \left(
-        M^2 \norm{ \hat{ \meanop } - \meanop }_{ \mathrm{op} }^2
-        + \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^2 ( \mathbb{Z} ) }^2
-        + 2 \left( M^2 + \mean [ Y^2 ] \right)
+    &\leq 3 \norm{ \hat{ \Phi } }^2_{ \infty }
+    \left(
+        C_{ 0 }^2 + L^2 \left(
+            \norm{ \hat{ r_{ 0 } } }_{ L^2 ( Z ) }^2
+            + D^2 \norm{ \hat{ \meanop } }_{ \op }^2
+        \right)
     \right)
 .\end{align*}
-{\color{red} We still have to use convergence results for $ \hat{ \meanop } $ and $ \hat{ r_{ 0 } } $ to finish this bound.
-It doesn't need to be good, we only need to bound this by something which remains bounded as $ \abs{ \dataoff } $ and the number of iterations grow.
-Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, that is, almost surely finite, and rely on the (fast enough) decay of the learning rate to achieve convergence.}
+Therefore,
+\begin{equation*}
+    \mean_{ \bz_{ 1:M } } \left[
+        \sum_{ m=1 }^{ M } \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2
+    \right]
+    \leq
+    \frac{ 3 }{ 2 } \norm{ \hat{ \Phi } }^2_{ \infty }
+    \left(
+        C_{ 0 }^2 + L^2 \left(
+            \norm{ \hat{ r_{ 0 } } }_{ L^2 ( Z ) }^2
+            + D^2 \norm{ \hat{ \meanop } }_{ \op }^2
+        \right)
+    \right)
+    \sum_{ m=1 }^{ M } \alpha_{ m }
+.\end{equation*}
+
+
+
+% We are fixing the offline data $ \dataoff $ and averaging with respect to the other samples of the instrumental variable.
+% Therefore, what we wish to compute is
+% \begin{align*}
+%     \mean_{ \bz_{ 1:M } } \left[
+%         \norm{ u_{ m } }^2
+%         \given{} \dataoff
+%     \right]
+%     &= \mean_{ \bz_{ 1:m } } \left[
+%         \mean_{ X } \left[
+%             \hat{ \Phi } ( X, \bz_{ m } )^2
+%             \partial_{ 2 } \ell \% left(
+%                 \hat{ r_{ 0 } } (%  \bz_{ m } ),
+%                 \hat{ \meanop } [%  \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%             \right)^2
+%         \right]
+%         \given{\Big} \dataoff
+%     \right] \\
+%     &= \mean_{ X } \left[
+%         \mean_{ \bz_{ 1:m } } \le% ft[
+%             \hat{ \Phi } ( X, \bz% _{ m } )^2
+%             \partial_{ 2 } \ell \% left(
+%                 \hat{ r_{ 0 } } (%  \bz_{ m } ),
+%                 \hat{ \meanop } [%  \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%             \right)^2
+%             \given{\Big} \dataoff% 
+%         \right]
+%     \right]
+% .\end{align*}
+% Since $ \bz_{ 1:m } $ is independ% ent from $ \dataoff $, this is equal to
+% \begin{equation*}
+%     \mean_{ X } \left[
+%         \mean_{ \bz_{ 1:m } } \le% ft[
+%             \hat{ \Phi } ( X, \bz% _{ m } )^2
+%             \partial_{ 2 } \ell \% left(
+%                 \hat{ r_{ 0 } } (%  \bz_{ m } ),
+%                 \hat{ \meanop } [%  \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%             \right)^2
+%         \right]
+%     \right]
+% .\end{equation*}
+% Reversing back the expectations, % we get
+% \begin{align*}
+%     &\mean_{ \bz_{ 1:m } } \left[% 
+%         \mean_{ X } \left[
+%             \hat{ \Phi } ( X, \bz% _{ m } )^2
+%             \partial_{ 2 } \ell \% left(
+%                 \hat{ r_{ 0 } } (%  \bz_{ m } ),
+%                 \hat{ \meanop } [%  \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%             \right)^2
+%         \right]
+%     \right] \\
+%     &\hspace{1cm}=
+%     \mean_{ \bz_{ 1:m } } \left[
+%         \mean_{ X } \left[
+%             \hat{ \Phi } ( X, \bz% _{ m } )^2
+%         \right]
+%         \partial_{ 2 } \ell \left% (
+%             \hat{ r_{ 0 } } ( \bz% _{ m } ),
+%             \hat{ \meanop } [ \ha% t{ h }_{ m-1 } ] ( \bz_{ m } )
+%         \right)^2
+%     \right]
+% .\end{align*}
+% Now we use Assumption 14.5.1 in \% cite{sugiyama2012}, which states that
+% \begin{equation*}
+%     \sup_{ w \in \mathbb{W} } k (%  \bw, \bw ) \leq 1
+% ,\end{equation*}
+% where $ \mathbb{W} = \mathbb{X} \% times \mathbb{Z} $, $ \bw = ( \bx, \bz ) $ and $ k : \mathbb{W} \times \mathbb{W} \to \R $ is the kernel corresponding to the RKHS used to estimate $ \Phi $, which we denote by $ \rkhsw $.
+% This assumption implies
+% \begin{align*}
+%     &\hat{ \Phi } ( \bw )
+%     = \dotprod{ \hat{ \Phi }, k (%  \bw, \cdot ) }_{ \rkhsw }
+%     \leq \norm{ \hat{ \Phi } }_{ % \rkhsw } \norm{ k ( \bw, \cdot ) }_{ \rkhsw }
+%     = \norm{ \hat{ \Phi } }_{ \rk% hsw } \sqrt{ \dotprod{ k ( \bw, \cdot ), k ( \bw, \cdot ) } } = \\
+%     &\hspace{1.6cm}
+%     = \norm{ \hat{ \Phi } }_{ \rk% hsw } \sqrt{ k ( \bw, \bw ) }
+%     \leq \norm{ \hat{ \Phi } }_{ % \rkhsw }
+% \end{align*}
+% for all $ \bw \in \mathbb{W} $.
+% Therefore,
+% \begin{align*}
+%     &\mean_{ \bz_{ 1:m } } \left[% 
+%         \mean_{ X } \left[
+%             \hat{ \Phi } ( X, \bz% _{ m } )^2
+%         \right]
+%         \partial_{ 2 } \ell \left% (
+%             \hat{ r_{ 0 } } ( \bz% _{ m } ),
+%             \hat{ \meanop } [ \ha% t{ h }_{ m-1 } ] ( \bz_{ m } )
+%         \right)^2
+%     \right] \\
+%     &\hspace{1cm}\leq
+%     \mean_{ \bz_{ 1:m } } \left[
+%         \mean_{ X } \left[
+%             \norm{ \hat{ \Phi } }% _{ \rkhsw }^2
+%         \right]
+%         \partial_{ 2 } \ell \left% (
+%             \hat{ r_{ 0 } } ( \bz% _{ m } ),
+%             \hat{ \meanop } [ \ha% t{ h }_{ m-1 } ] ( \bz_{ m } )
+%         \right)^2
+%     \right] \\
+%     &\hspace{1cm}=
+%     \norm{ \hat{ \Phi } }_{ \rkhs% w }^2
+%     \mean_{ \bz_{ 1:m } } \left[
+%         \partial_{ 2 } \ell \left% (
+%             \hat{ r_{ 0 } } ( \bz% _{ m } ),
+%             \hat{ \meanop } [ \ha% t{ h }_{ m-1 } ] ( \bz_{ m } )
+%         \right)^2
+%     \right]
+% .\end{align*}
+% 
+% To bound the expectation, we assu% me\info{Assumption} the loss is quadratic and then
+% \begin{align*}
+%     &\mean_{ \bz_{ 1:m } } \left[% 
+%         \left(
+%             \hat{ \meanop } [ \ha% t{ h }_{ m-1 } ] ( \bz_{ m } )
+%             - \hat{ r_{ 0 } } ( \% bz_{ m } )
+%         \right)^2
+%     \right] \\
+%     \begin{split}
+%         &\hspace{1cm}
+%         = \mean_{ \bz_{ 1:m } } \% bigg[
+%             \Big(
+%                 \left(
+%                     \hat{ \meanop%  } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                     - \meanop [ \% hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                 \right)
+%                 + \left(
+%                     r_{ 0 } ( \bz% _{ m } )
+%                     - \hat{ r_{ 0%  } } ( \bz_{ m } )
+%                 \right) \\
+%         &\hspace{4cm}
+%                 + \left(
+%                     \meanop [ \ha% t{ h }_{ m-1 } ] ( \bz_{ m } )
+%                     - r_{ 0 } ( \% bz_{ m } )
+%                 \right)
+%             \Big)^2
+%         \bigg]
+%     \end{split} \\
+%     \begin{split}
+%         &\hspace{1cm}
+%         \leq 3 \mean_{ \bz_{ 1:m % } } \bigg[
+%             \left(
+%                 \hat{ \meanop } [%  \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+%                 - \meanop [ \hat{%  h }_{ m-1 } ] ( \bz_{ m } )
+%             \right)^2
+%             + \left(
+%                 r_{ 0 } ( \bz_{ m%  } )
+%                 - \hat{ r_{ 0 } }%  ( \bz_{ m } )
+%             \right)^2 \\
+%     &\hspace{3cm}
+%             + \left(
+%                 \meanop [ \hat{ h%  }_{ m-1 } ] ( \bz_{ m } )
+%                 - r_{ 0 } ( \bz_{%  m } )
+%             \right)^2
+%         \bigg]
+%     \end{split} \\
+%     \begin{split}
+%         &\hspace{1cm}
+%         = 3 \bigg\{
+%             \mean_{ \bz_{ 1:m-1 }%  }\left[
+%                 \norm{
+%                 ( \hat{ \meanop }%  - \meanop )
+%                 [ \hat{ h }_{ m-1%  } ]
+%             }_{ L^2 ( \mathbb{Z} % ) }^2
+%             \right]
+%             + \mean_{ \bz_{ 1:m }%  } \left[
+%                 \norm{ r_{ 0 } - % \hat{ r_{ 0 } } }_{ L^2 ( \mathbb{Z} ) }^2
+%             \right]\\
+%         &\hspace{3cm}
+%             + \mean_{ \bz_{ 1:m-1%  } }  \left[
+%                 \norm{ \meanop [ % \hat{ h }_{ m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
+%             \right]
+%         \bigg\}
+%     \end{split}
+% .\end{align*}
+% We treat each part of this expres% sion separately.
+% Firstly,
+% \begin{align*}
+%     \norm{ ( \hat{ \meanop } - \m% eanop ) [ \hat{ h }_{ m-1 } ] }_{ L^2 ( \mathbb{Z} ) }^2
+%     \leq \norm{ \hat{ \meanop } -%  \meanop }_{ \mathrm{op} }^2 \norm{ \hat{ h }_{ m-1 } }_{ L^2 ( \mathbb{X} ) }^2
+%     \leq M^2 \norm{ \hat{ \meanop%  } - \meanop }_{ \mathrm{op} }^2
+% .\end{align*}
+% We leave the second part as $ \no% rm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^{ 2 } ( \mathbb{Z} ) }^2 $.
+% Finally, for the third part, we h% ave
+% \begin{align*}
+%     \norm{ \meanop [ \hat{ h }_{ % m-1 } ] - r_{ 0 } }_{ L^2 ( \mathbb{Z} ) }^2
+%     &= \mean_{ Z } \left[
+%         \left(
+%             \meanop [ \hat{ h }_{%  m-1 } ] ( Z ) - r_{ 0 } ( Z )
+%         \right)^2
+%     \right] \\
+%     &= \mean_{ Z } \left[
+%         \left(
+%             \mean \left[ \hat{ h % }_{ m-1 } ( X ) - Y \given{} Z \right]
+%         \right)^2
+%     \right] \\
+%     &\leq \mean_{ ( X, Y ) } \lef% t[
+%         \left(
+%             \hat{ h }_{ m-1 } ( X%  ) - Y
+%         \right)^2
+%     \right] \\
+%     &\leq 2 \left(
+%         \mean_{ X } \left[ \hat{ % h }_{ m-1 } ( X )^2 \right]
+%         + \mean \left[ Y^2 \right% ]
+%     \right) \\
+%     &= 2 \left(
+%         \norm{ \hat{ h }_{ m-1 } % }_{ L^2 ( \mathbb{X} ) }^2
+%         + \mean \left[ Y^2 \right% ]
+%     \right) \\
+%     &\leq 2 \left( M^2 + \mean \l% eft[ Y^2 \right] \right)
+% .\end{align*}
+% Putting everything together, what%  we conclude is
+% \begin{align*}
+%     \mean_{ \bz_{ 1:m } } \left[
+%         \norm{ u_{ m } }_{ L^2 ( % \mathbb{X} ) }^2 \given{} \dataoff
+%     \right]
+%     \leq
+%     3 \norm{ \hat{ \Phi } }_{ \rk% hsw }^2 \left(
+%         M^2 \norm{ \hat{ \meanop % } - \meanop }_{ \mathrm{op} }^2
+%         + \norm{ r_{ 0 } - \hat{ % r_{ 0 } } }_{ L^2 ( \mathbb{Z} ) }^2
+%         + 2 \left( M^2 + \mean [ % Y^2 ] \right)
+%     \right)
+% .\end{align*}
+% {\color{red} We still have to use%  convergence results for $ \hat{ \meanop } $ and $ \hat{ r_{ 0 } } $ to finish this bound.
+% It doesn't need to be good, we on% ly need to bound this by something which remains bounded as $ \abs{ \dataoff } $ and the number of iterations grow.
+% Another idea is to simply say tha% t this whole thing is $ \bigO_{ p } ( 1 ) $, that is, almost surely finite, and rely on the (fast enough) decay of the learning rate to achieve convergence.}
 
 % \begin{align*}
-%     &\norm{ \hat{ \Phi } }_{ \rkhsw }^2
+%     &\norm{ \hat{ \Phi } }_{ \rkh% sw }^2
 %     \mean_{ \bz_{ 1:m } } \left[
 %         \left(
-%             \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
-%             - \hat{ r_{ 0 } } ( \bz_{ m } )
+%             \hat{ \meanop } [ \ha% t{ h }_{ m-1 } ] ( \bz_{ m } )
+%             - \hat{ r_{ 0 } } ( \% bz_{ m } )
 %         \right)^2
 %     \right] \\
 %     \begin{split}
@@ -608,7 +701,7 @@ Another idea is to simply say that this whole thing is $ \bigO_{ p } ( 1 ) $, th
 % The goal is to bound this uniformly with respect to $ \bz_{ 1 }, \bz_{ 2 }, \dots $ and in a way which does not explode as $ \abs{ \dataoff } $ and $ M $ grow.}
 
 
-\textbf{Third term }
+\textbf{Third summation }
 
 Our goal is to open up the inner product and make explicit the estimation errors of our model's different components, like we did before.
 Here, we define $ \Psi_{ m } ( Z ) \defeq \partial_{ 2 } \ell ( r_{ 0 } ( Z ), \meanop [ \hat{ h }_{ m-1 } ] ( Z ) ) $.
@@ -805,7 +898,7 @@ We proceed to analyze each term separately:
         .\end{equation*}
     Furthermore, we can bound $ \norm{ \Psi_{ m } }_{ L^2 ( Z ) }^2 $ as follows:
     \begin{align*}
-        \norm{ \Phi_{ m } }_{ L^2 ( Z ) }^2
+        \norm{ \Psi_{ m } }_{ L^2 ( Z ) }^2
         &= \norm{ r_{ 0 } - \meanop [ \hat{ h }_{ m-1 } ] }_{ L^2 ( Z ) }^2 \\
         &\leq 2 \left(
             \norm{ r_{ 0 } }_{ L^{ 2 } ( Z ) }^2

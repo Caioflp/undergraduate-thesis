@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.6.1)  18 OCT 2023 11:47
+This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.6.1)  23 OCT 2023 01:29
  restricted system commands enabled.
  file:line:error style messages enabled.
 **main.tex
@@ -910,9 +910,10 @@ File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \c@@todonotes@numberoftodonotes=\count459
 )
 \c@assumption=\count460
+\c@proposition=\count461
 )
-\@quotelevel=\count461
-\@quotereset=\count462
+\@quotelevel=\count462
+\@quotereset=\count463
  (./.out/main.aux)
 \openout1 = main.aux
 
@@ -1032,16 +1033,16 @@ Package microtype Info: No adjustment of kerning.
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 ) (/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count463
+\scratchcounter=\count464
 \scratchdimen=\dimen305
 \scratchbox=\box77
-\nofMPsegments=\count464
-\nofMParguments=\count465
+\nofMPsegments=\count465
+\nofMParguments=\count466
 \everyMPshowfont=\toks51
-\MPscratchCnt=\count466
+\MPscratchCnt=\count467
 \MPscratchDim=\dimen306
-\MPnumerator=\count467
-\makeMPintoPDFobject=\count468
+\MPnumerator=\count468
+\makeMPintoPDFobject=\count469
 \everyMPtoPDFconversion=\toks52
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -1105,22 +1106,19 @@ Package hyperref Info: bookmark level for unknown todo defaults to 0 on input li
  [1
 
 
-{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]) (./gradient-computation.tex [2]) (./unbiased-estimator-of-the-gradient.tex
+{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]) (./gradient-computation.tex [2]) (./unbiased-estimator-of-the-gradient.tex [3]
 
-LaTeX Warning: Marginpar on page 3 moved.
-
-
-LaTeX Warning: Marginpar on page 3 moved.
+LaTeX Warning: Marginpar on page 4 moved.
 
 ) (./algorithm.tex
 
-LaTeX Warning: Marginpar on page 3 moved.
+LaTeX Warning: Marginpar on page 4 moved.
 
 
-LaTeX Warning: Marginpar on page 3 moved.
+LaTeX Warning: Marginpar on page 4 moved.
 
-) (./proof-of-convergence.tex [3] [4] [5] [6]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 782.
+) (./proof-of-convergence.tex [4] [5] [6]
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 875.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
@@ -1135,22 +1133,24 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 )
 
 Here is how much of LuaTeX's memory you used:
- 35020 strings out of 478285
- 156460,1977958 words of node,token memory allocated
- 31263 words of node memory still in use:
-   651 hlist, 89 vlist, 7 rule, 58 disc, 31 local_par, 64 math, 743 glue, 65 kern, 51 penalty, 31 margin_kern, 847 glyph, 1926 attribute, 89 glue_spec, 1926 attribute_list, 32 write, 30 save_pos, 1005 pdf_literal, 30 pdf_colorstack nodes
-   avail lists: 1:1,2:2564,3:1695,4:223,5:647,6:80,7:7434,8:86,9:2864,10:23,11:371
- 53862 multiletter control sequences out of 65536+600000
- 89 fonts using 5732391 bytes
- 120i,19n,114p,1000b,1271s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 34980 strings out of 478285
+ 125161,1977958 words of node,token memory allocated
+ 23482 words of node memory still in use:
+   506 hlist, 74 vlist, 7 rule, 45 disc, 21 local_par, 60 math, 523 glue, 63 kern, 38 penalty, 23 margin_kern, 696 glyph, 1343 attribute, 90 glue_spec, 1343 attribute_list, 22 write, 20 save_pos, 670 pdf_literal, 20 pdf_colorstack nodes
+   avail lists: 1:1,2:2145,3:1089,4:199,5:695,6:69,7:6708,8:73,9:3382,10:23,11:352
+ 53817 multiletter control sequences out of 65536+600000
+ 81 fonts using 5252207 bytes
+ 120i,19n,114p,1000b,1273s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+warning  (pdf backend): unreferenced destination with name 'assumption.2'
 
 warning  (pdf backend): unreferenced destination with name 'assumption.1'
-{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/te
-xlive/2023/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (9 pages, 313277 bytes).
+{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm5.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/20
+23/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (9 pages, 302782 bytes).
 
-PDF statistics: 238 PDF objects out of 1000 (max. 8388607)
- 199 compressed objects within 2 object streams
- 48 named destinations out of 1000 (max. 131072)
+PDF statistics: 248 PDF objects out of 1000 (max. 8388607)
+ 209 compressed objects within 3 object streams
+ 53 named destinations out of 1000 (max. 131072)
  72 words of extra memory for PDF output out of 10000 (max. 100000000)
 
