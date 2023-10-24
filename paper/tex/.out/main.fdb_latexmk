@@ -1,16 +1,16 @@
 # Fdb version 4
-["biber .out/main"] 1698034580 ".out/main.bcf" ".out/main.bbl" ".out/main" 1698035367 0
+["biber .out/main"] 1698121815 ".out/main.bcf" ".out/main.bbl" ".out/main" 1698121822 0
   "../bib/bibliography.bib" 1689802492 272 e03da5a101c1309e4bc96fdb81373de4 ""
-  ".out/main.bcf" 1698035367 107844 9afc41871d93b1c6070db7af35794414 "lualatex"
+  ".out/main.bcf" 1698121822 107360 e7fb13fab16d8ce7daa23c6cdb0935bd "lualatex"
   (generated)
   ".out/main.bbl"
   ".out/main.blg"
   (rewritten before read)
-["lualatex"] 1698035364 "main.tex" ".out/main.pdf" "main" 1698035367 0
-  ".out/main.aux" 1698035367 6037 2bb6b58f6594c23e3be6bed2efe5e350 "lualatex"
-  ".out/main.bbl" 1698034582 1958 331aa6cc7e40d118bdc1394658f03829 "biber .out/main"
-  ".out/main.out" 1698035367 923 a2e344e2011692a480136a2ffbe033af "lualatex"
-  ".out/main.run.xml" 1698035367 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
+["lualatex"] 1698121820 "main.tex" ".out/main.pdf" "main" 1698121822 0
+  ".out/main.aux" 1698121822 6229 1e04191fdf3c899d4ce36788492345cb "lualatex"
+  ".out/main.bbl" 1698121817 466 ee04f40f768daeed26442158e95aba61 "biber .out/main"
+  ".out/main.out" 1698121822 923 a2e344e2011692a480136a2ffbe033af "lualatex"
+  ".out/main.run.xml" 1698121822 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1694907539 368260 3dcbf693681628f7ff1663c2d447d401 ""
   "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1691460808 2904 9df24d430eca38985b553313cd33a565 ""
@@ -22,7 +22,6 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8c.tfm" 1136768653 1352 fa28a7e6d323c65ce7d13d5342ff6be2 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm" 1136768653 4408 25b74d011a4c66b7f212c0cc3c90061b ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm" 1136768653 6672 e3ab9e37e925f3045c9005e6d1473d56 ""
-  "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmrc8t.tfm" 1136768653 16648 7e91c60ebf91b9c60e16ef52b3070f9c ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmri8r.tfm" 1136768653 4640 532ca3305aad10cc01d769f3f91f1029 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmri8t.tfm" 1136768653 6944 94c55ad86e6ea2826f78ba2240d50df9 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
@@ -77,7 +76,6 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb" 1248133631 39386 0bb525d495ceab21fe797301a586e0d7 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb" 1248133631 31764 459c573c03a4949a528c2cc7f557e217 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
-  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm5.pfb" 1248133631 35457 884c5a936fbb3fae6a4c18058662d654 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb" 1248133631 35309 940e81a5b9e04201a07e8b33a3ae6e64 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb" 1255129361 113227 1010e11451afc2822c95dae77c390042 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb" 1136849748 44648 23115b2a545ebfe2c526c3ca99db8b95 ""
@@ -88,7 +86,6 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmb8t.vf" 1136768653 2340 df9c920cc5688ebbf16a93f45ce7bdd3 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmr8c.vf" 1136768653 3556 8a9a6dcbcd146ef985683f677f4758a6 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmr8t.vf" 1136768653 2348 91706c542228501c410c266421fbe30c ""
-  "/usr/local/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmrc8t.vf" 1136768653 3608 78e4c999d9e69f03f448158d01821741 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmri8t.vf" 1136768653 2328 6cd7df782b09b29cfc4d93e55b6b9a59 ""
   "/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/local/texlive/2023/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty" 1576625341 40635 c40361e206be584d448876bba8a64a3b ""
@@ -317,10 +314,10 @@
   "/usr/local/texlive/2023/texmf-var/web2c/luahbtex/lualatex.fmt" 1685627356 11878523 2b8a1901742a4edff1e9481006137752 ""
   "algorithm.tex" 1693744701 2529 d04ca8ff39717d95cc7746683de14853 ""
   "gradient-computation.tex" 1698029806 3097 9acb4712779ffc86f3d40c1e4f581c48 ""
-  "main.tex" 1697748810 269 f523274691a472500e89af7878806022 ""
-  "preamble.tex" 1698034059 3021 f8969055d1729d1eb5f3489331af79ae ""
-  "problem-setup.tex" 1698031484 7385 851b881de1185171f1e535ec78fb562c ""
-  "proof-of-convergence.tex" 1698035362 45341 2fc28f596651b1aca697ab5320992977 ""
+  "main.tex" 1698120039 271 d67adb01a171e6c05585871983b054f2 ""
+  "preamble.tex" 1698120757 3077 9fd421c5400c25ebe12b550a53dcb1e4 ""
+  "problem-setup.tex" 1698121350 7529 602c1f1d4628add803aaef347b853867 ""
+  "proof-of-convergence.tex" 1698121801 24210 4f444ccfc05f992b53d0f2a806f37eee ""
   "unbiased-estimator-of-the-gradient.tex" 1698031817 3564 d1585e413f55d826ef16d3870a2caadd ""
   (generated)
   ".out/main.aux"

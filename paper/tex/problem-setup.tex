@@ -64,6 +64,7 @@ We would like to solve
     \inf_{ h \in \mathcal{F} } \risk ( h )
 ,\end{equation*}
 where $ \mathcal{F} \subseteq L^{ 2 } ( X ) $ is a bounded, closed, convex set such that $ \hstar \in \mathcal{F} $ \info{Assumption}.
+We also assume that $ D \defeq \diam \mathcal{F} < \infty $ and that $ 0 \in \mathcal{F} $, so that $ \norm{ h } \leq D $ if $ h \in \mathcal{F} $.
 A possible choice for the set $ \mathcal{F} $ is
 \begin{equation*}
     \mathcal{F} = \left\{ h \in L^{ 2 } ( X ) : \norm{ h }_{ \infty } \leq A \right\}
@@ -82,7 +83,7 @@ We now state all the assumptions needed about the function $ \ell $:
     \begin{enumerate}
         \item[]
         \item The function $ \ell : \R \times \R \to \R $ is convex and $ C^2 $ with respect to its second argument;
-        \item The function $ \ell $ has Lipschitz first derivative with respect to the second coordinate, i.e., there exists $ L \geq 0 $ such that, for all $ y, y', u, u' \in \R $ we have
+        \item The function $ \ell $ has Lipschitz first derivative with respect to the second argument, i.e., there exists $ L \geq 0 $ such that, for all $ y, y', u, u' \in \R $ we have
             \begin{equation*}
                 \abs{ \partial_{ 2 } \ell ( y, y' ) - \partial_{ 2 } \ell ( u, u' ) }
                 \leq L ( \abs{ y - u } + \abs{ y' - u' } )
@@ -101,7 +102,7 @@ Some useful facts which follow immediately from these assumptions are:
             \end{equation*}
             for all $ y, y' \in \R $;
         \item \label{continuous composition} The map $ f \mapsto \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), f ( \cdot ) ) $ from $ L^{ 2 } ( Z ) $ to $ L^{ 2 } ( Z ) $ is well-defined and $ L $-Lipschitz.
-        \item \label{bounded second derivative} The second derivative with respect to the second coordinate is bounded: $ \abs{ \partial_{ 2 }^{ 2 } \ell ( y, y' ) } \leq L $ for all $ y, y' \in \R $;
+        \item \label{bounded second derivative} The second derivative with respect to the second argument is bounded: $ \abs{ \partial_{ 2 }^{ 2 } \ell ( y, y' ) } \leq L $ for all $ y, y' \in \R $;
     \end{enumerate}
 \end{proposition}
 \begin{proof}
