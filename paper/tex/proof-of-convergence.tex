@@ -255,7 +255,7 @@ To lighten the notation, the symbols $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \
                 \risk ( \hat{ h } ) - \risk ( \hstar )
             \right]
             &\leq \frac{ D^2 }{ 2 M \alpha_{ m } }
-            + \alpha \left( \hat{ \Phi }, \hat{ r_{ 0 } }, \hat{ \meanop } \right) \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \alpha_{ m } \\
+            + \xi \left( \hat{ \Phi }, \hat{ r_{ 0 } }, \hat{ \meanop } \right) \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \alpha_{ m } \\
             &\hspace{1cm}
             + \tau \left( \hat{ \Phi } \right) \left(
                 \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \nu_{ X } \otimes \nu_{ Z } ) }^2 + \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2
@@ -264,7 +264,7 @@ To lighten the notation, the symbols $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \
     \end{align*}
     where
     \begin{align*}
-        \alpha \left( \hat{ \Phi }, \hat{ r_{ 0 } }, \hat{ \meanop } \right)
+        \xi \left( \hat{ \Phi }, \hat{ r_{ 0 } }, \hat{ \meanop } \right)
         &= \frac{ 3 }{ 2 } \norm{ \hat{ \Phi } }_{ \infty }^2 \left(
             C_{ 0 }^2 + L^2 \norm{ \hat{ r_{ 0 } } }_{ L^2 ( Z ) }^2 + L^2 D ^2 \norm{ \hat{ \meanop } }_{ \op }^2
         \right), \\
@@ -426,7 +426,7 @@ To lighten the notation, the symbols $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \
         \label{bound third sum}
     \end{align}
     All that is left to do is to apply equations (\ref{three sums}), (\ref{bound first sum}), (\ref{bound second sum}) and (\ref{bound third sum}) along with a basic convexity inequality.
-    Let $ \hat{ h } \defeq \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \hat{ h }_{ m-1 } $ and $ \alpha = \rho / 2 $.
+    Let $ \hat{ h } \defeq \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \hat{ h }_{ m-1 } $ and $ \xi \defeq \rho / 2 $.
     Then:
     \begin{align*}
         &\mean_{ \bz_{ 1:M } } \left[
@@ -439,7 +439,7 @@ To lighten the notation, the symbols $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \
         &\hspace{1cm}
         \leq
         \frac{ D^2 }{ 2 M \alpha_{ m } }
-        + \alpha \left( \hat{ \Phi }, \hat{ r_{ 0 } }, \hat{ \meanop } \right) \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \alpha_{ m } \\
+        + \xi \left( \hat{ \Phi }, \hat{ r_{ 0 } }, \hat{ \meanop } \right) \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \alpha_{ m } \\
         &\hspace{2.5cm}
         + \tau \left( \hat{ \Phi } \right) \left(
             \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \nu_{ X } \otimes \nu_{ Z } ) }^2 + \norm{ r_{ 0 } - \hat{ r_{ 0 } } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2

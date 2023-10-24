@@ -1,16 +1,16 @@
 # Fdb version 4
-["biber .out/main"] 1698121815 ".out/main.bcf" ".out/main.bbl" ".out/main" 1698122193 0
+["biber .out/main"] 1698121815 ".out/main.bcf" ".out/main.bbl" ".out/main" 1698152614 0
   "../bib/bibliography.bib" 1689802492 272 e03da5a101c1309e4bc96fdb81373de4 ""
-  ".out/main.bcf" 1698122193 107360 e7fb13fab16d8ce7daa23c6cdb0935bd "lualatex"
+  ".out/main.bcf" 1698152614 107360 e7fb13fab16d8ce7daa23c6cdb0935bd "lualatex"
   (generated)
   ".out/main.bbl"
   ".out/main.blg"
   (rewritten before read)
-["lualatex"] 1698122191 "main.tex" ".out/main.pdf" "main" 1698122193 0
-  ".out/main.aux" 1698122193 6229 7342b56f7b288811222913807c5403da "lualatex"
+["lualatex"] 1698152611 "main.tex" ".out/main.pdf" "main" 1698152614 0
+  ".out/main.aux" 1698152614 6229 7342b56f7b288811222913807c5403da "lualatex"
   ".out/main.bbl" 1698121817 466 ee04f40f768daeed26442158e95aba61 "biber .out/main"
-  ".out/main.out" 1698122193 923 a2e344e2011692a480136a2ffbe033af "lualatex"
-  ".out/main.run.xml" 1698122193 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
+  ".out/main.out" 1698152614 923 a2e344e2011692a480136a2ffbe033af "lualatex"
+  ".out/main.run.xml" 1698152614 2349 da7794ae68158a8df8f5d6819503a419 "lualatex"
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman10-regular.luc" 1685645277 127327 0c22a2c7faa4e80fd8c3443dc8dd3208 ""
   "/Users/caio/.texlive2020/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1694907539 368260 3dcbf693681628f7ff1663c2d447d401 ""
   "/Users/caio/Library/texmf/tex/latex/packages/global-macros.sty" 1691460808 2904 9df24d430eca38985b553313cd33a565 ""
@@ -317,7 +317,7 @@
   "main.tex" 1698121826 271 d67adb01a171e6c05585871983b054f2 ""
   "preamble.tex" 1698120757 3077 9fd421c5400c25ebe12b550a53dcb1e4 ""
   "problem-setup.tex" 1698122026 7531 764fc735a1d0d1ea4a2703737572074f ""
-  "proof-of-convergence.tex" 1698122187 24224 5117050e59a6ea013407a1ffab12cdf7 ""
+  "proof-of-convergence.tex" 1698152610 24217 dc0feafb7ce94ad200d9a834ebed9967 ""
   "unbiased-estimator-of-the-gradient.tex" 1698031817 3564 d1585e413f55d826ef16d3870a2caadd ""
   (generated)
   ".out/main.aux"
