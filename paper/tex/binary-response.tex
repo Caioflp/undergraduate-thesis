@@ -60,7 +60,7 @@ Let $ t ( Z ) = \mean [ \hstar ( X ) \mid Z ] $.
 This implies
 \begin{align*}
     \mean [ Y \mid Z ]
-    &= \prob [ t ( z ) + \eta > 0 \mid Z ] \\
+    &= \prob [ t ( Z ) + \eta > 0 \mid Z ] \\
     &= 1 - F_{ \eta \mid Z } ( - t ( Z ) )
 .\end{align*}
 Hence, we have
@@ -75,10 +75,29 @@ This looks promising:
 If we assume to know the conditional distribution of $ \eta $ given $ Z $, we have a couple of options.
 We can minimize
 \begin{equation*}
-    \BCE ( r_{ 0 } ( Z ) , 1 - F_{ \eta \mid Z } ( - \mean [ \hstar ( X ) \mid Z ] ) )
+    \BCE ( r_{ 0 } ( Z ) , 1 - F_{ \eta \mid Z } ( - \mean [ h ( X ) \mid Z ] ) )
 ,\end{equation*}
 or
 \begin{equation*}
-     \left( \mean [ \hstar ( X ) \mid Z ] + F_{ \eta \mid Z }^{ -1 } ( r_{ 0 } ( Z ) - 1 ) \right)^2
+     \left( \mean [ h ( X ) \mid Z ] + F_{ \eta \mid Z }^{ -1 } ( r_{ 0 } ( Z ) - 1 ) \right)^2
 .\end{equation*}
 This assumption was used on the paper ``Nonparametric Instrumental Variable Estimation of Binary Response Models'', by P. L. Florens, from where I took the ideas for these calculations.
+
+In an unpublished version of that paper, they assume that $ \eta = \frac{ 1 }{ \zeta ( Z ) } v $, where $ v \mid Z \sim \operatorname{KnownDistribution}(0, \sigma_{ v }^2) $.
+This implies
+\begin{align*}
+    \mean [ Y \mid Z ]
+    &= \prob [ t ( Z ) + \eta > 0 \mid Z ] \\
+    &= \prob [ t ( Z ) + \frac{ v }{ \zeta ( Z ) } > 0 \mid Z ] \\
+    &= \prob [ v > - t ( Z ) \zeta ( Z ) \mid Z ] \\
+    &= 1 - F_{ v } ( - t ( Z ) \zeta ( Z ) ) \\
+    &\defeq 1 - F_{ v } ( - \gamma ( Z ) )
+.\end{align*}
+Equivalently, this means that
+\begin{equation*}
+    \gamma ( Z ) =  - F_{ v }^{ -1 } ( 1 - \mean [ Y \mid Z ] )
+,\end{equation*}
+where $ \gamma ( Z ) = \mean [ \hstar ( X ) \mid Z ] \zeta ( Z ) $.
+They proceed to use $ \gamma $ to estimate $ r_{ 0 } $ (this involves splitting $ Z $ into two parts and is the main contribution in their article) and then use this estimate of $ r_{ 0 } $ to estimate $ \hstar $ through Tikhonov regularization.
+
+However, on the published version, the authors assume that $ \eta $ is \emph{independent} of $ Z $, which is good for us.
