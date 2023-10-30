@@ -1,0 +1,84 @@
+\section{Binary response models}
+We want to be able to employ the same risk minimization procedure:
+\begin{equation}
+    \label{risk minimization}
+    \argmin_{ h \in \mathcal{F} } \risk ( h )
+    = \argmin_{ h \in \mathcal{F} } \mean_{ Z } \left[
+        \ell ( r_{ 0 } ( Z ), \meanop [ h ] ( Z ) )
+    \right]
+.\end{equation}
+Let's see what data generating procedure makes this possible.
+Firstly, let
+\begin{equation}
+    \label{Y explicit bernoulli}
+    Y \mid X, \varepsilon \sim \ber ( \sigma ( \hstar ( X ) + \varepsilon ) )
+,\end{equation}
+where $ \sigma $ is the logistic function, $ \mean [ \varepsilon \mid X ] \neq 0 $ and $ \mean [ \varepsilon \mid Z ] = 0 $.
+For (\ref{risk minimization}) to make sense, we'd like $ r_{ 0 } ( Z ) = \mean [ Y \mid Z ] $ and $ \meanop [ \hstar ] ( Z ) = \mean [ \hstar ( X ) \mid Z ] $ to be close according to a suitable loss function $ \ell $, at least close enough so that $ \hstar $ is a solution to (\ref{risk minimization}).
+Let's see if this is the case under (\ref{Y explicit bernoulli}):
+\begin{equation*}
+    \mean [ Y \mid Z ] = \prob [ Y = 1 \mid Z ]
+,\end{equation*}
+
+Assuming (\ref{Y explicit bernoulli}), we may compute this conditioning on $ X $ and $ \varepsilon $ and then integrating them out:
+\begin{align*}
+    \prob [ Y = 1 \mid Z = z ]
+    &= \int_{ \mathcal{X} \times \R } \prob [ Y = 1 \mid Z = z, X = x, \varepsilon = e ] p_{ X, \varepsilon \mid Z } ( x, e \mid z ) \drm x \ddrm \varepsilon \\
+    &= \int_{ \mathcal{X} \times \R } \sigma ( \hstar ( x ) + e ) p_{ X, \varepsilon \mid Z } ( x, e \mid z ) \drm x \ddrm \varepsilon \\
+    &= \mean [ \sigma ( \hstar ( X ) + \varepsilon ) \mid Z = z ]
+.\end{align*}
+There are a two main problems here.
+The first one is that $ \varepsilon $ appears inside $ \sigma $ and, hence, does not vanish after conditioning on $ Z = z $.
+I cannot think of a way to remove it without assuming known the distribution of $ \varepsilon $ given $ X $, which is prohibitive.
+The second problem is that, even if there was no $ \varepsilon $, the expectation is outside the function $ \sigma $.
+In order for (\ref{risk minimization}) to work under (\ref{Y explicit bernoulli}), we'd like set
+\begin{equation*}
+    \ell ( y, y' ) = \BCE ( y, \sigma ( y' ) )
+,\end{equation*}
+where $ \BCE $ is the binary cross entropy loss function:
+\begin{equation*}
+    \BCE ( y, p ) = - [ y \log p + ( 1 - y ) \log ( 1 - p ) ]
+.\end{equation*}
+That is, we'd like to have $ \sigma \left( \mean [ h ( X ) \mid Z ] \right) $ inside $ \risk ( h ) $, instead of $ \mean \left[ \sigma \left( h ( X ) \right) \mid Z \right] $.
+
+The second option is to set
+\begin{equation}
+    \label{Y is indicator}
+    Y = \ind [ \hstar ( X ) + \varepsilon > 0 ]
+.\end{equation}
+Here, we have
+\begin{align}
+    \mean [ Y \mid Z = z ]
+    &= \prob [ \hstar ( X ) + \varepsilon > 0 \mid Z = z ]
+.\end{align}
+To try to make this lead somewhere, let's define $ \eta = \hstar ( X ) - \mean [ \hstar ( X ) \mid Z ] + \varepsilon $, so that
+\begin{equation*}
+    Y = \ind [ \mean [ \hstar ( X ) \mid Z ] + \eta > 0]
+\end{equation*}
+and $ \mean [ \eta \mid Z ] = 0 $.
+Let $ t ( Z ) = \mean [ \hstar ( X ) \mid Z ] $.
+This implies
+\begin{align*}
+    \mean [ Y \mid Z ]
+    &= \prob [ t ( z ) + \eta > 0 \mid Z ] \\
+    &= 1 - F_{ \eta \mid Z } ( - t ( Z ) )
+.\end{align*}
+Hence, we have
+\begin{equation*}
+    t ( Z ) = - F_{ \eta \mid Z }^{ -1 } ( r_{ 0 } ( Z ) - 1 )
+.\end{equation*}
+Or, equivalently:
+\begin{equation*}
+    \mean [ \hstar ( X ) \mid Z ] = - F^{ -1 }_{ \eta \mid Z } \left( \mean [ Y \mid Z ] - 1 \right)
+.\end{equation*}
+This looks promising:
+If we assume to know the conditional distribution of $ \eta $ given $ Z $, we have a couple of options.
+We can minimize
+\begin{equation*}
+    \BCE ( r_{ 0 } ( Z ) , 1 - F_{ \eta \mid Z } ( - \mean [ \hstar ( X ) \mid Z ] ) )
+,\end{equation*}
+or
+\begin{equation*}
+     \left( \mean [ \hstar ( X ) \mid Z ] + F_{ \eta \mid Z }^{ -1 } ( r_{ 0 } ( Z ) - 1 ) \right)^2
+.\end{equation*}
+This assumption was used on the paper ``Nonparametric Instrumental Variable Estimation of Binary Response Models'', by P. L. Florens, from where I took the ideas for these calculations.

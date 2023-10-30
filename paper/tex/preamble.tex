@@ -31,6 +31,7 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{enumitem}
+\usepackage{bbm}
 \usepackage[dvipsnames]{xcolor}         % colors
 \usepackage{biblatex}
 \addbibresource{../bib/bibliography.bib}
@@ -72,7 +73,7 @@
 \newcommand{\data}{\mathcal{D}}
 \newcommand{\dataoff}{\mathcal{D}_{ \Phi, \meanop, r_{ 0 } }}
 \newcommand{\dataproj}{\mathcal{D}_{ \mathrm{proj} }}
-
+% \newcommand{\ind}{\mathbbm{1}}
 \newcommand{\rkhsw}{\mathcal{R}_{ \mathbb{W} }}
 
 % Environments
@@ -80,5 +81,7 @@
 \newtheorem{proposition}{Proposition}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
+\DeclareMathOperator{\ber}{Bernoulli}
+\DeclareMathOperator{\BCE}{BCE}
 
 \hfuzz=15pt
