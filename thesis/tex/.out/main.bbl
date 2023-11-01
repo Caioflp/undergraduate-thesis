@@ -19,6 +19,47 @@
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global}
+    \entry{florens2007}{inbook}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=a35d1fb4461f66bfbd032f6e90ad7bea}{%
+           family={Carrasco},
+           familyi={C\bibinitperiod},
+           given={Marine},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=be95d38d5c00bbf84299e7be0b861e8c}{%
+           family={Florens},
+           familyi={F\bibinitperiod},
+           given={Jean-Pierre},
+           giveni={J\bibinithyphendelim P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=140a29ec147c9017d71696f00e3f819f}{%
+           family={Renault},
+           familyi={R\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{b11085c7a18464d6c99f3c17e85b5f49}
+      \strng{fullhash}{b11085c7a18464d6c99f3c17e85b5f49}
+      \strng{bibnamehash}{b11085c7a18464d6c99f3c17e85b5f49}
+      \strng{authorbibnamehash}{b11085c7a18464d6c99f3c17e85b5f49}
+      \strng{authornamehash}{b11085c7a18464d6c99f3c17e85b5f49}
+      \strng{authorfullhash}{b11085c7a18464d6c99f3c17e85b5f49}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{chapter}{Linear Inverse Problems in Structural Econometrics Estimation Based on Spectral Decomposition and Regularization}
+      \field{title}{Handbook of Econometrics}
+      \field{volume}{6B}
+      \field{year}{2007}
+    \endentry
     \entry{hernan2020}{book}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=4bfbae7bd65c55b2dceaaa88a09d6acc}{%

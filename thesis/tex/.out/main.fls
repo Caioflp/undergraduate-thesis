@@ -680,6 +680,8 @@ INPUT ../fig//tsls_examples.pdf
 INPUT ../fig//tsls_examples.pdf
 INPUT ../fig//tsls_examples.pdf
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman6-regular.luc
+INPUT ./chapters/npiv-and-lip.tex
+INPUT ./chapters/npiv-and-lip.tex
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmmono12-regular.luc
