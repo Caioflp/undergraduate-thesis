@@ -1,5 +1,54 @@
 \chapter{Nonparametric Instrumental Variable \\Regression and Linear Inverse Problems}
 
-Having defined what we mean by nonparametric regression instrumental variable (NPIV) regression, we now present two well established approaches, one of which will serve as a starting point for our method.
-We first describe the idea behind Newey's seminal paper on NPIV \cite{newey2003}, which develops a nonparametric analog of 2SLS, and them move on to the more inverse problem (IP) oriented approach presented in \cite{florens2007}
-\improvement{Take a look at the article by Florens, Darolles and Renault on Econometrica in 2011 as well}
+Having defined what we mean by nonparametric regression instrumental variable (NPIV) regression, we now present two well established approaches, namely the ones in \cite{newey2003} and \cite{darolles2011}, the latter of which will serve as a starting point for our method.
+% We will describe the idea behind Newey's seminal paper on NPIV \cite{newey2003}, which develops a nonparametric analog of 2SLS, and them move on to the more inverse problem (IP) oriented approach presented in \cite{florens2007} as well as \cite{darolles2011}.
+
+\section{NPIV as an ill-posed linear inverse problem}
+
+Recalling the notation presented in section \ref{sec: nonparametric}, we want to find $ \hstar \in L^{ 2 } ( X ) $ which satisfies
+\begin{equation}
+    \label{eq: basic equation}
+    Y = \hstar ( X ) + \varepsilon
+,\end{equation}
+where $ \mean [ \varepsilon \mid Z ] = 0 $.
+Letting $ r ( Z ) \defeq \mean [ Y \mid Z ] $ and assuming that $ Y $ has a finite second moment, we have $ r \in L^{ 2 } ( Z ) $, so that (\ref{eq: basic equation}) is equivalent to
+\begin{equation}
+    \label{eq: linear equation}
+    r = \meanop [ \hstar ]
+,\end{equation}
+where $ \meanop : L^{ 2 } ( X ) \to L^{ 2 } ( Z ) $ is the conditional expectation operator.
+Assume that the joint distribution of $ ( X, Z ) $ is absolutely continuous with respect to Lebesgue measure in $ \R^{ d_{ X } + d_{ Z } } $, so that we may rewrite (\ref{eq: linear equation}) as
+\begin{equation}
+    \label{}
+    r ( z ) = \int_{ \R^{ d_{ X } } } \hstar ( x ) p_{ X \mid Z } ( x \mid z ) \drm x
+,\end{equation}
+where $ p_{ X\mid Z } ( x \mid z ) $ is the conditional density of $ X $ given $ Z $.
+This is a Fredholm integral equation of the first kind \cite{kress89} which, due to the nature of our problem, will most likely be ill-posed.
+We dedicate some space to make this statement precise.
+
+% {\color{red}Talk about the three ways in which the problem can be ill posed, relate them with identification, talk about compactness of $ \meanop $ and it being Hilbert-Schmidt, say what we are going to assume in what follows.}
+
+Equation (\ref{eq: linear equation}) would describe a well-posed problem if the operator $ \meanop $ were invertible and the inverse $ \meanop^{ -1 } $, continuous.
+There are three ways in which these conditions may be violated.
+One of them was already discussed in section \ref{sec: identification}, the identification problem.
+It corresponds to non-injectivity of $ \meanop $, that is, to $ \ker \meanop \neq \left\{ 0 \right\} $.
+A possible correction for this problem is to look for the least norm solution.
+
+Another violation happens if $ \meanop $ is not surjective, which leaves the possibility of $ r \notin \image ( \meanop ) $.
+A way to bypass this difficulty is to project $ r $ onto the subspace $ \image ( \meanop ) $ of $ L^{ 2 } ( Z ) $ and find the inverse image of this projection.
+However, the orthogonal projection onto a subspace is only well defined for $ \closure{\image ( \meanop )} $, since we need the subspace to be closed, which may not be the case for $ \image ( \meanop ) $.
+Hence, we would need to assume that the projection of $ r $ onto $ \closure{\image ( \meanop )} $ belongs to $ \image ( \meanop ) $.
+The methods we will analyze assume that the model (\ref{eq: basic equation}) is correctly specified and, therefore, that $ r \in \image ( \meanop ) $, so this won't be a concern for us.
+The interested reader may consult \cite{florens2007} for ways to proceed without this assumption.
+
+The last way for a problem such as (\ref{eq: basic equation}) to be ill-posed is to have $ \meanop $ injective and $ r \in \image ( \meanop ) $, but $ \meanop^{ -1 } : \image ( \meanop ) \to L^{ 2 } ( X ) $ discontinuous.
+By the Open Mapping Theorem, if $ \image ( \meanop ) $ is closed, then $ \meanop : L^{ 2 } ( X ) \to \image ( \meanop ) $ is an open map and the inverse is automatically continuous.
+Hence, we must require that $ \image ( \meanop ) $ is not closed.
+A prototypical example for this situation is when $ \meanop $ is a compact operator with infinite dimensional range.
+If $ \image ( \meanop ) $ were closed, since $ \id_{ \image ( \meanop ) } = \meanop^{ -1 } \circ \meanop $ it would be compact, which would imply compactness of the closed unit ball of $ \image ( \meanop ) $ and, hence, $ \dim \image ( \meanop ) < \infty $ \cite{florens2007}.
+
+Aside from requiring $ r \in \image ( \meanop ) $, we leave the possibility of any other form of ill-posedness to be present in our problem until further notice.
+
+\section{Nonparametric 2SLS}
+
+In \cite{newey2003}, the author's

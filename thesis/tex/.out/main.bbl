@@ -60,6 +60,53 @@
       \field{volume}{6B}
       \field{year}{2007}
     \endentry
+    \entry{darolles2011}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=53098a7c62874e7e454b80d03a285478}{%
+           family={Darolles},
+           familyi={D\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9f7fd6fb881501ca5ea978714193f2e1}{%
+           family={Fan},
+           familyi={F\bibinitperiod},
+           given={Y.},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e26be5c3814ff01372f4a8499cec892d}{%
+           family={Florens},
+           familyi={F\bibinitperiod},
+           given={J.\bibnamedelimi P.},
+           giveni={J\bibinitperiod\bibinitdelim P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=44864e4ffe54fcd03b5091c5cf7f990c}{%
+           family={Renault},
+           familyi={R\bibinitperiod},
+           given={E.},
+           giveni={E\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{a4eb813331de03bf6038ff10c03667ab}
+      \strng{fullhash}{8ec6a67d72d9f87028edb6287456af46}
+      \strng{bibnamehash}{a4eb813331de03bf6038ff10c03667ab}
+      \strng{authorbibnamehash}{a4eb813331de03bf6038ff10c03667ab}
+      \strng{authornamehash}{a4eb813331de03bf6038ff10c03667ab}
+      \strng{authorfullhash}{8ec6a67d72d9f87028edb6287456af46}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometrica}
+      \field{number}{5}
+      \field{title}{Nonparametric Instrumental Regression}
+      \field{volume}{79}
+      \field{year}{2011}
+      \field{pages}{1541\bibrangedash 5165}
+      \range{pages}{3625}
+    \endentry
     \entry{hernan2020}{book}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=4bfbae7bd65c55b2dceaaa88a09d6acc}{%
@@ -92,6 +139,34 @@
       \field{labeltitlesource}{title}
       \field{title}{Causal Inference: What If}
       \field{year}{2020}
+    \endentry
+    \entry{kress89}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=f2099ff9eeb99f589e56fc275320d050}{%
+           family={Kress},
+           familyi={K\bibinitperiod},
+           given={Rainer},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Springer-Verlag}%
+      }
+      \strng{namehash}{f2099ff9eeb99f589e56fc275320d050}
+      \strng{fullhash}{f2099ff9eeb99f589e56fc275320d050}
+      \strng{bibnamehash}{f2099ff9eeb99f589e56fc275320d050}
+      \strng{authorbibnamehash}{f2099ff9eeb99f589e56fc275320d050}
+      \strng{authornamehash}{f2099ff9eeb99f589e56fc275320d050}
+      \strng{authorfullhash}{f2099ff9eeb99f589e56fc275320d050}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{Applied Mathematical Sciences}
+      \field{title}{Linear Integral Equations}
+      \field{year}{1989}
     \endentry
     \entry{lehmann59}{book}{}
       \name{author}{1}{}{%
