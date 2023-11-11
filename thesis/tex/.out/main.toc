@@ -24,11 +24,11 @@
 \contentsline {section}{\numberline {3.2}Nonparametric 2SLS}{25}{section.3.2}%
 \vspace {\cftbeforechapterskip }
 \setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
-\contentsline {chapter}{\chapternumberline {4}\MakeUppercase []{Conclusion}}{26}{chapter.4}%
+\contentsline {chapter}{\chapternumberline {4}\MakeUppercase []{Conclusion}}{28}{chapter.4}%
 \vspace {\cftbeforechapterskip }
 \setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
-\contentsline {chapter}{References}{27}{section*.19}%
+\contentsline {chapter}{References}{29}{section*.19}%
 \renewcommand *{\cftappendixname }{APPENDIX \space }
 \setlength {\cftpartindent }{\cftlastnumwidth } \setlength {\cftpartnumwidth }{2em}
 \cftinsert {A}
-\contentsline {part}{\uppercase {Appendix}}{28}{section*.20}%
+\contentsline {part}{\uppercase {Appendix}}{30}{section*.20}%

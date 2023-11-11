@@ -1,9 +1,11 @@
 \chapter{Nonparametric Instrumental Variable \\Regression and Linear Inverse Problems}
 
 Having defined what we mean by nonparametric regression instrumental variable (NPIV) regression, we now present two well established approaches, namely the ones in \cite{newey2003} and \cite{darolles2011}, the latter of which will serve as a starting point for our method.
+We start by connecting nonparametric instrumental variable regression with inverse problems.
 % We will describe the idea behind Newey's seminal paper on NPIV \cite{newey2003}, which develops a nonparametric analog of 2SLS, and them move on to the more inverse problem (IP) oriented approach presented in \cite{florens2007} as well as \cite{darolles2011}.
 
 \section{NPIV as an ill-posed linear inverse problem}
+\label{sec: npiv and ill posed lip}
 
 Recalling the notation presented in section \ref{sec: nonparametric}, we want to find $ \hstar \in L^{ 2 } ( X ) $ which satisfies
 \begin{equation}
@@ -19,8 +21,8 @@ Letting $ r ( Z ) \defeq \mean [ Y \mid Z ] $ and assuming that $ Y $ has a fini
 where $ \meanop : L^{ 2 } ( X ) \to L^{ 2 } ( Z ) $ is the conditional expectation operator.
 Assume that the joint distribution of $ ( X, Z ) $ is absolutely continuous with respect to Lebesgue measure in $ \R^{ d_{ X } + d_{ Z } } $, so that we may rewrite (\ref{eq: linear equation}) as
 \begin{equation}
-    \label{}
-    r ( z ) = \int_{ \R^{ d_{ X } } } \hstar ( x ) p_{ X \mid Z } ( x \mid z ) \drm x
+    \label{eq: expectation equation}
+    r ( z ) = \mean [ \hstar ( X ) \mid Z = z ] = \int_{ \R^{ d_{ X } } } \hstar ( x ) p_{ X \mid Z } ( x \mid z ) \drm x
 ,\end{equation}
 where $ p_{ X\mid Z } ( x \mid z ) $ is the conditional density of $ X $ given $ Z $.
 This is a Fredholm integral equation of the first kind \cite{kress89} which, due to the nature of our problem, will most likely be ill-posed.
@@ -30,7 +32,7 @@ We dedicate some space to make this statement precise.
 
 Equation (\ref{eq: linear equation}) would describe a well-posed problem if the operator $ \meanop $ were invertible and the inverse $ \meanop^{ -1 } $, continuous.
 There are three ways in which these conditions may be violated.
-One of them was already discussed in section \ref{sec: identification}, the identification problem.
+One of them was already discussed in subsection \ref{sec: identification}, the identification problem.
 It corresponds to non-injectivity of $ \meanop $, that is, to $ \ker \meanop \neq \left\{ 0 \right\} $.
 A possible correction for this problem is to look for the least norm solution.
 
@@ -42,13 +44,106 @@ The methods we will analyze assume that the model (\ref{eq: basic equation}) is 
 The interested reader may consult \cite{florens2007} for ways to proceed without this assumption.
 
 The last way for a problem such as (\ref{eq: basic equation}) to be ill-posed is to have $ \meanop $ injective and $ r \in \image ( \meanop ) $, but $ \meanop^{ -1 } : \image ( \meanop ) \to L^{ 2 } ( X ) $ discontinuous.
-By the Open Mapping Theorem, if $ \image ( \meanop ) $ is closed, then $ \meanop : L^{ 2 } ( X ) \to \image ( \meanop ) $ is an open map and the inverse is automatically continuous.
+By the Open Mapping Theorem \cite{rudin1991}, if $ \image ( \meanop ) $ is closed, then $ \meanop : L^{ 2 } ( X ) \to \image ( \meanop ) $ is an open map and the inverse is automatically continuous.
 Hence, we must require that $ \image ( \meanop ) $ is not closed.
 A prototypical example for this situation is when $ \meanop $ is a compact operator with infinite dimensional range.
-If $ \image ( \meanop ) $ were closed, since $ \id_{ \image ( \meanop ) } = \meanop^{ -1 } \circ \meanop $ it would be compact, which would imply compactness of the closed unit ball of $ \image ( \meanop ) $ and, hence, $ \dim \image ( \meanop ) < \infty $ \cite{florens2007}.
+If $ \image ( \meanop ) $ were closed, since $ \id_{ \image ( \meanop ) } = \meanop^{ -1 } \circ \meanop $ it would be a compact operator, which would imply compactness of the closed unit ball of $ \image ( \meanop ) $ and, hence, $ \dim \image ( \meanop ) < \infty $ \cite{florens2007}.
 
 Aside from requiring $ r \in \image ( \meanop ) $, we leave the possibility of any other form of ill-posedness to be present in our problem until further notice.
 
 \section{Nonparametric 2SLS}
 
-In \cite{newey2003}, the author's
+In \cite{newey2003}, the authors overcome the difficulties presented in section \ref{sec: npiv and ill posed lip} by assuming identification and restricting the solution $ \hstar $ to belong to a compact set.
+With this assumption, the problem of continuous inverse is automatically satisfied, since the inverse of a continuous function defined on a compact set and taking values in a Hausdorff space is automatically continuous \cite{munkres2000}.
+
+However, we must advise the reader that the formulation of the nonparametric regression problem presented in \cite{newey2003} is a somewhat different then ours.
+More specifically, the authors do not use the notation presented in subsection \ref{sec: problem specification}, neither the spaces $ L^2 ( X ) $ and $ L^2 ( Z ) $ for domain and codomain of the conditional expectation operator.
+Therefore, the compact set where the solution is restricted to live is not necessarily a compact subset of $ L^{ 2 } ( X ) $, and it becomes difficult to compare both approaches from a theoretical perspective, a task which is left for future work.
+Nonetheless, we decided to include a subsection on this paper because of its importance to the research in nonparametric methods for instrumental variables.
+In the following, we will provide a high level description of their method, adapting the notation and focusing on the aspects we feel are the most important.
+We refer the reader to the original paper for details.
+
+Suppose that the structural function can be approximated as follows:
+\begin{equation}
+    \label{eq: expansion on basis functions}
+    \hstar ( x ) \approx \sum_{ j=1 }^{ J } \gamma_{ j } p_{ j } ( x )
+,\end{equation}
+where $ p_{ 1 }, p_{ 2 }, \dots $ is a sequence of ``basis'' functions and $ \gamma $ is the corresponding vector of coefficients.
+Substituting this into (\ref{eq: expectation equation}), we get
+\begin{equation}
+    \label{eq: projected expansion}
+    \mean [ Y \mid Z = z ] = r ( z ) = \sum_{ j=1 }^{ J } \gamma_{ j } \mean [ p_{ j } ( X ) \mid Z = z ]
+.\end{equation}
+This suggests a two stage procedure analogous to 2SLS.
+In the first stage, a nonparametric estimate of $ \mean [ p_{ j } ( X ) \mid Z = z ] $ is obtained for $ j = 1, \dots, J $.
+Then, in the second stage, the $ Y $ samples on these estimates to obtain the vector of coefficients $ \gamma $.
+It's worth emphasizing that the second stage regression is substantially sensitive to the number $ J $ of approximating functions and the precision of the first stage estimators \cite{newey2003}.
+
+More specifically, their search space consists of structural functions which take the following form:
+\begin{equation}
+    \label{eq: newey functions}
+    h ( x ) = \beta^{ \trp } a ( x ) + h_{ 1 } ( x )
+,\end{equation}
+where $ \beta $ is a vector of unknown coefficients, $ a $ is a vector of known functions and $ h_{ 1 } $ is an unknown function.
+The compactness property is obtained by placing bounds on $ \beta $ and restricting $ h_{ 1 } $ and its derivatives to be small in the tails, which is done by demanding a certain Sobolev norm of $ h_{ 1 } $ to be finite.
+The details can be found in \cite{newey2003}.
+It's important to notice that (\ref{eq: newey functions}) is a semiparametric model which allows $ h $ to be nonparametric in the center of the support of $ X $, but restricts it to be parametric in the tails.
+Let's denote by $ \mathcal{G} $ the set of functions which are of the form (\ref{eq: newey functions}) and satisfy the mentioned regularity conditions.
+It is assumed that $ \hstar = ( \beta^{ \star } ) ^{ \trp } a ( x ) + \hstar_{ 1 } ( x ) \in \mathcal{G} $.
+
+The nonparametric estimate for $ \hstar_{ 1 } $ is based on an expansion such as (\ref{eq: expansion on basis functions}), where the $ p_{ j } $ are chosen to be Hermite polynomials and the coefficients are restricted in a way that the final estimate belongs to $ \mathcal{G} $.
+
+With these choices, it is not yet possible to then use equation \ref{eq: projected expansion} directly, since the conditional distribution of $ X $ given $ Z $ is not known.
+Hence, a separate step is necessary, in which estimates for $ \mean [ Y \mid Z = z ] $, $ \mean [ a ( X ) \mid Z = z ] $ and $ \mean [ p_{ j } ( X ) \mid Z = z ] $ are obtained.
+Assuming that these estimates are available and denoting them by $ \hat{ \mean } [ Y \mid Z = z ], \hat{ \mean } [ a ( X ) \mid Z = z ] $ and $ \hat{ \mean } [ p_{ j } ( X ) \mid Z = z ] $, equation (\ref{eq: expectation equation}) indicates that one should optimize the parameters in order to have
+\begin{equation*}
+    \hat{ \mean } [ Y \mid Z = z ] \approx \beta^{ \trp } \hat{ \mean } [ a ( X ) \mid Z = z ] + \sum_{ j=1 }^{ J } \gamma_{ j } \hat{ \mean } [ p_{ j } ( X ) \mid Z = z ]
+.\end{equation*}
+Therefore, the optimization objective chosen in \cite{newey2003} is
+\begin{equation}
+    \label{eq: newey loss}
+    \widetilde{Q} ( \beta, \gamma )
+    = \frac{ 1 }{ n } \sum_{ i=1 }^{ n } \left\{ Y_{ i } - \beta^{ \trp } \hat{ \mean } [ a ( X ) \mid Z = z_{ i } ] - \sum_{ j=1 }^{ J } \gamma_{ j } \hat{ \mean } [ p_{ j } ( X ) \mid Z = z_{ i } ] \right\}^2
+.\end{equation}
+In the paper, it is stated that it is not necessary to use $ \hat{ \mean } [ Y_{ i } \mid Z = z ] $ inside the objective instead of $ Y_{ i } $ because of the choice made for first stage $ \hat{ \mean } $-estimators, which we will shortly present.
+With this objective function, the nonparametric 2SLS estimator is obtained minimizing $ \widetilde{Q} $ over $ ( \beta, \gamma ) $, that is,
+\begin{equation}
+    \label{eq: newey optimization problem}
+    \hat{ h } ( x ) = \hat{ \beta }^{ \trp } a ( x ) + \sum_{ j=1 }^{ J } \hat{ \gamma }_{ j } p_{ j } ( x )
+\end{equation}
+where $ ( \hat{ \beta }, \hat{ \gamma } ) = \argmin \widetilde{Q} ( \beta, \gamma ) $ subject to $ h = \beta^{ \trp } a + \sum_{ j=1 }^{ J } \gamma_{ j } p_{ j } \in \mathcal{G} $.
+This restriction is shown to be equivalent to a quadratic inequality restriction on $ \beta $ and $ \gamma $ and, therefore, there is a closed form solution for $ \hat{ \gamma } $ and $ \hat{ \beta } $.
+
+What is left to do is to specify how the first stage estimators are computed.
+For this task, a series estimator is employed, using splines or power series as approximating functions.
+In essence, the values of $ \hat { \mean } [ a ( X ) \mid Z = z_{ i } ] $ and $ \hat{ \mean } [ p_{ j } ( X ) \mid Z = z_{ i } ] $ are estimated using the approximating functions, and then employed in the computation of $ \widetilde ( \beta, \gamma ) $.
+The specific form taken by these estimators may be consulted in \cite{newey2003}.
+
+The key aspects of the nonparametric 2SLS (NP2SLS) estimator given by (\ref{eq: newey optimization problem}) which we would like the reader to have in mind are the following:
+\begin{itemize}
+    \item The ill-posedness of the inverse problem is solved by requiring identification and that the structural function $ \hstar $ belongs to a compact set;
+    \item There is a clear two stage procedure analogous to 2SLS, where the first stage estimates the conditional expectation using splines/power series and the second stage employs a truncated basis expansion with Hermite polynomials.
+\end{itemize}
+
+To end this subsection, we remark that although \cite{newey2003} provides consistency results of the form $ \norm{ \hat{ h } - \hstar } \to 0 $ in probability for a norm related to the space $ \mathcal{G} $, these results rest on non-trivial assumptions about the quality of the first stage regression, the denseness of the chosen basis functions and compactness of the parameter set.
+% Our estimator for $ h^{ \star }_{ 1 } $ will be a finite dimensional approximation very similar to (\ref{eq: expansion on basis functions}).
+% The only modification is that we standardize $ x $ using the sample $ ( X_{ i } )_{ i=1 }^{ N } $.
+% Let $ \hat{ \mu } $ and $ \hat{ \Sigma } $ denote the sample mean and covariance matrix for $ X $.
+% Let $ \hat{ x } = \hat{ \Sigma }^{ -1/2 } ( x - \hat{ \mu } ) $.
+% We consider a Hermite polynomial approximation for $ \hstar_{ 1 } $:
+% \begin{equation*}
+%     h_{ 1 } ( x ) = \sum_{ i=1 }^{ J } \gamma_{ j } p_{ j } ( \hat{ x } ),
+%     \quad
+%     p_{ j } ( x ) = \exp \left\{ - x^{ \trp } x \right\} \cdot x^{ \lambda ( j ) }
+% ,\end{equation*}
+% where $ \lambda ( j ) \in \Z_{ \geq 0 }^{ d_{ x } } $ is a multi-index and
+% \begin{equation*}
+%     x^{ \lambda ( j ) } = \prod_{ k=1 }^{ d_{ X } } x_{ k }^{ \lambda ( j )_{ k } }
+% .\end{equation*}
+% We require $ \abs{ \lambda ( j ) } = \lambda ( j )_{ 1 } + \cdots + \lambda ( j )_{ d_{ X } } $ to be increasing in $ j $.
+% 
+% In order to have the estimator $ h = \beta^{ \trp } a + h_{ 1 } $ belong to $ \mathcal{G} $, we must impose restrictions on $ \beta $ and $ \gamma $.
+% It is shown in \cite{newey2003} that the necessary restrictions are a norm bound on $ \beta $ and a quadratic inequality restriction on $ \gamma $.
+
+
+
