@@ -1,6 +1,6 @@
 \chapter{Nonparametric Instrumental Variable \\Regression and Linear Inverse Problems}
 
-Having defined what we mean by nonparametric regression instrumental variable (NPIV) regression, we now present two well established approaches, namely the ones in \cite{newey2003} and \cite{darolles2011}, the latter of which will serve as a starting point for our method.
+Having defined what we mean by nonparametric regression instrumental variable (NPIV) regression, we now present two well established approaches, namely the ones in \cite{darolles2011} and \cite{newey2003}, the first of which will serve as a starting point for our method.
 We start by connecting nonparametric instrumental variable regression with inverse problems.
 % We will describe the idea behind Newey's seminal paper on NPIV \cite{newey2003}, which develops a nonparametric analog of 2SLS, and them move on to the more inverse problem (IP) oriented approach presented in \cite{florens2007} as well as \cite{darolles2011}.
 
@@ -49,7 +49,47 @@ Hence, we must require that $ \image ( \meanop ) $ is not closed.
 A prototypical example for this situation is when $ \meanop $ is a compact operator with infinite dimensional range.
 If $ \image ( \meanop ) $ were closed, since $ \id_{ \image ( \meanop ) } = \meanop^{ -1 } \circ \meanop $ it would be a compact operator, which would imply compactness of the closed unit ball of $ \image ( \meanop ) $ and, hence, $ \dim \image ( \meanop ) < \infty $ \cite{florens2007}.
 
+In light of this discussion, we now take the opportunity to study additional properties of the operator $ \meanop $, in particular, with the goal of providing a sufficient condition for it to be compact in terms of the distribution of $ X $ and $ Z $.
+Notice that
+\begin{align}
+    \meanop [ h ] ( z )
+    = \mean [ h ( X ) \mid Z = z ] 
+    &= \int_{ \R^{ d_{ X } } } h ( x ) p_{ X \mid Z } ( x \mid z ) \drm x \nonumber \\
+    &= \int_{ \R^{ d_{ X } } } h ( x ) \frac{ p_{ X, Z } ( x, z ) }{ p_{ X } ( x ) p_{ Z } ( z ) } p_{ X } ( x ) \drm x \nonumber \\
+    &= \mean \left[
+        h ( X ) \frac{ p_{ X, Z } ( X, z ) }{ p_{ X } ( X ) p_{ Z } ( z ) }
+    \right] \nonumber \\
+    &= \mean \left[ h ( X ) \Phi ( X, z ) \right] \label{eq: finding kernel}
+.\end{align}
+Hence, $ \meanop $ is an integral operator with kernel\footnote{Not to be confused with $ \ker \meanop $, a subspace of $ L^{ 2 } ( X ) $.}
+\begin{equation*}
+    \Phi ( x, z ) = \frac{ p_{ X, Z } ( x, z ) }{ p_{ X } ( x ) p_{ Z } ( z ) }
+.\end{equation*}
+Furthermore, since
+\begin{align*}
+    \dotprod{ \meanop[h], g }_{ L^{ 2 } ( Z ) }
+    &= \mean \left[ \mean [ h ( X ) \mid Z ] g ( Z ) \right] \\
+    &= \mean \left[ h ( X ) g ( Z ) \right] \\
+    &= \mean \left[ h ( X ) \mean [ g ( Z ) \mid X ] \right] \\
+    &= \dotprod{ h, \mean [ g ( Z ) \mid X = \cdot ] }_{ L^{ 2 } ( X ) }
+,\end{align*}
+by the defining inequality of the adjoint operator $ \meanop^{ * } : L^{ 2 } ( Z ) \to L^{ 2 } ( X ) $ we have
+\begin{equation*}
+    \meanop^{ * } [ g ] ( X ) = \mean [ g ( Z ) \mid X ]
+.\end{equation*}
+Proceeding in a manner analogous to the one which got us (\ref{eq: finding kernel}), we may find that $ \meanop^{ * } $ is also an integral operator with the same kernel $ \Phi $ of $ \meanop $.
+
+This observation is useful because, from \cite[Theorem 2.34]{florens2007} we know that if the kernel $ \Phi $ satisfies
+\begin{equation}
+    \label{eq: Phi square integrable}
+    \int_{ \R^{ d_{ X } } } \int_{ \R^{ d_{ Z } } } \Phi ( x, z )^2 p_{ X } ( x ) p_{ Z } ( z ) \drm z \ddrm x < \infty
+,\end{equation}
+then $ \meanop $ (and, consequently, $ \meanop^{ * } $) is a Hilbert-Schmidt operator and, in particular, compact.
+{\color{red} Talk about the case where $ X $ and $ Z $ share coordinates}
+
 Aside from requiring $ r \in \image ( \meanop ) $, we leave the possibility of any other form of ill-posedness to be present in our problem until further notice.
+
+\section{Tikhonov NPIV}
 
 \section{Nonparametric 2SLS}
 
@@ -93,7 +133,7 @@ It is assumed that $ \hstar = ( \beta^{ \star } ) ^{ \trp } a ( x ) + \hstar_{ 1
 
 The nonparametric estimate for $ \hstar_{ 1 } $ is based on an expansion such as (\ref{eq: expansion on basis functions}), where the $ p_{ j } $ are chosen to be Hermite polynomials and the coefficients are restricted in a way that the final estimate belongs to $ \mathcal{G} $.
 
-With these choices, it is not yet possible to then use equation \ref{eq: projected expansion} directly, since the conditional distribution of $ X $ given $ Z $ is not known.
+With these choices, it is not yet possible to then use equation (\ref{eq: projected expansion}) directly, since the conditional distribution of $ X $ given $ Z $ is not known.
 Hence, a separate step is necessary, in which estimates for $ \mean [ Y \mid Z = z ] $, $ \mean [ a ( X ) \mid Z = z ] $ and $ \mean [ p_{ j } ( X ) \mid Z = z ] $ are obtained.
 Assuming that these estimates are available and denoting them by $ \hat{ \mean } [ Y \mid Z = z ], \hat{ \mean } [ a ( X ) \mid Z = z ] $ and $ \hat{ \mean } [ p_{ j } ( X ) \mid Z = z ] $, equation (\ref{eq: expectation equation}) indicates that one should optimize the parameters in order to have
 \begin{equation*}
@@ -105,7 +145,7 @@ Therefore, the optimization objective chosen in \cite{newey2003} is
     \widetilde{Q} ( \beta, \gamma )
     = \frac{ 1 }{ n } \sum_{ i=1 }^{ n } \left\{ Y_{ i } - \beta^{ \trp } \hat{ \mean } [ a ( X ) \mid Z = z_{ i } ] - \sum_{ j=1 }^{ J } \gamma_{ j } \hat{ \mean } [ p_{ j } ( X ) \mid Z = z_{ i } ] \right\}^2
 .\end{equation}
-In the paper, it is stated that it is not necessary to use $ \hat{ \mean } [ Y_{ i } \mid Z = z ] $ inside the objective instead of $ Y_{ i } $ because of the choice made for first stage $ \hat{ \mean } $-estimators, which we will shortly present.
+In the paper, it is stated that it is not necessary to use $ \hat{ \mean } [ Y_{ i } \mid Z = z ] $ inside the objective instead of $ Y_{ i } $ because of the choice made for first stage $ \hat{ \mean } $-estimators, which we will shortly clarify.
 With this objective function, the nonparametric 2SLS estimator is obtained minimizing $ \widetilde{Q} $ over $ ( \beta, \gamma ) $, that is,
 \begin{equation}
     \label{eq: newey optimization problem}
@@ -116,7 +156,7 @@ This restriction is shown to be equivalent to a quadratic inequality restriction
 
 What is left to do is to specify how the first stage estimators are computed.
 For this task, a series estimator is employed, using splines or power series as approximating functions.
-In essence, the values of $ \hat { \mean } [ a ( X ) \mid Z = z_{ i } ] $ and $ \hat{ \mean } [ p_{ j } ( X ) \mid Z = z_{ i } ] $ are estimated using the approximating functions, and then employed in the computation of $ \widetilde ( \beta, \gamma ) $.
+Then, the estimated values of $ \hat { \mean } [ a ( X ) \mid Z = z_{ i } ] $ and $ \hat{ \mean } [ p_{ j } ( X ) \mid Z = z_{ i } ] $ are employed in the computation of $ \widetilde{Q} ( \beta, \gamma ) $.
 The specific form taken by these estimators may be consulted in \cite{newey2003}.
 
 The key aspects of the nonparametric 2SLS (NP2SLS) estimator given by (\ref{eq: newey optimization problem}) which we would like the reader to have in mind are the following:
@@ -125,7 +165,7 @@ The key aspects of the nonparametric 2SLS (NP2SLS) estimator given by (\ref{eq: 
     \item There is a clear two stage procedure analogous to 2SLS, where the first stage estimates the conditional expectation using splines/power series and the second stage employs a truncated basis expansion with Hermite polynomials.
 \end{itemize}
 
-To end this subsection, we remark that although \cite{newey2003} provides consistency results of the form $ \norm{ \hat{ h } - \hstar } \to 0 $ in probability for a norm related to the space $ \mathcal{G} $, these results rest on non-trivial assumptions about the quality of the first stage regression, the denseness of the chosen basis functions and compactness of the parameter set.
+To end this section, we remark that although \cite{newey2003} provides consistency results of the form $ \norm{ \hat{ h } - \hstar } \to 0 $ (in probability for a norm $ \norm{ \cdot } $ related to the space $ \mathcal{G} $), these results rest on non-trivial assumptions about the quality of the first stage regression, the denseness of the chosen basis functions and the already mentioned compactness of the parameter set.
 % Our estimator for $ h^{ \star }_{ 1 } $ will be a finite dimensional approximation very similar to (\ref{eq: expansion on basis functions}).
 % The only modification is that we standardize $ x $ using the sample $ ( X_{ i } )_{ i=1 }^{ N } $.
 % Let $ \hat{ \mu } $ and $ \hat{ \Sigma } $ denote the sample mean and covariance matrix for $ X $.
@@ -144,6 +184,3 @@ To end this subsection, we remark that although \cite{newey2003} provides consis
 % 
 % In order to have the estimator $ h = \beta^{ \trp } a + h_{ 1 } $ belong to $ \mathcal{G} $, we must impose restrictions on $ \beta $ and $ \gamma $.
 % It is shown in \cite{newey2003} that the necessary restrictions are a norm bound on $ \beta $ and a quadratic inequality restriction on $ \gamma $.
-
-
-
