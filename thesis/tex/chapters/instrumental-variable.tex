@@ -1,7 +1,7 @@
 \chapter{Instrumental Variable Regression}
 
 This chapter provides an introduction to both parametric and nonparametric instrumental variable regression.
-It's goal is twofold.
+It is goal is twofold.
 Firstly, we want to introduce the subject to readers unfamiliar with it.
 To make the exposition more fluid, we chose to delay the precise definition of all mathematical objects involved until Section \ref{sec: nonparametric}, which deals with the nonparametric approach.
 % Until then, only knowledge of non-measure theoretic probability theory is required.
@@ -41,7 +41,7 @@ When this happens, we say that $ X $ is \emph{endogenous}.
 There are several causes for endogenous covariates, the most common of  which are \cite{wooldridge2001}:
 \begin{description}
     \item[Omitted Variables] This means $ \varepsilon $ can be decomposed as $ \gstar ( W ) + \eta $, where $ \mean [ \eta \mid X, W ] = 0 $ and $ X $ and $ W $ are correlated.
-        Hence, when we don't observe $ W $ and leave it to the error term, we end up estimating
+        Hence, when we do not observe $ W $ and leave it to the error term, we end up estimating
         \begin{align*}
             \mean [ Y \mid X ]
             &= \hstar ( X ) + \mean [ \varepsilon \mid X ] \\
@@ -60,7 +60,7 @@ There are several causes for endogenous covariates, the most common of  which ar
 \end{description}
 
 As we have said, bias in the estimation procedure is only one of the problems which arise when there are endogenous covariates.
-It's well known that the OLS estimate for linear regression fails to be consistent if any one of the covariates is endogenous \cite{wooldridge2001}.
+It is well known that the OLS estimate for linear regression fails to be consistent if any one of the covariates is endogenous \cite{wooldridge2001}.
 To overcome endogeneity a few approaches exist, but by far the one most used by empirical economic research is instrumental variable estimation \cite{wooldridge2001}.
 
 \section{Instrumental Variables}
@@ -276,7 +276,7 @@ Letting $ \hat{ \bX } $ denote $ \bX^{ \trp } \bZ ( \bZ^{ \trp } \bZ )^{ -1 } \b
 which is the empirical analogue of equation (\ref{eq: beta reduced}).
 This final form makes it clear that the estimator $ \hat{ \beta } $ is obtained by first performing one linear regression of $ \bX $ onto $ \bZ $, and then taking the fitted values $ \hat{ \bX } $ and linearly regressing $ \bY $ on them.
 
-Using equation (\ref{eq: beta hat expanded}), together with the Law of Large Numbers and Slutsky's Theorem, one may prove the consistency of $ \hat{ \beta } $.
+Using equation (\ref{eq: beta hat expanded}), together with the Law of Large Numbers and Slutsky's theorem, one may prove the consistency of $ \hat{ \beta } $.
 Similar inspection allows one to establish asymptotic normality.
 For further theoretical properties of the 2SLS estimator, we refer the reader to \cite[Chapter~5]{wooldridge2001}, this section's main reference.
 
@@ -341,7 +341,7 @@ Assume that $ X : ( \Omega, \mathcal{A} ) \to ( \R^{ d_{ X } }, \mathcal{B} ( \R
 We also assume that $ \mean [ \varepsilon \mid X ] $ is \emph{not} almost surely null and, hence, $ X $ is endogenous.
 Denote by $ \prob_{ X } $ the distribution of the random variable\footnote{We use the term ``random variable'' when referring to scalar or vector valued measurable functions defined on $ ( \Omega, \mathcal{A} ) $.} $ X $, that is, the pushforward measure $ \prob \circ X^{ -1 } $ defined on $ \mathcal{B} ( \R^{ d_{ X } } ) $.
 We write $ L^{ 2 } ( X ) $ as a shorthand for the space $ L^2 ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ), \prob_{ X } ) $ of real and square integrable (equivalence classes of) measurable functions defined on the measure space $ ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ), \prob_{ X } ) $.
-It's important to recall that the inner product and norm in $ L^{ 2 } ( X ) $ are given by $ \dotprod{ h, g }_{ L^{ 2 } ( X ) } = \mean [ h ( X ) g ( X ) ] $ and $ \norm{ h }_{ L^{ 2 } ( X ) }^2 = \dotprod{ h, h }_{ L^{ 2 } ( X ) } = \mean [ h ( X )^2 ] $.
+It is important to recall that the inner product and norm in $ L^{ 2 } ( X ) $ are given by $ \dotprod{ h, g }_{ L^{ 2 } ( X ) } = \mean [ h ( X ) g ( X ) ] $ and $ \norm{ h }_{ L^{ 2 } ( X ) }^2 = \dotprod{ h, h }_{ L^{ 2 } ( X ) } = \mean [ h ( X )^2 ] $.
 
 We assume there exists $ \hstar \in L^{ 2 } ( X ) $ such that (\ref{eq: structural equation}) holds, that is, $ Y = \hstar ( X ) + \varepsilon $.
 Finally, we assume there exists a random variable $ Z : ( \Omega, \mathcal{A} ) \to ( \R^{ d_{ Z } }, \mathcal{B} ( \R^{ d_{ Z } } ) ) $ such that $ Z $ qualifies as an instrumental variable, i.e., $ Z $ satisfies conditions \ref{def: iv} \ref{en: Z influences X} and \ref{en: Z is exogenous}.
@@ -439,7 +439,7 @@ Using this result and under suitable hypotheses, we can reformulate the identifi
     Then, $ \hstar $ is identified.
 \end{thm}
 \begin{proof}
-    Taking $ \Xi = \alpha ( U ) $ and $ \theta = \alpha ( z ) $, we see that the hypotheses of Theorem \ref{thm: completeness of exp family} are satisfied and, hence,
+    Taking $ \Xi = \alpha ( U ) $ and $ \theta = \alpha ( z ) $, we see that the hypotheses of theorem \ref{thm: completeness of exp family} are satisfied and, hence,
     \begin{equation*}
         \mathscr{P} \defeq \left\{ \probq_{ z } \circ T^{ -1 } : z \in U \right\}
     \end{equation*}

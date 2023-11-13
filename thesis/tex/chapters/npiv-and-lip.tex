@@ -4,7 +4,7 @@ Having defined what we mean by nonparametric regression instrumental variable (N
 We start by connecting nonparametric instrumental variable regression with inverse problems.
 % We will describe the idea behind Newey's seminal paper on NPIV \cite{newey2003}, which develops a nonparametric analog of 2SLS, and them move on to the more inverse problem (IP) oriented approach presented in \cite{florens2007} as well as \cite{darolles2011}.
 
-\section{NPIV as an ill-posed linear inverse problem}
+\section{NPIV regression as an ill-posed linear inverse problem}
 \label{sec: npiv and ill posed lip}
 
 Recalling the notation presented in section \ref{sec: nonparametric}, we want to find $ \hstar \in L^{ 2 } ( X ) $ which satisfies
@@ -40,11 +40,11 @@ Another violation happens if $ \meanop $ is not surjective, which leaves the pos
 A way to bypass this difficulty is to project $ r $ onto the subspace $ \image ( \meanop ) $ of $ L^{ 2 } ( Z ) $ and find the inverse image of this projection.
 However, the orthogonal projection onto a subspace is only well defined for $ \closure{\image ( \meanop )} $, since we need the subspace to be closed, which may not be the case for $ \image ( \meanop ) $.
 Hence, we would need to assume that the projection of $ r $ onto $ \closure{\image ( \meanop )} $ belongs to $ \image ( \meanop ) $.
-The methods we will analyze assume that the model (\ref{eq: basic equation}) is correctly specified and, therefore, that $ r \in \image ( \meanop ) $, so this won't be a concern for us.
+The methods we will analyze assume that the model (\ref{eq: basic equation}) is correctly specified and, therefore, that $ r \in \image ( \meanop ) $, so this will not be a concern for us.
 The interested reader may consult \cite{florens2007} for ways to proceed without this assumption.
 
 The last way for a problem such as (\ref{eq: basic equation}) to be ill-posed is to have $ \meanop $ injective and $ r \in \image ( \meanop ) $, but $ \meanop^{ -1 } : \image ( \meanop ) \to L^{ 2 } ( X ) $ discontinuous.
-By the Open Mapping Theorem \cite{rudin1991}, if $ \image ( \meanop ) $ is closed, then $ \meanop : L^{ 2 } ( X ) \to \image ( \meanop ) $ is an open map and the inverse is automatically continuous.
+By the open mapping theorem \cite{rudin1991}, if $ \image ( \meanop ) $ is closed, then $ \meanop : L^{ 2 } ( X ) \to \image ( \meanop ) $ is an open map and the inverse is automatically continuous.
 Hence, we must require that $ \image ( \meanop ) $ is not closed.
 A prototypical example for this situation is when $ \meanop $ is a compact operator with infinite dimensional range.
 If $ \image ( \meanop ) $ were closed, since $ \id_{ \image ( \meanop ) } = \meanop^{ -1 } \circ \meanop $ it would be a compact operator, which would imply compactness of the closed unit ball of $ \image ( \meanop ) $ and, hence, $ \dim \image ( \meanop ) < \infty $ \cite{florens2007}.
@@ -79,17 +79,124 @@ by the defining inequality of the adjoint operator $ \meanop^{ * } : L^{ 2 } ( Z
 .\end{equation*}
 Proceeding in a manner analogous to the one which got us (\ref{eq: finding kernel}), we may find that $ \meanop^{ * } $ is also an integral operator with the same kernel $ \Phi $ of $ \meanop $.
 
-This observation is useful because, from \cite[Theorem 2.34]{florens2007} we know that if the kernel $ \Phi $ satisfies
+This observation is useful because, from \cite[theorem 2.34]{florens2007} we know that if the kernel $ \Phi $ satisfies
 \begin{equation}
     \label{eq: Phi square integrable}
     \int_{ \R^{ d_{ X } } } \int_{ \R^{ d_{ Z } } } \Phi ( x, z )^2 p_{ X } ( x ) p_{ Z } ( z ) \drm z \ddrm x < \infty
 ,\end{equation}
 then $ \meanop $ (and, consequently, $ \meanop^{ * } $) is a Hilbert-Schmidt operator and, in particular, compact.
-{\color{red} Talk about the case where $ X $ and $ Z $ share coordinates}
 
-Aside from requiring $ r \in \image ( \meanop ) $, we leave the possibility of any other form of ill-posedness to be present in our problem until further notice.
+It is also appropriate to note that in the case where $ X $ and $ Z $ share any coordinates, the operator $ \meanop $ \emph{cannot} be compact.
+To see this, suppose that $ X = ( X_{ 1 }, W ) $ and $ Z = ( Z_{ 1 }, W ) $ for some random vector $ W $.
+Denote by $ L^2 ( W ) $ the subspace of $ L^2 ( X ) $ (and $ L^2 ( Z ) $) of functions which depend only on $ W $.
+Notice that, if $ f \in L^2 ( W ) $, then
+\begin{equation*}
+    \meanop [ f ] ( Z ) = \meanop [ f ] ( Z_{ 1 }, W ) = \mean [ f ( W ) \mid W, Z_{ 1 } ] = f ( W )
+    \quad \text{i.e.}
+    \quad \meanop [ f ] = f
+.\end{equation*}
+Hence, the image of the unit ball in $ L^2 ( X ) $ by $ \meanop $ contains the unit ball of $ L^2 ( W ) $.
+Since the norm $ \norm{ \cdot }_{ L^2 ( Z ) } $ coincides with $ \norm{ \cdot }_{ L^2 ( W ) } $ in $ L^2 ( W ) $, and since $ L^2 ( W ) $ is closed as a subspace of $ L^2 ( Z ) $, then the unit ball in $ L^2 ( W ) $ is compact for $ \norm{ \cdot }_{ L^2 ( W ) } $ if and only if it is compact for $ \norm{ \cdot }_{ L^2 ( Z ) } $.
+Then, since $ L^2 ( W ) $ is infinite dimensional, its unit ball is not compact, which means that the closure of image of the unit ball in $ L^2 ( X ) $ by $ \meanop $ is not compact and, hence, $ \meanop $ is not a compact operator.
 
-\section{Tikhonov NPIV}
+We remark that, aside from requiring $ r \in \image ( \meanop ) $, we leave the possibility of any other form of ill-posedness to be present in our problem until stated otherwise.
+
+\section{NPIV regression through Tikhonov regularization}
+
+In \cite{darolles2011}, the authors assume identification and also that the joint density $ p_{ X, Z } $ is dominated by the product of marginals $ p_{ x } \cdot p_{ Z } $.
+This is the same as demanding the kernel $ \Phi $ to be bounded, which implies (\ref{eq: Phi square integrable}).
+Hence, the operators $ \meanop $ and $ \meanop^{ * } $ are assumed to be Hilbert-Schmidt.
+Ill-posedness can then be characterized in terms of the singular values of $ \meanop $, which we will show nextly.
+
+Since $ \meanop $ is compact, it has a \emph{singular value decomposition (SVD)} --- see \cite[section 15.4]{kress89} --- that is, there exists orthonormal sequences $ ( \varphi_{ n } )_{ n\in\N } $ and $ ( \psi_{ n } )_{ n\in\N } $, in $ L^2 ( X ) $ and $ L^2 ( Z ) $ respectively, as well as a decreasing sequence $ \lambda_{ 0 } \geq \lambda_{ 1 } \geq \dots \geq 0 $ of nonnegative real numbers (the singular values), such that
+\begin{enumerate}[label=(\alph*)]
+    \item The eigenvalues of $ \meanop^{ * } \meanop $ are precisely $ ( \lambda_{ i }^2 )_{ i \geq 0 } $ \label{en: singular values};
+    \item $ \meanop [ \varphi_{ i } ] = \lambda_{ i } \psi_{ i } $ and $ \meanop^{ * } [ \psi_{ i } ] = \lambda_{ i } \varphi_{ i } $ for all $ i \geq 0 $;
+    \item For all $ h \in L^2 ( X ) $ we have $ h = \sum_{ i=0 }^{ \infty } \dotprod{ h, \varphi_{ i } } \varphi_{ i } + \bar{ h } $, where $ \bar{ h } \in \ker \meanop $;
+    \item For all $ g \in L^2 ( Z ) $ we have $ g = \sum_{ i=0 }^{ \infty } \dotprod{ g, \psi_{ i } } \psi_{ i } + \bar{ g } $, where $ \bar{ g } \in \ker \meanop^{ * } $;
+\end{enumerate}
+Therefore, we have
+\begin{equation*}
+    \meanop [ h ] = \sum_{ i=0 }^{ \infty } \lambda_{ i } \dotprod{ h, \varphi_{ i } } \psi_{ i }
+\end{equation*}
+as well as
+\begin{equation*}
+    \meanop^{ * } [ g ] = \sum_{ i=0 }^{ \infty } \lambda_{ i } \dotprod{ g, \psi_{ i } } \varphi_{ i }
+.\end{equation*}
+We can also see that, because of \ref{en: singular values}, identification is equivalent to all the $ \lambda_{ i } $ being strictly greater than $ 0 $.
+
+Since $ \meanop^{ * } \meanop $ is compact, its sequence of eigenvalues $ ( \lambda_{ i }^2 )_{ i \geq 0 } $ and, hence, the sequence of singular values $ ( \lambda_{ i } )_{ i \geq 0 } $, must converge to $ 0 $.
+This fact allows the NPIV regression problem to be ill posed when combined with the following proposition \cite[theorem 15.18]{kress89}, sometimes known as the Picard theorem:
+\begin{prop}
+    \label{prop: picard}
+    We have $ r \in \image ( \meanop ) $ if, and only if, $ r \in ( \ker \meanop^{ * } )^{ \perp } $ and
+    \begin{equation*}
+        \sum_{ i=0 }^{ \infty } \frac{ 1 }{ \lambda_{ i }^2 } \dotprod{ r, \psi_{ i } }^2 < \infty
+    .\end{equation*}
+    Then, the solution to $ \meanop [ h ] = r $ is given by
+    \begin{equation}
+        \label{eq: closed form solution}
+        h = \sum_{ i=0 }^{ \infty } \frac{ 1 }{ \lambda_{ i } } \dotprod{ r, \psi_{ i } } \varphi_{ i }
+    .\end{equation}
+\end{prop}
+
+As we are assuming $ r \in \image ( \meanop ) $, this proposition tells us that if instead of $ r $ we measure $ r + \delta \psi_{ i } $, the solution will be perturbed by $ \frac{ \delta }{ \lambda_{ i } } \varphi_{ i } $, which may be very large in norm since $ \lambda_{ i } $ can be arbitrarily small.
+To overcome this issue of noncontinuity, a classical technique in inverse problems is to apply Tikhonov regularization.
+
+Observe that solving $ \meanop [ h ] = r $ is equivalent to solving
+\begin{equation*}
+    \argmin_{ h \in L^2 ( X ) } \norm{ \meanop [ h ] - r }_{ L^2 ( Z ) }^2
+.\end{equation*}
+Tikhonov regularization modifies this objective function by adding a penalization for large norm solutions.
+Given a regularization parameter $ \alpha > 0 $, the new optimization problem is 
+\begin{equation*}
+    \argmin_{ h \in L^2 ( X ) } L_{ \alpha } ( h ) = \norm{ \meanop [ h ] - r }_{ L^2 ( Z ) }^2 + \alpha \norm{ h }_{ L^2 ( X ) }^2
+.\end{equation*}
+The function $ L_{ \alpha } $ is clearly convex and a straightforward application of the chain rule gives us
+\begin{equation}
+    \label{eq: loss gradient}
+    \nabla L_{ \alpha } ( h ) = 2 \left( \meanop^{ * } [ \meanop [ h ] - r ] + \alpha h \right)
+.\end{equation}
+Hence, we can minimize $ L_{ \alpha } $ by setting the gradient to be null.
+Denoting the solution by $ h_{ \alpha } $, we have:
+\begin{align}
+    2 ( \meanop^{ * } [ \meanop [ h_{ \alpha } ] - r ] + \alpha h_{ \alpha } ) = 0
+    &\iff \meanop^{ * }\meanop [ h_{ \alpha } ] + \alpha h_{ \alpha } = \meanop^{ * } [ r ] \nonumber \\
+    &\iff h_{ \alpha } = ( \meanop^{ * } \meanop + \alpha I )^{ -1 } \meanop^{ * } [ r ] \label{eq: tikhonov solution}
+.\end{align}
+Since the (eigenvector, eigenvalue) pairs of $ ( \meanop^{ * } \meanop + \alpha I )^{ -1 } $ are precisely $ ( 1 / ( \lambda_{ i }^2 + \alpha ), \varphi_{ i } ) $, a computation shows that
+\begin{equation*}
+    h_{ \alpha } = \sum_{ i=0 }^{ \infty } \frac{ \lambda_{ i } }{ \lambda_{ i }^2 + \alpha } \dotprod{ r, \psi_{ i } } \varphi_{ i }
+.\end{equation*}
+This clearly controls the decay of $ \lambda_{ i } $ by replacing $ 1/\lambda_{ i } $ in (\ref{eq: closed form solution}) with $ \lambda_{ i } / ( \lambda_{ i }^2 + \alpha ) $.
+
+To be able to better control the convergence of $ h_{ \alpha } $ to $ \hstar $ as $ \alpha \to 0 $, the authors of \cite{darolles2011} impose a so-called \emph{source condition}, which states that there exists $ \beta > 0 $ such that
+\begin{equation}
+    \label{eq: source condition}
+    \sum_{ i=0 }^{ \infty } \frac{ \dotprod{ \hstar, \varphi_{ i } }^2 }{ \lambda_{ i }^{ 2 \beta } } < \infty
+\end{equation}
+or, equivalently, that $ \hstar \in \image [ ( \meanop^{ * } \meanop )^{ \beta/2 } ] $.
+This condition, although somewhat common in the inverse problems literature, is considerably restrictive, even more so as the degree of ill-posedness of the problem increases.
+For example, if the $ \lambda_{ i } $ decay exponentially, then (\ref{eq: source condition}) requires the Fourier coefficients $ \dotprod{ \hstar, \varphi_{ i } } $ of $ \hstar $ to decay even more rapidly, which means that $ \hstar $ must have a highly precise finite-dimensional approximation.
+
+Another technique employed in \cite{darolles2011} to obtain better consistency results is, instead of performing a standard Tikhonov regularization with (\ref{eq: tikhonov solution}), to build a sequence of estimators iteratively:
+\begin{align}
+    \begin{split}
+        h_{ \alpha }^{ ( 1 ) } &= ( \meanop^{ * } \meanop + \alpha I )^{ -1 } \meanop^{ * } [ r ], \\
+        h_{ \alpha }^{ ( k + 1 ) } &= ( \meanop^{ * } \meanop + \alpha I )^{ -1 } [ \meanop^{ * } r + h_{ \alpha }^{ ( k ) } ]
+    \end{split}
+    \label{eq: iterated tikhonov}
+.\end{align}
+While for the estimator (\ref{eq: tikhonov solution}) one has $ \norm{ \hstar - h_{ \alpha } } = \mathcal{O} ( \alpha^{ ( 2 \wedge \beta ) } ) $, for the iterated estimator it is possible to show $ \norm{ \hstar - h_{ \alpha }^{ ( k ) } } = \mathcal{O} ( \alpha^{ ( 2k \wedge \beta ) } ) $ \cite{darolles2011}.
+
+To be able to apply the iteration scheme (\ref{eq: iterated tikhonov}), one must first obtain estimates for $ \meanop, \meanop^{ * } $ and $ r $, since these are unknown.
+The choice was made to use Nadaraya-Watson kernel estimators --- see \cite{nadaraya64} and \cite{watson64}.
+
+The important aspects of this method that the reader should keep in mind are the following:
+\begin{itemize}
+    \item 
+\end{itemize}
+
 
 \section{Nonparametric 2SLS}
 
@@ -99,7 +206,7 @@ With this assumption, the problem of continuous inverse is automatically satisfi
 However, we must advise the reader that the formulation of the nonparametric regression problem presented in \cite{newey2003} is a somewhat different then ours.
 More specifically, the authors do not use the notation presented in subsection \ref{sec: problem specification}, neither the spaces $ L^2 ( X ) $ and $ L^2 ( Z ) $ for domain and codomain of the conditional expectation operator.
 Therefore, the compact set where the solution is restricted to live is not necessarily a compact subset of $ L^{ 2 } ( X ) $, and it becomes difficult to compare both approaches from a theoretical perspective, a task which is left for future work.
-Nonetheless, we decided to include a subsection on this paper because of its importance to the research in nonparametric methods for instrumental variables.
+Nonetheless, we decided to include a section on this paper because of its importance to the research in nonparametric methods for instrumental variables.
 In the following, we will provide a high level description of their method, adapting the notation and focusing on the aspects we feel are the most important.
 We refer the reader to the original paper for details.
 
@@ -117,7 +224,7 @@ Substituting this into (\ref{eq: expectation equation}), we get
 This suggests a two stage procedure analogous to 2SLS.
 In the first stage, a nonparametric estimate of $ \mean [ p_{ j } ( X ) \mid Z = z ] $ is obtained for $ j = 1, \dots, J $.
 Then, in the second stage, the $ Y $ samples on these estimates to obtain the vector of coefficients $ \gamma $.
-It's worth emphasizing that the second stage regression is substantially sensitive to the number $ J $ of approximating functions and the precision of the first stage estimators \cite{newey2003}.
+It is worth emphasizing that the second stage regression is substantially sensitive to the number $ J $ of approximating functions and the precision of the first stage estimators \cite{newey2003}.
 
 More specifically, their search space consists of structural functions which take the following form:
 \begin{equation}
@@ -127,8 +234,8 @@ More specifically, their search space consists of structural functions which tak
 where $ \beta $ is a vector of unknown coefficients, $ a $ is a vector of known functions and $ h_{ 1 } $ is an unknown function.
 The compactness property is obtained by placing bounds on $ \beta $ and restricting $ h_{ 1 } $ and its derivatives to be small in the tails, which is done by demanding a certain Sobolev norm of $ h_{ 1 } $ to be finite.
 The details can be found in \cite{newey2003}.
-It's important to notice that (\ref{eq: newey functions}) is a semiparametric model which allows $ h $ to be nonparametric in the center of the support of $ X $, but restricts it to be parametric in the tails.
-Let's denote by $ \mathcal{G} $ the set of functions which are of the form (\ref{eq: newey functions}) and satisfy the mentioned regularity conditions.
+It is important to notice that (\ref{eq: newey functions}) is a semiparametric model which allows $ h $ to be nonparametric in the center of the support of $ X $, but restricts it to be parametric in the tails.
+Let us denote by $ \mathcal{G} $ the set of functions which are of the form (\ref{eq: newey functions}) and satisfy the mentioned regularity conditions.
 It is assumed that $ \hstar = ( \beta^{ \star } ) ^{ \trp } a ( x ) + \hstar_{ 1 } ( x ) \in \mathcal{G} $.
 
 The nonparametric estimate for $ \hstar_{ 1 } $ is based on an expansion such as (\ref{eq: expansion on basis functions}), where the $ p_{ j } $ are chosen to be Hermite polynomials and the coefficients are restricted in a way that the final estimate belongs to $ \mathcal{G} $.

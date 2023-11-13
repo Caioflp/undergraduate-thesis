@@ -222,6 +222,35 @@
       \field{title}{Topology}
       \field{year}{2000}
     \endentry
+    \entry{nadaraya64}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=7c96cb892e3d709febb05f732aafb736}{%
+           family={Nadaraya},
+           familyi={N\bibinitperiod},
+           given={E.\bibnamedelimi A.},
+           giveni={E\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{7c96cb892e3d709febb05f732aafb736}
+      \strng{fullhash}{7c96cb892e3d709febb05f732aafb736}
+      \strng{bibnamehash}{7c96cb892e3d709febb05f732aafb736}
+      \strng{authorbibnamehash}{7c96cb892e3d709febb05f732aafb736}
+      \strng{authornamehash}{7c96cb892e3d709febb05f732aafb736}
+      \strng{authorfullhash}{7c96cb892e3d709febb05f732aafb736}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Theory of Probability \& its Applications}
+      \field{number}{1}
+      \field{title}{On Estimating Regression}
+      \field{volume}{9}
+      \field{year}{1964}
+      \field{pages}{141\bibrangedash 142}
+      \range{pages}{2}
+    \endentry
     \entry{newey2003}{article}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=058d74ae5e89fbd5a49ebdbe97b4c922}{%
@@ -286,6 +315,35 @@
       \field{labeltitlesource}{title}
       \field{title}{Functional Analysis}
       \field{year}{1991}
+    \endentry
+    \entry{watson64}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=2d8e29f2d1107a373c0532f91d067cc9}{%
+           family={Watson},
+           familyi={W\bibinitperiod},
+           given={Geoffrey\bibnamedelima S.},
+           giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{2d8e29f2d1107a373c0532f91d067cc9}
+      \strng{fullhash}{2d8e29f2d1107a373c0532f91d067cc9}
+      \strng{bibnamehash}{2d8e29f2d1107a373c0532f91d067cc9}
+      \strng{authorbibnamehash}{2d8e29f2d1107a373c0532f91d067cc9}
+      \strng{authornamehash}{2d8e29f2d1107a373c0532f91d067cc9}
+      \strng{authorfullhash}{2d8e29f2d1107a373c0532f91d067cc9}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Sankhyā: The Indian Journal of Statistics, Series A}
+      \field{number}{4}
+      \field{title}{Smooth Regression Analysis}
+      \field{volume}{26}
+      \field{year}{1964}
+      \field{pages}{359\bibrangedash 372}
+      \range{pages}{14}
     \endentry
     \entry{wooldridge2001}{book}{}
       \name{author}{1}{}{%
