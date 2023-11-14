@@ -184,9 +184,9 @@ Another technique employed in \cite{darolles2011} to obtain better consistency r
     \begin{split}
         h_{ \alpha }^{ ( 1 ) } &= ( \meanop^{ * } \meanop + \alpha I )^{ -1 } \meanop^{ * } [ r ], \\
         h_{ \alpha }^{ ( k + 1 ) } &= ( \meanop^{ * } \meanop + \alpha I )^{ -1 } [ \meanop^{ * } r + h_{ \alpha }^{ ( k ) } ]
-    \end{split}
+    .\end{split}
     \label{eq: iterated tikhonov}
-.\end{align}
+\end{align}
 While for the estimator (\ref{eq: tikhonov solution}) one has $ \norm{ \hstar - h_{ \alpha } } = \mathcal{O} ( \alpha^{ ( 2 \wedge \beta ) } ) $, for the iterated estimator it is possible to show $ \norm{ \hstar - h_{ \alpha }^{ ( k ) } } = \mathcal{O} ( \alpha^{ ( 2k \wedge \beta ) } ) $ \cite{darolles2011}.
 
 To be able to apply the iteration scheme (\ref{eq: iterated tikhonov}), one must first obtain estimates for $ \meanop, \meanop^{ * } $ and $ r $, since these are unknown.
@@ -194,7 +194,9 @@ The choice was made to use Nadaraya-Watson kernel estimators --- see \cite{nadar
 
 The important aspects of this method that the reader should keep in mind are the following:
 \begin{itemize}
-    \item 
+    \item Ill-posedness is tackled by assuming identification and performing (iterated) Tikhonov regularization;
+    \item A source condition is necessary for providing convergence bounds;
+    \item The estimation of conditional expectations is performed using Nadaraya-Watson kernels.
 \end{itemize}
 
 
