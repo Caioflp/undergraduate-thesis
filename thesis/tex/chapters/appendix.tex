@@ -1,1 +1,424 @@
-% \chapter{Proofs of theoretical results}
+\chapter{Proofs of theoretical results}
+
+\section{Proof of Theorem \ref{thm: main theorem}}
+
+To lighten the notation, the symbols $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \cdot } $, when written without a subscript to specify which space they refer to, will act as the norm and inner product, respectively, of $ L^2 ( X ) $.
+Before presenting the proof of Theorem \ref{thm: main theorem}, we need to prove two auxiliary lemmas:
+\begin{lemm}
+    \label{lem: bound u_m}
+    In the procedure of Algorithm \ref{algo: sagdiv} we have $ u_{ m } \in L^{ 2 } ( X ) $ for all $ 1 \leq m \leq M $ and, furthermore,
+    \begin{equation*}
+        \mean_{ \bz_{ 1:M } } [ \norm{ u_{ m } }^2 ] \leq
+        \rho \left( \hat{ \Phi }, \hat{ r }, \hat{ \meanop } \right) 
+    ,\end{equation*}
+    where
+    \begin{equation*}
+        \rho \left( \hat{ \Phi }, \hat{ r }, \hat{ \meanop } \right) =
+        3 \norm{ \hat{ \Phi } }_{ \infty }^2 \left(
+            C_{ 0 }^2 + L^2 \norm{ \hat{ r } }_{ L^2 ( Z ) }^2 + L^2 D^2 \norm{ \hat{ \meanop } }_{ \op }^2
+        \right)
+    .\end{equation*}
+\end{lemm}
+\begin{proof}
+    By Assumption \ref{assumption estimators} we have:
+    \begin{align*}
+        \norm{ u_{ m } }_{ L^{ 2 } ( X ) }^2
+        &= \norm{
+            \hat{ \Phi } ( \cdot, \bz_{ m } ) \partial_{ 2 } \ell \left(
+                \hat{ r } ( \bz_{ m } ), \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+            \right)
+        }_{ L^{ 2 } ( X ) }^2  \\
+        &= \mean_{ X } \left[
+            \abs{ 
+                \hat{ \Phi } ( X, \bz_{ m } ) \partial_{ 2 } \ell \left(
+                    \hat{ r } ( \bz_{ m } ),
+                    \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+                \right)
+            }^2
+        \right]  \\
+        &\leq \partial_{ 2 } \ell \left(
+            \hat{ r } ( \bz_{ m } ),
+            \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( \bz_{ m } )
+        \right)^2
+        \norm{ \hat{ \Phi } }_{ \infty }^2  \\
+        &< \infty 
+    .\end{align*}
+    Hence, $ u_{ m } \in L^{ 2 } ( X ) $ for all $ m $.
+    This computation and Proposition \ref{prop: loss properties} \ref{bounded growth} then imply
+    \begin{align*}
+        \mean_{ \bz_{ 1:M } } \left[
+            \norm{ u_{ m } }^2
+        \right]
+        &\leq 3 \norm{ \hat{ \Phi } }^2_{ \infty } 
+        \left(
+            C_{ 0 }^2 + L^2 \left(
+                \norm{ \hat{ r } }_{ L^2 ( Z ) }^2
+                + \norm{ \hat{ \meanop } [ \hat{ h }_{ m-1 } ] }_{ L^2 ( Z ) }^2
+            \right)
+        \right) \\
+        &\leq 3 \norm{ \hat{ \Phi } }^2_{ \infty }
+        \left(
+            C_{ 0 }^2 + L^2 \left(
+                \norm{ \hat{ r } }_{ L^2 ( Z ) }^2
+                + \norm{ \hat{ \meanop } }_{ \op }^2 \norm{ \hat{ h }_{ m-1 } }^2
+            \right)
+        \right) \\
+        &\leq 3 \norm{ \hat{ \Phi } }^2_{ \infty }
+        \left(
+            C_{ 0 }^2 + L^2 \left(
+                \norm{ \hat{ r } }_{ L^2 ( Z ) }^2
+                + D^2 \norm{ \hat{ \meanop } }_{ \op }^2
+            \right)
+        \right) \\
+        &= 3 \norm{ \hat{ \Phi } }^2_{ \infty }
+        \left(
+            C_{ 0 }^2 + L^2 \norm{ \hat{ r } }_{ L^2 ( Z ) }^2
+                + L^2 D^2 \norm{ \hat{ \meanop } }_{ \op }^2
+        \right) \defeq \rho \left( \hat{ \Phi }, \hat{ r }, \hat{ \meanop } \right). \qedhere
+    \end{align*}
+\end{proof}
+\begin{lemm}
+    \label{lem: bound u_m - grad}
+    In the procedure of Algorithm \ref{algo: sagdiv} we have
+    \begin{equation*}
+        \norm{
+            \mean_{ \bz_{ m } } \left[
+                \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }
+            \right]
+        }
+        \leq
+        \kappa \left( \hat{ \Phi } \right) \left(
+            \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \nu_{ X } \otimes \nu_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2
+        \right)^{ \frac{ 1 }{ 2 } }
+    ,\end{equation*}
+    where
+    \begin{equation*}
+        \kappa^2 \left( \hat{ \Phi } \right) \defeq 2 \max \left\{
+            3 ( C_{ 0 }^2 + L^2 \mean [ Y^2 ] + L^2 D^2 ),
+            2L^2 \norm{ \hat{ \Phi } }_{ \infty }^2,
+            2L^2 D^2 \norm{ \hat{ \Phi } }_{ \infty }^2
+        \right\}
+    .\end{equation*}
+\end{lemm}
+\begin{proof}
+    To ease the notation, we define
+    \begin{align*}
+        \Psi_{ m } ( Z ) &\defeq \partial_{ 2 } \ell ( r ( Z ), \meanop [ \hat{ h }_{ m-1 } ] ( Z ) ), \\
+        \hat{ \Psi }_{ m } ( Z ) &\defeq \partial_{ 2 } \ell ( \hat{ r } ( Z ), \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( Z ) )
+    .\end{align*}
+    Let's expand the definition of $ \norm{ \cdot } $:
+    \begin{align*}
+        \norm{
+            \mean_{ \bz_{ m } } \left[
+                \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }
+            \right]
+        }
+        &= \mean_{ X } \left[
+            \mean_{ \bz_{ m } } \left[
+                \nabla \risk ( \hat{ h }_{ m-1 } ) ( X ) - u_{ m } ( X )
+            \right]^2
+        \right]^{ \frac{ 1 }{ 2 } } \\
+        &= \mean_{ X } \left[
+            \left(
+                \nabla \risk ( \hat{ h }_{ m-1 } ) ( X ) - \mean_{ \bz_{ m } } \left[ u_{ m } ( X ) \right]
+            \right)^2
+        \right]^{ \frac{ 1 }{ 2 } } \\
+        &= \mean_{ X } \left[
+            \left(
+                \mean_{ Z } \left[
+                    \Phi ( X, Z ) \Psi_{ m } ( Z )
+                \right]
+                - \mean_{ \bz_{ m } } \left[
+                    \hat{ \Phi } ( X, \bz_{ m } ) \hat{ \Psi }_{ m } ( \bz_{ m } )
+                \right]
+            \right)^2
+        \right]^{ \frac{ 1 }{ 2 } } \\
+        &= \mean_{ X } \left[
+            \left(
+                \mean_{ Z } \left[
+                    \Phi ( X, Z ) \Psi_{ m } ( Z )
+                    - \hat{ \Phi } ( X, Z ) \hat{ \Psi }_{ m } ( Z )
+                \right]
+            \right)^2
+        \right]^{ \frac{ 1 }{ 2 } }
+    ,\end{align*}
+    Now we add and subtract $ \hat{ \Phi } ( X, Z ) \Psi_{ m } ( Z ) $, so that
+    \begin{align*}
+        &\mean_{ X } \left[
+            \left(
+                \mean_{ Z } \left[
+                    \Phi ( X, Z ) \Psi_{ m } ( Z )
+                    - \hat{ \Phi } ( X, Z ) \hat{ \Psi }_{ m } ( Z )
+                \right]
+            \right)^2
+        \right]^{ \frac{ 1 }{ 2 } } \\
+        &\hspace{1cm}
+        = \mean_{ X } \left[
+            \left(
+                \mean_{ Z } \left[
+                    \Psi_{ m } ( Z ) \left(
+                        \Phi ( X, Z ) - \hat{ \Phi } ( X, Z )
+                    \right)
+                    + \hat{ \Phi } ( X, Z ) \left(
+                        \Psi_{ m } ( Z ) - \hat{ \Psi }_{ m } ( Z )
+                    \right)
+                \right]
+            \right)^2
+        \right]^{ \frac{ 1 }{ 2 } } \\
+        &\hspace{1cm}
+        \leq \mean_{ X } \left[
+            \left(
+                \norm{ \Psi_{ m } }_{ L^{ 2 } ( Z ) } \norm{ \Phi ( X, \cdot ) - \hat{ \Phi } ( X, \cdot ) }_{ L^{ 2 } ( Z ) }
+                + \norm{ \hat{ \Phi } ( X, \cdot ) }_{ L^{ 2 } ( Z ) } \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^{ 2 } ( Z ) }
+            \right)^2
+        \right]^{ \frac{ 1 }{ 2 } } \\
+        &\hspace{1cm}
+        \leq \sqrt{ 2 } \mean_{ X } \left[
+            \norm{ \Psi_{ m } }_{ L^{ 2 } ( Z ) }^2 \norm{ \Phi ( X, \cdot ) - \hat{ \Phi } ( X, \cdot ) }_{ L^{ 2 } ( Z ) }^2
+            + \norm{ \hat{ \Phi } ( X, \cdot ) }_{ L^{ 2 } ( Z ) }^2 \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^{ 2 } ( Z ) }^2
+        \right]^{ \frac{ 1 }{ 2 } } \\
+        &\hspace{1cm}
+        = \sqrt{ 2 } \left(
+            \norm{ \Psi_{ m } }_{ L^{ 2 } ( Z ) }^2 \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \nu_{ X } \otimes \nu_{ Z } ) }^2
+            + \norm{ \hat{ \Phi } }_{ L^{ 2 } ( \nu_{ X } \otimes \nu_{ Z } ) }^2 \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^{ 2 } ( Z ) }^2
+        \right)^{ \frac{ 1 }{ 2 } }
+    ,\end{align*}
+    where
+    \begin{equation*}
+        \norm{ \Phi }_{ L^{ 2 } ( \nu_{ X } \otimes \nu_{ Z } ) }^2 = \int_{ \mathcal{X} \times \mathcal{Z} } \Phi ( x, z )^2 p ( x ) p ( z ) \drm x \ddrm z
+    \end{equation*}
+    is the norm with respect to the independent coupling of the distributions of $ X $ and $ Z $.
+    By Proposition \ref{prop: loss properties}.\ref{bounded growth} we have
+    \begin{align*}
+        \norm{ \Psi_{ m } }_{ L^{ 2 } ( Z ) }^2
+        &= \mean_{ Z } \left[
+            \partial_{ 2 } \ell ( r ( Z ), \meanop [ \hat{ h }_{ m-1 } ] ( Z ) )^2
+        \right] \\
+        &\leq \mean_{ Z } \left[
+            \left(
+                C_{ 0 } + L \left(
+                    \abs{ r ( Z ) } + \abs{ \meanop [ \hat{ h }_{ m-1 } ] ( Z ) }
+                \right)
+            \right)^2
+        \right] \\
+        &\leq 3 \left(
+            C_{ 0 }^2 + L^2 \norm{ r }_{ L^{ 2 } ( Z ) }^2 + L^2 \norm{ \meanop [ \hat{ h }_{ m-1 } ] }_{ L^{ 2 } ( Z ) }^2
+        \right) \\
+        &\leq 3 \left(
+            C_{ 0 }^2 + L^2 \mean [ Y^2 ] + L^2 D^2
+        \right)
+    .\end{align*}
+    It is also clear that, by Assumption \ref{assumption estimators},
+    \begin{equation*}
+        \norm{ \hat{ \Phi } }_{ L^2 ( \nu_{ X } \otimes \nu_{ Z } ) }^2 \leq \norm{ \hat{ \Phi } }_{ \infty }^2
+    .\end{equation*}
+    Finally, by Assumption \ref{assumption loss}.\ref{en: lipschitz gradients} we also have
+    \begin{align*}
+        \norm{ \Psi_{ m } - \hat{ \Psi }_{ m } }_{ L^{ 2 } ( Z ) }^2
+        &= \mean_{ Z } \left[
+            \left(
+                \partial_{ 2 } \ell ( r ( Z ), \meanop [ \hat{ h }_{ m-1 } ] ( Z ) )
+                - \partial_{ 2 } \ell ( \hat{ r } ( Z ), \hat{ \meanop } [ \hat{ h }_{ m-1 } ] ( Z ) )
+            \right)^2
+        \right] \\
+        &\leq 2L^2 \left(
+            \norm{ r - \hat{ r } }_{ L^{ 2 } ( Z ) }^2 + \norm{ ( \meanop - \hat{ \meanop } ) [ \hat{ h }_{ m-1 } ] }_{ L^{ 2 } ( Z ) }^2
+        \right) \\
+        &\leq 2L^2 \left(
+            \norm{ r - \hat{ r } }_{ L^{ 2 } ( Z ) }^2 + D^2 \norm{ \meanop - \hat{ \meanop } }_{ \op }^2
+        \right)
+    .\end{align*}
+    To combine all terms, we first define
+    \begin{equation*}
+        \kappa^2 \left( \hat{ \Phi } \right) \defeq 2 \max \left\{
+            3 ( C_{ 0 }^2 + L^2 \mean [ Y^2 ] + L^2 D^2 ),
+            2L^2 \norm{ \hat{ \Phi } }_{ \infty }^2,
+            2L^2 D^2 \norm{ \hat{ \Phi } }_{ \infty }^2
+        \right\}
+    .\end{equation*}
+    Then, it's easy to see that
+    \begin{align*}
+        \norm{
+            \mean_{ \bz_{ m } } \left[
+                \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }
+            \right]
+        } \leq \kappa \left( \hat{ \Phi } \right) \left(
+            \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \nu_{ X } \otimes \nu_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2
+        \right)^{ \frac{ 1 }{ 2 } }
+    ,\end{align*}
+    as we wanted to show.
+\end{proof}
+
+We now have everything needed to show the
+\begin{proof}[Proof of Theorem \ref{thm: main theorem}]
+    We start by checking that $ \risk $ is convex in $ \searchset $:
+    if $ h, g \in \searchset $ and $ \lambda \in [ 0, 1 ] $, then
+    \begin{align*}
+        \risk ( \lambda h + ( 1 - \lambda ) g )
+        &= \mean [ \loss ( r ( Z ), \meanop [ \lambda h + ( 1 - \lambda ) g ] ( Z ) ) ] \\
+        &= \mean [ \loss ( r ( Z ), \lambda \meanop [ h ] ( Z ) + ( 1 - \lambda ) \meanop [ g ] ( Z ) ) ] \\
+        &\leq \lambda \mean [ \loss ( r ( Z ), \meanop [ h ] ( Z ) ) ] + ( 1 - \lambda ) \mean [ \loss ( r ( Z ), \meanop [ g ] ( Z ) ) ] \\
+        &= \lambda \risk ( h ) + ( 1 - \lambda ) \risk ( g )
+    .\end{align*}
+    By Assumption \ref{assumption on H}, there exists $ \bar{ h } \in ( \hstar + \ker \meanop ) \cap \searchset $.
+    By the Algorithm \ref{algo: sagdiv} procedure, we have
+    \begin{align*}
+        \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m } - \hbar }^2
+        &= \frac{ 1 }{ 2 } \norm{ \pi_{ \searchset } \left[ \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m } \right] - \hbar }^2 \\
+        &\leq \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m } - \hbar }^2 \\
+        &= \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \hbar }^2
+        - \alpha_{ m } \dotprod{ u_{ m }, \hat{ h }_{ m-1 } - \hbar }
+        + \frac{ \alpha_{ m }^2 }{ 2 } \norm{ u_{ m } }^2
+    .\end{align*}
+    After adding and subtracting $ \alpha_{ m } \dotprod{ \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hbar } $, we are left with
+    \begin{equation*}
+        \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \hbar }^2
+        - \alpha_{ m } \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hbar }
+        + \frac{ \alpha_{ m }^2 }{ 2 } \norm{ u_{ m } }^2
+        - \alpha_{ m } \dotprod{ \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hbar }
+    .\end{equation*}
+    Applying the first order convexity inequality on the last term give us, in total,
+    \begin{align*}
+        \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m } - \hbar }^2
+        &\leq
+        \frac{ 1 }{ 2 } \norm{ \hat{ h }_{ m-1 } - \hbar }^2
+        - \alpha_{ m } \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hbar } \\
+        &\hspace{1.5cm}
+        + \frac{ \alpha_{ m }^2 }{ 2 } \norm{ u_{ m } }^2
+        - \alpha_{ m } ( \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hbar ) )
+    .\end{align*}
+    Notice that, by the definition of $ \hbar $, we have $ \risk ( \hbar ) = \risk ( \hstar ) $.
+    Hence, making this substitution and rearranging terms, we get
+    \begin{align*}
+        \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hstar )
+        &\leq
+        \frac{ 1 }{ 2 \alpha_{ m } } \left(
+            \norm{ \hat{ h }_{ m-1 } - \hbar }^2
+            -
+            \norm{ \hat{ h }_{ m } - \hbar }^2
+        \right) \\
+        &\hspace{1.5cm}+ \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2
+        - \dotprod{ u_{ m } - \nabla \risk ( \hat{ h }_{ m-1 } ), \hat{ h }_{ m-1 } - \hbar }
+    .\end{align*}
+    Finally, summing over $ 1 \leq m \leq M $ leads to
+    \begin{align}
+        \label{three sums}
+        \begin{split}
+            \sum_{ n=1 }^{ M } \left[
+                \risk ( \hat{ h }_{ m-1 } ) - \risk ( \hstar )
+            \right]
+            &\leq \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
+                \norm{ \hat{ h }_{ m-1 } - \hbar }^2
+                -
+                \norm{ \hat{ h }_{ m } - \hbar }^2
+            \right) \\
+            &\hspace{1cm} + \sum_{ m=1 }^{ M } \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2 \\
+            &\hspace{1cm} + \sum_{ m=1 }^{ M }
+            \dotprod{ \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }, \hat{ h }_{ m-1 } - \hbar }.
+        \end{split}
+    \end{align}
+    The next step is to take the average of both sides with respect to $ \bz_{ 1:M } $, taking advantage of the independence between $ \bz_{ 1:M } $ and $ \dataset $, the data used to compute $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $.
+    Each summation in the RHS is then bounded separately.
+
+    The first summation admits a deterministic bound.
+    By assumption, we the diameter $ D $ of $ \searchset $ is finite.
+    Hence
+    \begin{align}
+        \begin{split}
+            \sum_{ m=1 }^{ M } \frac{ 1 }{ 2 \alpha_{ m } } \left(
+                \norm{ \hat{ h }_{ m-1 } - \hbar }^2
+                -
+                \norm{ \hat{ h }_{ m } - \hbar }^2
+            \right)
+            &= \sum_{ m=2 }^{ M } \left(
+                \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
+            \right) \norm{ \hat{ h }_{ m-1 } - \hbar }^2 \\
+            &\hspace{1.5cm}+ \frac{ 1 }{ 2 \alpha_{ 1 } } \norm{ \hat{ h }_{ 0 } - \hbar }^2 - \frac{ 1 }{ 2 \alpha_{ M } } \norm{ \hat{ h }_{ M } - \hbar }^2
+        \end{split} \nonumber \\
+        &\leq 
+        \sum_{ m=2 }^{ M } \left(
+            \frac{ 1 }{ 2 \alpha_{ m } } - \frac{ 1 }{ 2 \alpha_{ m-1 } } 
+        \right) D^2 + \frac{ 1 }{ 2 \alpha_{ 1 } } D^2 \nonumber \\
+        &= \frac{ D^2 }{ 2 \alpha_{ M } } \label{bound first sum}
+    .\end{align}
+    The second summation can be bounded with the aid of Lemma \ref{lem: bound u_m}:
+    \begin{equation}
+        \mean_{ \bz_{ 1:M } } \left[
+            \sum_{ m=1 }^{ M } \frac{ \alpha_{ m } }{ 2 } \norm{ u_{ m } }^2
+        \right]
+        = \frac{ \mean_{ \bz_{ 1:M } } \left[ \norm{ u_{ m } }^2 \right] }{ 2 } \sum_{ m=1 }^{ M } \alpha_{ m }
+        \leq \frac{ \rho \left( \hat{ \Phi }, \hat{ r }, \hat{ \meanop } \right) }{ 2 } 
+        \sum_{ m=1 }^{ M } \alpha_{ m }
+        \label{bound second sum}
+    .\end{equation}
+    Finally, the third summation can be bounded using Lemma \ref{lem: bound u_m - grad}.
+    Let $ \mean_{ \bz_{ -m } } $ denote the expectation with respect to $ \bz_{ 1 }, \dots, \bz_{ m-1 }, \bz_{ m+1 }, \dots, \bz_{ M } $ and notice that
+    \begin{align*}
+        \mean_{ \bz_{ 1:M } } \left[
+            \dotprod{ \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }, \hat{ h }_{ m-1 } - \hbar }
+        \right]
+        &= \mean_{ \bz_{ -m } } \left[
+            \mean_{ \bz_{ m } } \left[
+                \dotprod{ \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }, \hat{ h }_{ m-1 } - \hbar }
+            \right]
+        \right] \\
+        &= \mean_{ \bz_{ -m } } \left[
+                \dotprod{
+                    \mean_{ \bz_{ m } } \left[
+                        \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }
+                    \right],
+                    \hat{ h }_{ m-1 } - \hbar
+                }
+            \right] \\
+        &= \mean_{ \bz_{ -m } } \left[
+                \norm{
+                    \mean_{ \bz_{ m } } \left[
+                        \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }
+                    \right]
+                }
+                \norm{
+                    \hat{ h }_{ m-1 } - \hbar
+                }
+            \right] \\
+        &\leq D \mean_{ \bz_{ -m } } \left[
+                \norm{
+                    \mean_{ \bz_{ m } } \left[
+                        \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }
+                    \right]
+                }
+            \right]
+    .\end{align*}
+    Then, applying Lemma \ref{lem: bound u_m - grad} and setting $ \tau \defeq D \kappa $ we get
+    \begin{align}
+        \begin{split}
+            &\mean_{ \bz_{ 1:M } } \left[
+                \dotprod{ \nabla \risk ( \hat{ h }_{ m-1 } ) - u_{ m }, \hat{ h }_{ m-1 } - \hbar }
+            \right] \\
+            &\hspace{2cm}
+            \leq \tau \left( \hat{ \Phi } \right) \left(
+                \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \nu_{ X } \otimes \nu_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2
+            \right)^{ \frac{ 1 }{ 2 } }.
+        \end{split}
+        \label{bound third sum}
+    \end{align}
+    All that is left to do is to apply equations (\ref{three sums}), (\ref{bound first sum}), (\ref{bound second sum}) and (\ref{bound third sum}) along with the inequality which defines convexity.
+    Let $ \hat{ h } \defeq \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \hat{ h }_{ m-1 } $ and $ \xi \defeq \rho / 2 $.
+    Then:
+    \begin{align*}
+        &\mean_{ \bz_{ 1:M } } \left[
+            \risk ( \hat{ h } ) - \risk ( \hstar )
+        \right] \\
+        &\hspace{1cm}
+        \leq \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \mean_{ \bz_{ 1:M } } \left[
+            \risk ( \hat{ h }_{ m } ) - \risk ( \hstar )
+        \right] \\
+        &\hspace{1cm}
+        \leq
+        \frac{ D^2 }{ 2 M \alpha_{ M } }
+        + \xi \left( \hat{ \Phi }, \hat{ r }, \hat{ \meanop } \right) \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \alpha_{ m } \\
+        &\hspace{2.5cm}
+        + \tau \left( \hat{ \Phi } \right) \left(
+            \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \nu_{ X } \otimes \nu_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2
+        \right)^{ \frac{ 1 }{ 2 } }
+    .\qedhere\end{align*} 
+\end{proof}

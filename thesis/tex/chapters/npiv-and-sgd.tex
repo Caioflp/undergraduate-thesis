@@ -236,11 +236,23 @@ The drawback is that we have to estimate $ r $.
 
 \section{Theoretical results}
 
+\begin{rem}[Comment on notation]
+    Let $ X $ and $ Y $ be arbitrary independent random variables.
+    Then, given a function of two arguments $ f $, we have
+    \begin{equation*}
+        \mean [ f ( X, Y ) \mid Y ] = g ( Y )
+    ,\end{equation*}
+    where $ g ( y ) = \mean [ f ( X, y ) ] $.
+    That is, to compute $ \mean [ f ( X, Y ) \mid Y ] $ we simply treat $ Y $ as constant and integrate in $ X $.
+    We will denote this by writing $ \mean_{ X } [ f ( X, Y ) ] $.
+\end{rem}
+
 Since we are directly optimizing the risk measure, we are able to provide guarantees for $ \risk ( \hat{ h } ) $ in mean with respect to the training data $ \bz_{ 1:M } = \left\{ \bz_{ 1 }, \dots, \bz_{ m } \right\} $.
 Our main result is the following, whose proof we present in the Appendix:
 \begin{thm}
+    \label{thm: main theorem}
     Let $ \hat{ h }_{ 0 }, \dots, \hat{ h }_{ M-1 } $ be generated according to Algorithm \ref{algo: sagdiv}.
-    Assume that $ \ell $ satisfies A\ref{assumption loss}, $ \searchset $ satisfies A\ref{assumption on H}, $ \Phi $ satisfies A\ref{assumption Phi} and $ \hat{ \Phi }, \hat{ r }, \hat{ \meanop } $ satisfy A\ref{assumption estimators}.
+    Assume that $ \ell $ satisfies Assumption \ref{assumption loss}, $ \searchset $ satisfies Assumption \ref{assumption on H}, $ \Phi $ satisfies Assumption \ref{assumption Phi} and $ \hat{ \Phi }, \hat{ r }, \hat{ \meanop } $ satisfy Assumption \ref{assumption estimators}.
     Then, if we let $ \hat{ h } = \sum_{ m=1 }^{ M } \hat{ h }_{ m-1 } $, the following bound holds:
     \begin{align}
         \begin{split}

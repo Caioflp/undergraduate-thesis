@@ -42,3 +42,9 @@
 \setlength {\cftpartindent }{\cftlastnumwidth } \setlength {\cftpartnumwidth }{2em}
 \cftinsert {A}
 \contentsline {part}{\uppercase {Appendix}}{41}{section*.22}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\cftinsert {A}
+\contentsline {appendix}{\chapternumberline {A}\MakeUppercase []{Proofs of theoretical results}}{42}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Proof of Theorem \ref {thm: main theorem}}{42}{section.A.1}%
+\vspace {\cftbeforechapterskip }
