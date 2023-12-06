@@ -1,4 +1,5 @@
-\chapter{Nonparametric Instrumental Variable \\Regression and Linear Inverse Problems}
+\chapter{NPIV Regression and Linear Inverse \\Problems}
+\label{chap: npiv and lip}
 
 Having defined what we mean by nonparametric regression instrumental variable (NPIV) regression, we now present two well established approaches, namely the ones in \cite{darolles2011} and \cite{newey2003}, the first of which will serve as a starting point for our method.
 We start by connecting nonparametric instrumental variable regression with inverse problems.
@@ -102,6 +103,7 @@ Then, since $ L^2 ( W ) $ is infinite dimensional, its unit ball is not compact,
 We remark that, aside from requiring $ r \in \image ( \meanop ) $, we leave the possibility of any other form of ill-posedness to be present in our problem until stated otherwise.
 
 \section{NPIV regression through Tikhonov regularization}
+\label{sec: tikhonov}
 
 In \cite{darolles2011}, the authors assume identification and also that the joint density $ p_{ X, Z } $ is dominated by the product of marginals $ p_{ x } \cdot p_{ Z } $.
 This is the same as demanding the kernel $ \Phi $ to be bounded, which implies (\ref{eq: Phi square integrable}).
@@ -270,7 +272,7 @@ The specific form taken by these estimators may be consulted in \cite{newey2003}
 
 The key aspects of the nonparametric 2SLS (NP2SLS) estimator given by (\ref{eq: newey optimization problem}) which we would like the reader to have in mind are the following:
 \begin{itemize}
-    \item The ill-posedness of the inverse problem is solved by requiring identification and that the structural function $ \hstar $ belongs to a compact set;
+    \item The ill-posedness of the inverse problem is solved by requiring identification and that the structural function $ \hstar $ belong to a compact set;
     \item There is a clear two stage procedure analogous to 2SLS, where the first stage estimates the conditional expectation using splines/power series and the second stage employs a truncated basis expansion with Hermite polynomials.
 \end{itemize}
 

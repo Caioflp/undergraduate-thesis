@@ -140,6 +140,40 @@
       \field{title}{Causal Inference: What If}
       \field{year}{2020}
     \endentry
+    \entry{hsing2015}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=396cd532137675b4da218b8464d025e8}{%
+           family={Hsing},
+           familyi={H\bibinitperiod},
+           given={Tailen},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=84251f2d50ed9850f6dd83b47cfc0d7f}{%
+           family={Eubank},
+           familyi={E\bibinitperiod},
+           given={Randall},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {John Wiley \& Sons}%
+      }
+      \strng{namehash}{8131b5fc038545972a47dc39fe385f9e}
+      \strng{fullhash}{8131b5fc038545972a47dc39fe385f9e}
+      \strng{bibnamehash}{8131b5fc038545972a47dc39fe385f9e}
+      \strng{authorbibnamehash}{8131b5fc038545972a47dc39fe385f9e}
+      \strng{authornamehash}{8131b5fc038545972a47dc39fe385f9e}
+      \strng{authorfullhash}{8131b5fc038545972a47dc39fe385f9e}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{Wiley Series in Probability and Statistics}
+      \field{title}{Theoretical Foundations of Functional Data Analysis, with and Introduction to Linear Operators}
+      \field{year}{2015}
+    \endentry
     \entry{kress89}{book}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=f2099ff9eeb99f589e56fc275320d050}{%
@@ -288,6 +322,33 @@
       \verb{doi}
       \verb http://dx.doi.org/10.1111/1468-0262.00459
       \endverb
+    \endentry
+    \entry{pathak2018}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=2aa555e9204c62c41d23d00c857cd3ac}{%
+           family={Pathak},
+           familyi={P\bibinitperiod},
+           given={Hemant\bibnamedelima Kumar},
+           giveni={H\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{2aa555e9204c62c41d23d00c857cd3ac}
+      \strng{fullhash}{2aa555e9204c62c41d23d00c857cd3ac}
+      \strng{bibnamehash}{2aa555e9204c62c41d23d00c857cd3ac}
+      \strng{authorbibnamehash}{2aa555e9204c62c41d23d00c857cd3ac}
+      \strng{authornamehash}{2aa555e9204c62c41d23d00c857cd3ac}
+      \strng{authorfullhash}{2aa555e9204c62c41d23d00c857cd3ac}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{An Introduction to Nonlinear Analysis and Fixed Point Theory}
+      \field{year}{2018}
     \endentry
     \entry{rudin1991}{book}{}
       \name{author}{1}{}{%

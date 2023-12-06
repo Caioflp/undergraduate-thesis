@@ -397,6 +397,18 @@ INPUT /usr/local/texlive/2023/texmf-dist/tex/generic/pgf/libraries/shapes/pgflib
 INPUT /usr/local/texlive/2023/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex
 INPUT /usr/local/texlive/2023/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex
 INPUT /usr/local/texlive/2023/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/algorithm2e/algorithm2e.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/algorithm2e/algorithm2e.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/algorithm2e/algorithm2e.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/tools/xspace.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/tools/xspace.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/tools/xspace.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/relsize/relsize.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/relsize/relsize.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/relsize/relsize.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/bbm-macros/bbm.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/bbm-macros/bbm.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/bbm-macros/bbm.sty
@@ -647,6 +659,8 @@ INPUT ./.out/main.lof
 INPUT ./.out/main.lof
 INPUT ./.out/main.lot
 INPUT ./.out/main.lot
+INPUT ./structure/siglas-simbolos.tex
+INPUT ./structure/siglas-simbolos.tex
 INPUT ./.out/main.toc
 INPUT ./.out/main.toc
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
@@ -682,6 +696,8 @@ INPUT ../fig//tsls_examples.pdf
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman6-regular.luc
 INPUT ./chapters/npiv-and-lip.tex
 INPUT ./chapters/npiv-and-lip.tex
+INPUT ./chapters/npiv-and-sgd.tex
+INPUT ./chapters/npiv-and-sgd.tex
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmmono12-regular.luc
@@ -705,6 +721,7 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pf
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb

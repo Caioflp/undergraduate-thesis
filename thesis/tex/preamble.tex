@@ -17,6 +17,8 @@
 \graphicspath{{../fig/}}
 \usepackage{tikz}
 \usetikzlibrary{patterns, shapes, decorations}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\usepackage[algoruled,boxed,lined]{algorithm2e}
 
 % Matemáticos 
 \usepackage{bbm}
@@ -80,7 +82,7 @@
 
 \preambulo{Bachelor's dissertation presented to the School of Applied
 Mathematics (FGV/EMAp) to obtain the Bachelor's degree in Applied Mathematics.
-\\ \\ Area of Study: Nonparametric Regression, Instrumental Variables, Kernel Methods, Stochastic Optimization, Machine Learning.}
+\\ \\ Area of Study: Nonparametric Regression, Instrumental Variables, Stochastic Optimization, Kernel Methods.}
 
 \orientador{Yuri F. Saporito}
 
@@ -226,4 +228,4 @@ Mathematics (FGV/EMAp) to obtain the Bachelor's degree in Applied Mathematics.
 \newtheorem{ex}[thm]{Example}
 \newtheorem{axiom}[thm]{Axiom}
 \newtheorem*{assump*}{Assumption}
-\newtheorem{assump}{Assumption}
+\newtheorem{assump}[thm]{Assumption}
