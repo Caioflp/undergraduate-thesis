@@ -19,3 +19,15 @@ class InstrumentalVariableDataset:
     Y: np.ndarray
     Y_denoised: np.ndarray
     name: str = None
+
+@dataclass
+class KIVDataset:
+    """Dataset for instrumental variable regression using KIV
+
+    """
+    X: np.ndarray
+    Z: np.ndarray
+    Y: np.ndarray
+    X_tilde: np.ndarray
+    Z_tilde: np.ndarray
+    name: str = None

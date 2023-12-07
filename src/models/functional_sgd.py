@@ -99,7 +99,7 @@ class FunctionalSGD(BaseEstimator):
         density_ratio.fit(joint_samples, independent_samples)
 
         # Fit ConditionalMeanOperator model
-        # For E[X | Z]
+        # For E[h(X) | Z]
         conditional_mean_xz = ConditionalMeanOperator()
         best_weight_xz, best_loss_xz = \
                 conditional_mean_xz.find_best_regularization_weight(Z, X)
