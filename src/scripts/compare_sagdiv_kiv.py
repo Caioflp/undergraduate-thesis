@@ -68,9 +68,9 @@ def plot_estimate(
     ax.plot(
         dataset.X.flatten()[sorted_idx_observed],
         dataset.Y_denoised[sorted_idx_observed],
-        c="r",
+        c="k",
         label=r"$h^{\star} (X)$",
-        alpha=.8,
+        alpha=1,
     )
     sort_idx = np.argsort(model_sagdiv.domain.all_points.flatten())
     sorted_x = model_sagdiv.domain.all_points.flatten()[sort_idx]
@@ -92,7 +92,7 @@ def plot_estimate(
     ax.plot(
         sorted_x,
         model_kiv.predict(sorted_x),
-        c="m",
+        c="r",
         label="KIV"
     )
     if with_data:
@@ -115,14 +115,17 @@ def plot_estimate(
 @experiment("benchmark/benchmark_KIV")
 def main():
     cm = 1/2.54
-    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(22*cm, 12*cm))
+    fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(33*cm, 12*cm))
     fig.set_tight_layout(True)
     ax_sin = axs[0]
     ax_abs = axs[1]
+    ax_linear = axs[2]
+    n_samples = 600
+    n_samples_only_z = 1200
 
     response = "sin"
     dataset_sagdiv, dataset_kiv = make_deep_gmm_dataset(
-        n_samples=600, n_samples_only_z=1200, response=response,
+        n_samples=n_samples, n_samples_only_z=n_samples_only_z, response=response,
         return_kiv_dataset=True,
     )
     model_kiv = KIV()
@@ -141,7 +144,7 @@ def main():
 
     response = "abs"
     dataset_sagdiv, dataset_kiv = make_deep_gmm_dataset(
-        n_samples=600, n_samples_only_z=1200, response=response,
+        n_samples=n_samples, n_samples_only_z=n_samples_only_z, response=response,
         return_kiv_dataset=True,
     )
     model_kiv = KIV()
@@ -158,7 +161,26 @@ def main():
         title=r"$h^{\star} (x) = |x|$", ax=ax_abs
     )
 
-    fig.savefig("sagd-iv_kiv_comparison.pdf")
+    response = "linear"
+    dataset_sagdiv, dataset_kiv = make_deep_gmm_dataset(
+        n_samples=n_samples, n_samples_only_z=n_samples_only_z, response=response,
+        return_kiv_dataset=True,
+    )
+    model_kiv = KIV()
+    model_kiv.fit(dataset_kiv)
+    model_sagdiv = FunctionalSGD(
+        lr="inv_n_samples",
+        warm_up_duration=100,
+        bound=10,
+        nesterov=False,
+    )
+    model_sagdiv.fit(dataset_sagdiv)
+    plot_estimate(
+        model_sagdiv, model_kiv, dataset_sagdiv,
+        title=r"$h^{\star} (x) = x$", ax=ax_linear
+    )
+
+    fig.savefig("sagdiv_kiv_comparison.pdf")
 
     
     # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))

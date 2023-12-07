@@ -306,7 +306,7 @@ Using a gaussian kernel for the estimator, wee can see that it adheres to Assump
 The method of estimation of $ \hat{ \meanop } $ was taken to be the first stage of Kernel Instrumental Variable (KIV) \cite{singh2019}, a method for NPIV regression which provides two stages based on kernel Ridge regression.
 The first stage consists of computing a conditional mean embedding \cite{cme2009} of the conditional distribution of $ X $ given $ Z = z $ in a RKHS of functions $ \mathcal{H}_{ \mathcal{X} } $, which acts as a proxy for $ L^2 ( X ) $.
 This conditional mean embedding encodes the same information as $ \meanop $.
-To estimate $ r ( Z ) = \mean [ Y \mid Z ] $, we simply used this same method to obtain an approximation to the operator $ L^2 ( Y ) : f \mapsto \mean [ f ( Y ) \mid Z = \cdot ] \in L^2 ( Z ) $, which we then apply to the identity function.
+To estimate $ r ( Z ) = \mean [ Y \mid Z ] $, we simply used this same method to obtain an approximation to the operator $ L^2 ( Y ) : f \mapsto \mean [ f ( Y ) \mid Z = \cdot \ ] \in L^2 ( Z ) $, which we then apply to the identity function.
 
 \section{Numerical experiment}
 
