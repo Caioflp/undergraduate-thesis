@@ -6,7 +6,7 @@ Author: @Caioflp
 from dataclasses import dataclass
 import logging
 from typing import Literal
-from src.data.utils import InstrumentalVariableDataset
+from src.data.utils import InstrumentalVariableDataset, KIVDataset
 
 import numpy as np
 import scipy
@@ -143,6 +143,7 @@ def make_deep_gmm_dataset(
     n_samples_only_z: int = 500,
     response: Literal["sin", "step", "abs", "linear"] = "sin",
     seed: int = None,
+    return_kiv_dataset: bool = False,
 ) -> InstrumentalVariableDataset:
     """Creates a dataset in which the instrument is uniformly distributed.
 
@@ -177,6 +178,7 @@ def make_deep_gmm_dataset(
     response_func = response_dict[response]
 
     rng = np.random.default_rng(seed)
+
     Z = rng.uniform(low=-3, high=3, size=(n_samples, 2))
     eps = rng.normal(loc=0, scale=1, size=n_samples)
     gamma = rng.normal(loc=0, scale=np.sqrt(0.1), size=n_samples)
@@ -184,10 +186,35 @@ def make_deep_gmm_dataset(
     X = Z[:, 0] + eps + gamma
     Y_denoised = response_func(X)
     Y = Y_denoised + eps + delta
+
+    
     Z_loop = rng.uniform(low=-3, high=3, size=(n_samples_only_z, 2))
-    return InstrumentalVariableDataset(
-        X, Z, Z_loop, Y, Y_denoised, "deep gmm dataset"
-    )
+    eps_loop = rng.normal(loc=0, scale=1, size=n_samples_only_z)
+    gamma_loop = rng.normal(loc=0, scale=np.sqrt(0.1), size=n_samples_only_z)
+    delta_loop = rng.normal(loc=0, scale=np.sqrt(0.1), size=n_samples_only_z)
+    X_loop = Z_loop[:, 0] + eps_loop + gamma_loop
+    Y_loop = response_func(X_loop) + eps_loop + delta_loop
+
+    sagdiv_dataset = InstrumentalVariableDataset(
+            X, Z, Z_loop, Y, Y_denoised, "deep gmm dataset"
+        )
+    if not return_kiv_dataset:
+        return sagdiv_dataset
+    else: 
+        n_samples_tilde = Z_loop.shape[0]//2
+        Z_tilde = Z_loop[:n_samples_tilde]
+        Y_tilde = Y_loop[:n_samples_tilde]
+        kiv_dataset = KIVDataset(X, Z, Y, Z_tilde, Y_tilde, "deep gmm dataset")
+        # KIV needs one dataset of (X, Y, Z) and one of (X, Z).
+        # We return the same (X, Y, Z) dataset that we use in SAGDIV
+        # and return a dataset of (Z_tilde, Y_tilde) samples,
+        # where the Z_tilde samples are the same we use in the SAGDIV
+        # training loop.
+        # To be more precise, if we use M samples of Z in the SAGDIV loop,
+        # We use M/2 pairs of (Z_tilde, Y_tilde) for the second stage
+        # of KIV, so that the total number of random variables used by
+        # each method is the same.
+        return sagdiv_dataset, kiv_dataset
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt

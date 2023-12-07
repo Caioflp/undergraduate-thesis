@@ -28,6 +28,6 @@ class KIVDataset:
     X: np.ndarray
     Z: np.ndarray
     Y: np.ndarray
-    X_tilde: np.ndarray
     Z_tilde: np.ndarray
+    Y_tilde: np.ndarray
     name: str = None

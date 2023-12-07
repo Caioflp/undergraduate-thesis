@@ -35,11 +35,13 @@ class FunctionalSGD(BaseEstimator):
         self,
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
         warm_up_duration: int = 50,
-        bound = 10,
+        bound: int = 10,
+        nesterov: bool = False,
     ):
         self.lr = lr
         self.warm_up_duration = 50
         self.bound = bound
+        self.nesterov = nesterov
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:
         """Fits model to dataset.
@@ -116,6 +118,10 @@ class FunctionalSGD(BaseEstimator):
               f"{best_weight_yz}")
         conditional_mean_yz.loop_fit(Z, Z_loop)
 
+        if self.nesterov:
+            momentum = 1/n_samples
+            phi_current = estimates.on_all_points[0]
+
         for i in tqdm(range(n_iter)):
             # Project current estimate on Z, i.e., compute E [Th_{i-1}(X) | Z]
             projected_current_estimate = \
@@ -142,14 +148,25 @@ class FunctionalSGD(BaseEstimator):
             )
 
             # Take one step in the negative gradient direction
-            if self.bound is None:
-                estimates.on_all_points[i+1] = (
-                    estimates.on_all_points[i] - lr(i+1) * functional_grad
-                )
+            gd_update = estimates.on_all_points[i] - lr(i+1)*functional_grad
+            if self.nesterov:
+                phi_next = gd_update
+                if self.bound is None:
+                    estimates.on_all_points[i+1] = (
+                        phi_next + momentum*(phi_next - phi_current)
+                    )
+                else:
+                    estimates.on_all_points[i+1] = truncate(
+                        phi_next + momentum*(phi_next - phi_current),
+                        self.bound
+                    )
+                phi_current = phi_next
             else:
-                estimates.on_all_points[i+1] = (
-                    truncate(estimates.on_all_points[i] - lr(i+1) * functional_grad, self.bound)
-                )
+                if self.bound is None:
+                    estimates.on_all_points[i+1] = gd_update
+                else:
+                    estimates.on_all_points[i+1] = \
+                            truncate(gd_update, self.bound)
 
         # Construct final estimate as average of sequence of estimates
         # Discard the first `self.warm_up_duration` samples if we have enough

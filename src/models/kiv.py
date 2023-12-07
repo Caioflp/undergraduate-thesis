@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.spatial import distance_matrix
 from sklearn.base import BaseEstimator
+from sklearn.model_selection import KFold
 from tqdm import tqdm
 
 from src.data.utils import KIVDataset
@@ -24,16 +25,7 @@ class KIV(BaseEstimator):
     def __init__(self):
         self.lenghtscale_z = None
         self.lenghtscale_x = None
-
         self.lambda_ = None
-        self.n = None
-        self.m = None
-        self.xi = None
-        self.K_XX = None
-        self.K_ZZ = None
-        self.K_ZZ_tilde = None
-        self.K_X_tilde_X_tilde = None
-        self.K_X_tilde_X = None
         self.W = None
         self.alpha = None
 
@@ -81,7 +73,7 @@ class KIV(BaseEstimator):
         squared_distances = distance_matrix(x_1, x_2)**2
         return np.exp(- self.lengthscale_x * squared_distances)
 
-    def find_and_set_best_lengthscales(X, Z):
+    def find_and_set_best_lengthscales(self, X, Z):
         median_x = np.quantile(
             np.ravel(distance_matrix(X, X)),
             .5
@@ -104,7 +96,7 @@ class KIV(BaseEstimator):
         weights: list = [10**(-i) for i in range(-2, 3)],
     ):
         best_lambda, best_lambda_loss = self.find_and_set_best_lambda(
-            X, Z, Z_tilde, Y_tilde,
+            X, Z,
             n_splits=n_splits,
             weights=weights,
         )
@@ -115,7 +107,7 @@ class KIV(BaseEstimator):
         )
         return best_lambda, best_lambda_loss, best_xi, best_xi_loss
 
-    def compute_loss_lambda(X_train, Z_train, X_test, Z_test) -> float:
+    def compute_loss_lambda(self, X_train, Z_train, X_test, Z_test) -> float:
         assert Z_test.shape[0] == X_test.shape[0]
         assert X_train.shape[0] == Z_train.shape[0]
         n_samples_test = Z_test.shape[0]
@@ -139,6 +131,7 @@ class KIV(BaseEstimator):
         return loss
 
     def find_and_set_best_lambda(
+        self,
         X: np.ndarray,
         Z: np.ndarray,
         n_splits: int = 5,
@@ -204,6 +197,7 @@ class KIV(BaseEstimator):
             )
 
     def compute_loss_xi(
+        self,
         X_train,
         Z_train,
         Z_tilde_train,
@@ -228,11 +222,12 @@ class KIV(BaseEstimator):
             + n_samples_second_stage*self.xi*self.kernel_x(X_train, X_train)
         )
         alpha = np.linalg.solve(WW_m_xi_K_XX, W@Y_tilde_train)
-        h_hat = alfa.T@self.kernel_x(X_train, X_test).flatten()
+        h_hat = (alpha.T@self.kernel_x(X_train, X_test)).flatten()
         loss = np.sum((h_hat - Y_test)**2) / n_samples_second_stage
         return loss
 
     def find_and_set_best_xi(
+        self,
         X: np.ndarray,
         Z: np.ndarray,
         Y: np.ndarray,
@@ -251,9 +246,9 @@ class KIV(BaseEstimator):
         for weight in weights:
             self.xi = weight
             loss = self.compute_loss_xi(
-                X_train, Z_train, Z_tilde, Y_tilde, X_train, Y,
+                X, Z, Z_tilde, Y_tilde, X, Y,
             )
-            fold_losses_by_weight[weight] = loss
+            losses_by_weight[weight] = loss
         best_weight = min(losses_by_weight, key=losses_by_weight.get)
         if current_iter == max_iter:
             best_weight_loss = losses_by_weight[best_weight]
@@ -308,7 +303,9 @@ class KIV(BaseEstimator):
         Z_tilde = ensure_two_dimensional(Z_tilde)
 
         lambda_, lambda_loss, xi, xi_loss = \
-                self.find_and_set_best_regularization_weights()
+                self.find_and_set_best_regularization_weights(
+                    X, Z, Y, Z_tilde, Y_tilde,
+                )
         print(f"Best lambda: {lambda_}")
         print(f"With loss: {lambda_loss:1.2e}")
         print(f"Best Xi: {xi}")
@@ -320,14 +317,15 @@ class KIV(BaseEstimator):
 
         self.W = self.kernel_x(X, X) @ np.linalg.solve(
             self.kernel_z(Z, Z) + n*self.lambda_*np.eye(n),
-            self.kernel(Z, Z_tilde)
+            self.kernel_z(Z, Z_tilde)
         )
         self.alpha = np.linalg.solve(
             self.W@self.W.T + m*self.xi*self.kernel_x(X, X),
-            W
+            self.W
         ) @ Y_tilde
         # Needed for predict
         self.X_train = X
 
     def predict(self, X):
+        X = ensure_two_dimensional(X)
         return (self.alpha@self.kernel_x(self.X_train, X)).flatten()
