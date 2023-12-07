@@ -31,20 +31,20 @@
 \contentsline {section}{\numberline {4.3}Stochastic Approximate Gradient Descent IV}{36}{section.4.3}%
 \contentsline {section}{\numberline {4.4}Theoretical results}{37}{section.4.4}%
 \contentsline {section}{\numberline {4.5}Computing the necessary estimators with kernel methods}{38}{section.4.5}%
-\contentsline {section}{\numberline {4.6}Numerical results}{38}{section.4.6}%
+\contentsline {section}{\numberline {4.6}Numerical experiment}{39}{section.4.6}%
 \vspace {\cftbeforechapterskip }
 \setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
-\contentsline {chapter}{\chapternumberline {5}\MakeUppercase []{Conclusion}}{39}{chapter.5}%
+\contentsline {chapter}{\chapternumberline {5}\MakeUppercase []{Conclusion}}{41}{chapter.5}%
 \vspace {\cftbeforechapterskip }
 \setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
-\contentsline {chapter}{References}{40}{section*.21}%
+\contentsline {chapter}{References}{42}{section*.22}%
 \renewcommand *{\cftappendixname }{APPENDIX \space }
 \setlength {\cftpartindent }{\cftlastnumwidth } \setlength {\cftpartnumwidth }{2em}
 \cftinsert {A}
-\contentsline {part}{\uppercase {Appendix}}{41}{section*.22}%
+\contentsline {part}{\uppercase {Appendix}}{44}{section*.23}%
 \setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
 \setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
 \cftinsert {A}
-\contentsline {appendix}{\chapternumberline {A}\MakeUppercase []{Proofs of theoretical results}}{42}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Proof of Theorem \ref {thm: main theorem}}{42}{section.A.1}%
+\contentsline {appendix}{\chapternumberline {A}\MakeUppercase []{Proofs of theoretical results}}{45}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Proof of Theorem \ref {thm: main theorem}}{45}{section.A.1}%
 \vspace {\cftbeforechapterskip }

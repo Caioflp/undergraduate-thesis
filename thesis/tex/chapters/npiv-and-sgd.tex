@@ -39,7 +39,6 @@ One possible choice for the set $ \searchset $ is the $ L^{ \infty } ( X ) $ bal
 where $ A > 0 $ is a constant.
 This set is obviously convex and bounded in the $ L^2 ( X ) $ norm.
 It can be shown that it is also closed, but not necessarily compact, as can be seen by taking a $ \norm{ \cdot }_{ \infty } $--bounded orthonormal basis for $ L^2 ( X ) $, if one exists.
-The details can be found in the Appendix.
 We denote by $ \pi_{ \searchset } $ the orthogonal projection onto $ \searchset $.
 In case $ \searchset $ is given by (\ref{eq: H is L infinity ball}), we have the explicit formula:
 \begin{equation*}
@@ -165,7 +164,6 @@ From section \ref{sec: npiv and ill posed lip}, we know that $ \meanop^{ * } $ i
 .\end{equation*}
 Therefore, taking $ g ( z ) = \Phi ( x, z ) \partial_{ 2 } \ell ( r ( z ), \meanop [ h ] ( z ) ) $, we have that the random variable $ \Phi ( x, Z ) \partial_{ 2 } \ell ( r ( Z ), \meanop [ h ] ( Z ) ) $ is an unbiased stochastic estimate of $ \nabla \risk ( h ) ( x ) $.
 In fact, a stronger result is true: we can consider $ \Phi ( \cdot, Z ) \partial_{ 2 } \ell ( r ( Z ), \meanop [ h ] ( Z ) ) $ as a random element of the Hilbert space $ L^2 ( X ) $, with mean vector --- in the Bochner integral sense, see \cite[Chapter~7]{hsing2015} --- equal to $ \nabla \risk ( h ) $.
-A proof of this fact may be found in the Appendix.
 
 A hypothesis which is needed for this proof and which is necessary for the following theoretical analysis is a finite $ L^2 ( \prob_{ X } \otimes \prob_{ Z } ) $--norm of $ \Phi $, which, as we have seen in section \ref{sec: npiv and ill posed lip}, amounts to saying $ \meanop $ is Hilbert-Schmidt.
 \begin{assump}
@@ -292,6 +290,59 @@ as $ M \to \infty $, then the first two terms in the sum vanish as $ M $ grows.
 The last term is due to the fact that we do not know $ \Phi, r $ nor $ \meanop $, but it explicitly quantifies how the estimation errors of $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $ come together to determine the quality of the final estimator.
 
 \section{Computing the necessary estimators with kernel methods}
+\label{sec: kernel methods}
 
-\section{Numerical results}
+In this section, we give references for how we chose to compute $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $ in our practical implementation.
+All of these estimators are based on kernel Ridge regression, where the unknown function is approximated using members of a Reproducing Kernel Hilbert Space (RKHS) --- see \cite[Chapter~4]{svm2008} for an introduction to these spaces. 
+Kernel methods have the advantage of providing closed form solutions to regression problems due to the Representer Theorem \cite[Theorem~1]{representer2001}.
 
+Starting with the estimator of
+\begin{equation*}
+    \Phi ( x, z ) = \frac{ p ( x, z ) }{ p ( x ) p ( z ) }
+,\end{equation*}
+we chose to use the Unconstrained Least Squares Importance Fitting (uLSIF) framework described in \cite[Chapter~6]{sugiyama2012}.
+Using a gaussian kernel for the estimator, wee can see that it adheres to Assumption \ref{assumption estimators}.
+
+The method of estimation of $ \hat{ \meanop } $ was taken to be the first stage of Kernel Instrumental Variable (KIV) \cite{singh2019}, a method for NPIV regression which provides two stages based on kernel Ridge regression.
+The first stage consists of computing a conditional mean embedding \cite{cme2009} of the conditional distribution of $ X $ given $ Z = z $ in a RKHS of functions $ \mathcal{H}_{ \mathcal{X} } $, which acts as a proxy for $ L^2 ( X ) $.
+This conditional mean embedding encodes the same information as $ \meanop $.
+To estimate $ r ( Z ) = \mean [ Y \mid Z ] $, we simply used this same method to obtain an approximation to the operator $ L^2 ( Y ) : f \mapsto \mean [ f ( Y ) \mid Z = \cdot ] \in L^2 ( Z ) $, which we then apply to the identity function.
+
+\section{Numerical experiment}
+
+We tested SAGD-IV using the following data generating process, obtained from \cite{deepgmm2019}:
+
+\begin{tabular}{lcl}
+    $ Y = \hstar ( X ) + \varepsilon + \delta $ & &
+    $ X = Z_{ 1 } + \varepsilon + \gamma $ \\
+    $ Z = ( Z_{ 1 }, Z_{ 2 } ) \sim \unif ( [-3, 3]^2 ) $ & &
+    $ \varepsilon \sim \mathcal{N} ( 0, 1 ), \ \gamma, \delta \sim \mathcal{N} ( 0, 0.1 ) $
+\end{tabular}
+
+\noindent For the response function $ \hstar $, we tested two cases:
+\begin{equation*}
+    \bsin: \hstar ( x ) = \sin ( x ) \quad \text{and} \quad \babs: \hstar ( x ) = \abs{ x }
+.\end{equation*}
+We chose to compare our model to a direct competitor: Kernel Instrumental Variable (KIV) \cite{singh2019}, due to the relationship between both methods discussed in section \ref{sec: kernel methods}.
+All regularization parameters necessary for the computation of $ \hat{ \Phi }, \hat{ r }, \hat{ \meanop } $, as well as the ones in the two stages of KIV, were chosen using cross-validation on held-out training samples.
+All kernels employed were gaussian, with lenghtscale parameter set to be equal to the inverse of the median distance between samples.
+With the notation of Algorithm \ref{algo: sagdiv}, for SAGD-IV we set the learning rate to be $ \alpha_{ m } = \frac{ 1 }{ \sqrt{ M } } $ for $ 1 \leq m \leq M $.
+For SAGD-IV, the dataset was comprised of $ 600 $ samples from the triple $ ( X, Z, Y ) $ and an additional $ 1200 $ samples of $ Z $ alone, to conduct the loop in Algorithm \ref{algo: sagdiv}.
+The dataset for KIV was comprised of the same $ 600 $ samples of the triple $ ( X, Z, Y ) $, plus additional $ 600 $ samples of the pair $ ( Z, Y ) $ (these are necessary for the algorithm, see \cite{singh2019}).
+In this way, both algorithms have access to the same amount of samples and share as many as possible.
+
+The results obtained are in Figure \ref{fig: sagd-iv and kiv}.
+\begin{figure}[htb]
+    \begin{center}
+        \includegraphics[width=\textwidth]{sagd-iv_kiv_comparison.pdf}
+    \end{center}
+    \caption{
+    SAGD-IV and KIV for two different response functions.
+}
+    \label{fig: sagd-iv and kiv}
+\end{figure}
+We can see that, while both methods performed similarly in the $ \bsin $ case, KIV was slightly better.
+This might be due to the smooth nature of the KIV estimator, since both stages are conducted using Kernel Ridge Regression.
+However, the relative performance changes drastically when looking at the $ \babs $ case, where SAGD-IV greatly outperformed KIV.
+This indicates that SAGD-IV may perform better with non-smooth response functions.
+Of course, this isn't a thorough investigation of the empirical performance of SAGD-IV, nor irrefutable proof that it is better then KIV, and a more detailed analysis, involving other recent methods which have appeared in the NPIV literature, is left for future work.

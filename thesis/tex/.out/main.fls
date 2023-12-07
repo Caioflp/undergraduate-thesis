@@ -698,6 +698,11 @@ INPUT ./chapters/npiv-and-lip.tex
 INPUT ./chapters/npiv-and-lip.tex
 INPUT ./chapters/npiv-and-sgd.tex
 INPUT ./chapters/npiv-and-sgd.tex
+INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman8-bold.luc
+INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman6-bold.luc
+INPUT ../fig//sagd-iv_kiv_comparison.pdf
+INPUT ../fig//sagd-iv_kiv_comparison.pdf
+INPUT ../fig//sagd-iv_kiv_comparison.pdf
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmmono12-regular.luc

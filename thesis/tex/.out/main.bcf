@@ -2479,6 +2479,14 @@
     <bcf:citekey order="34" intorder="1">newey2003</bcf:citekey>
     <bcf:citekey order="35" intorder="1">pathak2018</bcf:citekey>
     <bcf:citekey order="36" intorder="1">hsing2015</bcf:citekey>
+    <bcf:citekey order="37" intorder="1">svm2008</bcf:citekey>
+    <bcf:citekey order="38" intorder="1">representer2001</bcf:citekey>
+    <bcf:citekey order="39" intorder="1">sugiyama2012</bcf:citekey>
+    <bcf:citekey order="40" intorder="1">singh2019</bcf:citekey>
+    <bcf:citekey order="41" intorder="1">cme2009</bcf:citekey>
+    <bcf:citekey order="42" intorder="1">deepgmm2019</bcf:citekey>
+    <bcf:citekey order="43" intorder="1">singh2019</bcf:citekey>
+    <bcf:citekey order="44" intorder="1">singh2019</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

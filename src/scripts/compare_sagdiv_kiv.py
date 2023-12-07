@@ -20,7 +20,7 @@ from src.scripts.utils import experiment
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
-    "font.size": 12,
+    "font.size": 10,
 })
 
 def plot_data(
@@ -59,15 +59,17 @@ def plot_estimate(
     figsize: Tuple[int] = (7, 5),
     with_data = True,
     title: str = "SAGD-IV and KIV",
+    ax = None,
 ) -> None:
-    fig, ax = plt.subplots(layout="constrained", figsize=figsize)
+    if ax is None:
+        fig, ax = plt.subplots(layout="constrained", figsize=figsize)
     # Sorting is necessary to make line plots
     sorted_idx_observed = np.argsort(model_sagdiv.domain.observed_points.flatten())
     ax.plot(
         dataset.X.flatten()[sorted_idx_observed],
         dataset.Y_denoised[sorted_idx_observed],
         c="r",
-        label=r"$h^{\star} (X) + \varepsilon$",
+        label=r"$h^{\star} (X)$",
         alpha=.8,
     )
     sort_idx = np.argsort(model_sagdiv.domain.all_points.flatten())
@@ -106,11 +108,18 @@ def plot_estimate(
     ax.set_title(title)
     # ax.set_xlim(-4, 4)
     ax.legend()
-    fig.savefig(title.lower().replace(" ", "_") + ".pdf")
+    if ax is None:
+        fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
 # @experiment("new_version/sandbox")
-@experiment("benchmark/benchmark_KIV_vs_nesterov")
+@experiment("benchmark/benchmark_KIV")
 def main():
+    cm = 1/2.54
+    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(22*cm, 12*cm))
+    fig.set_tight_layout(True)
+    ax_sin = axs[0]
+    ax_abs = axs[1]
+
     response = "sin"
     dataset_sagdiv, dataset_kiv = make_deep_gmm_dataset(
         n_samples=600, n_samples_only_z=1200, response=response,
@@ -125,11 +134,36 @@ def main():
         nesterov=True,
     )
     model_sagdiv.fit(dataset_sagdiv)
+    plot_estimate(
+        model_sagdiv, model_kiv, dataset_sagdiv,
+        title=r"$h^{\star} (x) = \sin (x)$", ax=ax_sin
+    )
+
+    response = "abs"
+    dataset_sagdiv, dataset_kiv = make_deep_gmm_dataset(
+        n_samples=600, n_samples_only_z=1200, response=response,
+        return_kiv_dataset=True,
+    )
+    model_kiv = KIV()
+    model_kiv.fit(dataset_kiv)
+    model_sagdiv = FunctionalSGD(
+        lr="inv_n_samples",
+        warm_up_duration=100,
+        bound=10,
+        nesterov=False,
+    )
+    model_sagdiv.fit(dataset_sagdiv)
+    plot_estimate(
+        model_sagdiv, model_kiv, dataset_sagdiv,
+        title=r"$h^{\star} (x) = |x|$", ax=ax_abs
+    )
+
+    fig.savefig("sagd-iv_kiv_comparison.pdf")
+
     
     # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))
     # plt.show()
     # plot_estimate(model, dataset, title=f"Estimate for {response} in {dataset.name}")
-    plot_estimate(model_sagdiv, model_kiv, dataset_sagdiv, title="SAGD-IV and KIV")
 
 
 if __name__ == "__main__":
