@@ -160,10 +160,25 @@
 }
 
 \headerbox{2. NPIV problem formulation}{name=npiv,column=0,below=abstract,span=1}{
+    \vspace{-1em}
     \begin{equation}
         \label{iv equation}
-        Y = \hstar ( X ) + \varepsilon, \quad \mean [ \varepsilon \mid X ] \neq 0 \quad \text{and} \quad \mean [ \varepsilon \mid Z ] = 0
+        Y = \hstar ( X ) + \varepsilon, \quad \mean [ \varepsilon \mid X ] \neq 0, \quad X\notindep Z \quad \text{and} \quad \mean [ \varepsilon \mid Z ] = 0
+        \vspace{-.5em}
     .\end{equation}
+    For example, consider the market of interstate transportation.
+    Take
+    \begin{center}
+        \begin{tabular}{cc}
+            $ X = $ Bus ticket price & $ Y = $ Bus ticket sales \\
+            $ Z = $ Gas price & $ \varepsilon =  $ Other market forces
+        \end{tabular}
+    \end{center}
+    % \begin{equation*}
+    %     X = \text{Bus ticket price} \quad Y = \text{Bus ticket sales}
+    %     \quad Z = \text{Gas price} \quad \varepsilon = \text{Other market forces}
+    % .\end{equation*}
+
     Let $ L^2 ( X ) = \left\{ h : \mean [ h ( X )^2 ] < \infty \right\} $.
     Then (\ref{iv equation}) is equivalent to
     \begin{equation}
@@ -185,10 +200,10 @@
        = \mean [ \Phi ( x, Z ) \partial_{ 2 } \loss ( r ( Z ), \meanop [ h ] ( Z ) ) ]
     ,\end{equation*}
     where $ \Phi ( x, z ) = \frac{ p_{ XZ } ( x, z ) }{ p_{ X } ( x ) p_{ Z } ( z ) } $.
-    Hence,
-    \begin{equation*}
-        \nabla \risk ( h ) \approx \Phi ( \cdot , Z ) \partial_{ 2 } \loss ( r ( Z ), \meanop [ h ] ( Z ) ) 
-    .\end{equation*}
+    % Hence,
+    % \begin{equation*}
+    %     \nabla \risk ( h ) \approx \Phi ( \cdot , Z ) \partial_{ 2 } \loss ( r ( Z ), \meanop [ h ] ( Z ) ) 
+    % .\end{equation*}
     We estimate $ \Phi, r $ and $ \meanop $ with $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $ and look for a solution in a convex, closed and bounded set $ \searchset \subseteq L^2 ( X ) $.
 }
 
@@ -218,8 +233,7 @@
 }
 
 \headerbox{4. Convergence Rate}{name=theorem,column=1, span=1, below=algorithm}{
-    \vspace{4.75pt}
-    Let
+    \vspace{6pt}
     \begin{align*}
         \alpha &= \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \prob_{ X } \otimes \prob_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2, \\
         \xi &= \frac{ 3 }{ 2 } \norm{ \hat{ \Phi } }_{ \infty }^2 \left(
@@ -240,7 +254,9 @@
         + \frac{ \xi }{ M } \sum_{ m=1 }^{ M } \alpha_{ m }
         + \tau \sqrt{ \alpha }.
     \end{align*}
-    This suggests that the learning rate should satisfy
+    \vspace{7pt}
+
+    This suggests that the learning rate should satisfy the usual conditions:
     \begin{equation*}
         M \alpha_{ M } \to \infty \quad \text{and} \quad \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \alpha_{ m } \to 0
     .\end{equation*}
