@@ -94,6 +94,9 @@
 
 \definecolor{fgv_dark_blue}{RGB}{1, 62, 125}
 \definecolor{fgv_light_blue}{RGB}{6, 143, 203}
+\definecolor{orange}{HTML}{DA511F}
+\definecolor{background}{HTML}{F6FBFD}
+\newcommand{\highlight}[1]{{\color{fgv_light_blue}\textbf{#1}}}
 
 \begin{poster}
 {
@@ -105,8 +108,8 @@
     borderColor=fgv_light_blue, % Border color
     headerColorOne=fgv_dark_blue, % Background color for the header in the content boxes (left side)
     headerColorTwo=fgv_dark_blue, % Background color for the header in the content boxes (right side)
-    headerFontColor=white, % Text color for the header text in the content boxes
-    boxColorOne=white, % Background color of the content boxes
+    headerFontColor=background, % Text color for the header text in the content boxes
+    boxColorOne=background, % Background color of the content boxes
     textborder=rectangle, %rectangle, % Format of the border around content boxes, can be: none, bars, coils, triangles, rectangle, rounded, roundedsmall, roundedright or faded
     eyecatcher=false, % Set to false for ignoring the left logo in the title and move the title left
     headerheight=0.125\textheight, % Height of the header
@@ -150,13 +153,13 @@
 
 % this states the box starts at column 0 (edge of page), row 0 (top of page) for a span of 2 (columns wide)
 \headerbox{1. Abstract}{name=abstract,column=0,row=0, span=1}{
-    We propose SAGD-IV, an algorithm which performs \textbf{instrumental variable regression} through iterative \textbf{SGD-like updates in a\\ functional space}:
+    We propose SAGD-IV, an algorithm which performs \highlight{\textbf{instrumental variable regression}} through iterative \highlight{SGD-like updates in a\\ functional space}:
     \begin{itemize}[noitemsep]
         \item IV regression is formulated as a statistical inverse problem;
         \item A suitable risk functional is introduced;
         \item This risk is minimized directly using a first order procedure.
     \end{itemize}
-    Convergence guarantees are obtained using \textbf{minimal assumptions} when compared to other NPIV models.
+    Convergence guarantees are obtained using \highlight{minimal assumptions} when compared to other NPIV models.
 }
 
 \headerbox{2. NPIV problem formulation}{name=npiv,column=0,below=abstract,span=1}{
@@ -168,10 +171,11 @@
     .\end{equation}
     For example, consider the market of interstate transportation.
     Take
+    \vspace{-1em}
     \begin{center}
         \begin{tabular}{cc}
             $ X = $ Bus ticket price & $ Y = $ Bus ticket sales \\
-            $ Z = $ Gas price & $ \varepsilon =  $ Other market forces
+            $ Z = $ Gas price & $ \varepsilon =  $ Unobservable local demographic features
         \end{tabular}
     \end{center}
     % \begin{equation*}
@@ -195,9 +199,9 @@
     .\end{equation*}
     We compute the gradient explicitly:
     \begin{equation*}
-       \nabla \risk ( h ) ( x )
+        {\color{fgv_light_blue}\nabla \risk ( h ) ( x )}
        = \meanop^{ * } [ \partial_{ 2 } \loss ( r ( \cdot ), \meanop [ h ] ( \cdot ) ) ] ( x )
-       = \mean [ \Phi ( x, Z ) \partial_{ 2 } \loss ( r ( Z ), \meanop [ h ] ( Z ) ) ]
+       = \mean [ {\color{fgv_light_blue}\Phi ( x, Z ) \partial_{ 2 } \loss ( r ( Z ), \meanop [ h ] ( Z ) )} ]
     ,\end{equation*}
     where $ \Phi ( x, z ) = \frac{ p_{ XZ } ( x, z ) }{ p_{ X } ( x ) p_{ Z } ( z ) } $.
     % Hence,
@@ -223,7 +227,7 @@
         }
         \Output{ $ \hat{ h } $ }
         \For{$ 1 \leq m \leq M $}{
-        Set $ u_{ m } = \hat{ \Phi } ( \cdot , \bz_{ m } ) \partial_{ 2 } \ell \left( \hat{ r } ( \bz_{ m } ), \hat{ \meanop } [ \hat{ h }_{ m - 1 } ] ( \bz_{ m } ) \right) $ \;
+        Set $ u_{ m } = {\color{fgv_light_blue}\hat{ \Phi } ( \cdot , \bz_{ m } ) \partial_{ 2 } \ell \left( \hat{ r } ( \bz_{ m } ), \hat{ \meanop } [ \hat{ h }_{ m - 1 } ] ( \bz_{ m } ) \right)} $ \;
         Set $ \hat{ h }_{ m }  = \pi_{ \searchset } \left[
             \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m }  
         \right] $ \;
@@ -235,11 +239,11 @@
 \headerbox{4. Convergence Rate}{name=theorem,column=1, span=1, below=algorithm}{
     \vspace{6pt}
     \begin{align*}
-        \alpha &= \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \prob_{ X } \otimes \prob_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2, \\
-        \xi &= \frac{ 3 }{ 2 } \norm{ \hat{ \Phi } }_{ \infty }^2 \left(
+        &{\color{orange}\zeta = \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \prob_{ X } \otimes \prob_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2}, \\
+        &\xi = \frac{ 3 }{ 2 } \norm{ \hat{ \Phi } }_{ \infty }^2 \left(
             C_{ 0 }^2 + L^2 \norm{ \hat{ r } }_{ L^2 ( Z ) }^2 + L^2 D ^2 \norm{ \hat{ \meanop } }_{ \op }^2
         \right), \\
-        \tau &= 2 D \max \left\{
+        &\tau = 2 D \max \left\{
             3 ( C_{ 0 }^2 + L^2 \mean [ Y^2 ] + L^2 D^2 ),
             2L^2 \norm{ \hat{ \Phi } }_{ \infty }^2,
             2L^2 D^2 \norm{ \hat{ \Phi } }_{ \infty }^2
@@ -252,7 +256,7 @@
         \right]
         \leq \frac{ D^2 }{ 2 M \alpha_{ M } }
         + \frac{ \xi }{ M } \sum_{ m=1 }^{ M } \alpha_{ m }
-        + \tau \sqrt{ \alpha }.
+        + \tau \sqrt{ {\color{orange}\zeta} }.
     \end{align*}
     \vspace{7pt}
 
