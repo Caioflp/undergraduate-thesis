@@ -11,6 +11,7 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
+\usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage[algoruled,boxed,lined]{algorithm2e}
 \newcommand{\theHalgorithm}{\arabic{algorithm}}
@@ -98,7 +99,7 @@
 {
     grid=false,
     headerborder=open, % Adds a border around the header of content boxes
-    colspacing=2em, % Column spacing
+    colspacing=.8em, % Column spacing
     bgColorOne=white, % Background color for the gradient on the left side of the poster
     bgColorTwo=white, % Background color for the gradient on the right side of the poster
     borderColor=fgv_light_blue, % Border color
@@ -149,20 +150,53 @@
 
 % this states the box starts at column 0 (edge of page), row 0 (top of page) for a span of 2 (columns wide)
 \headerbox{1. Abstract}{name=abstract,column=0,row=0, span=1}{
-    We propose SAGD-IV, an algorithm which performs \textbf{instrumental variable regression} through iterative \textbf{SGD-like updates in a functional space}:
-    \begin{itemize}
-        \item IV regression is formulated as an statistical inverse problem;
+    We propose SAGD-IV, an algorithm which performs \textbf{instrumental variable regression} through iterative \textbf{SGD-like updates in a\\ functional space}:
+    \begin{itemize}[noitemsep]
+        \item IV regression is formulated as a statistical inverse problem;
         \item A suitable risk functional is introduced;
         \item This risk is minimized directly using a first order procedure.
     \end{itemize}
     Convergence guarantees are obtained using \textbf{minimal assumptions} when compared to other NPIV models.
 }
 
-\headerbox{2. NPIV regression}{name=npiv,column=0,below=abstract,span=1}{
-
+\headerbox{2. NPIV problem formulation}{name=npiv,column=0,below=abstract,span=1}{
+    \begin{equation}
+        \label{iv equation}
+        Y = \hstar ( X ) + \varepsilon, \quad \mean [ \varepsilon \mid X ] \neq 0 \quad \text{and} \quad \mean [ \varepsilon \mid Z ] = 0
+    .\end{equation}
+    Let $ L^2 ( X ) = \left\{ h : \mean [ h ( X )^2 ] < \infty \right\} $.
+    Then (\ref{iv equation}) is equivalent to
+    \begin{equation}
+        \label{operator equation}
+        r = \meanop [ \hstar ]
+    ,\end{equation}
+    where $ r ( Z ) = \mean [ Y \mid Z ] $ and $ \meanop : L^2 ( X ) \to L^2 ( Z ) $ is given by
+    \begin{equation*}
+        \meanop [ h ] ( Z ) = \mean [ h ( X ) \mid Z ]
+    .\end{equation*}
+    Equation (\ref{operator equation}) motivates us to define the risk
+    \begin{equation*}
+        \risk ( h ) \defeq \mean [ \loss ( r ( Z ), \meanop [ h ] ( Z ) ) ]
+    .\end{equation*}
+    We compute the gradient explicitly:
+    \begin{equation*}
+       \nabla \risk ( h ) ( x )
+       = \meanop^{ * } [ \partial_{ 2 } \loss ( r ( \cdot ), \meanop [ h ] ( \cdot ) ) ] ( x )
+       = \mean [ \Phi ( x, Z ) \partial_{ 2 } \loss ( r ( Z ), \meanop [ h ] ( Z ) ) ]
+    ,\end{equation*}
+    where $ \Phi ( x, z ) = \frac{ p_{ XZ } ( x, z ) }{ p_{ X } ( x ) p_{ Z } ( z ) } $.
+    Hence,
+    \begin{equation*}
+        \nabla \risk ( h ) \approx \Phi ( \cdot , Z ) \partial_{ 2 } \loss ( r ( Z ), \meanop [ h ] ( Z ) ) 
+    .\end{equation*}
+    We estimate $ \Phi, r $ and $ \meanop $ with $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $ and look for a solution in a convex, closed and bounded set $ \searchset \subseteq L^2 ( X ) $.
 }
 
 \headerbox{3. Algorithm}{name=algorithm, column=1}{
+    % After computing the gradient descent update, we apply $ \pi_{ \searchset } $, an orthogonal projection onto $ \searchset $.
+
+    % The final average is taken due to good theoretical properties.
+
     \begin{algorithm}[H]\label{algo: sagdiv}
         \caption{SAGD--IV}
         \SetKwInOut{Input}{input}
@@ -184,6 +218,7 @@
 }
 
 \headerbox{4. Convergence Rate}{name=theorem,column=1, span=1, below=algorithm}{
+    \vspace{5pt}
     Let
     \begin{align*}
         \alpha &= \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \prob_{ X } \otimes \prob_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2, \\
@@ -203,13 +238,15 @@
         \right]
         \leq \frac{ D^2 }{ 2 M \alpha_{ M } }
         + \frac{ \xi }{ M } \sum_{ m=1 }^{ M } \alpha_{ m }
-        + \tau \sqrt{ \alpha },
+        + \tau \sqrt{ \alpha }.
     \end{align*}
+    This suggests that the learning rate should satisfy
+    \begin{equation*}
+        M \alpha_{ M } \to \infty \quad \text{and} \quad \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \alpha_{ m } \to 0
+    .\end{equation*}
 }
 
-
-
-\headerbox{5. Numerical Experiment}{name=experiment,column=0,span=2,below=theorem}{
+\headerbox{5. Numerical Experiment}{name=experiment,column=0,span=2,below=npiv}{
 
     {
         We compare our method with Kernel Instrumental Variable Regression (KIV) \cite{singh2019}.
@@ -220,17 +257,18 @@
 
 }
 
-\headerbox{6. Next Steps}{name=next-steps,column=0,below=experiment,span=1,above=bottom}
+\headerbox{6. Next Steps}{name=next-steps,column=0,below=experiment, above=bottom,span=1}
 {
     \vspace{1em}
-    \begin{itemize}
+    \begin{itemize}[noitemsep]
         \item More thorough benchmarks;
-        \item Application to discrete outcomes $ Y = \ind \left\{ \hstar ( X ) > 0 \right\} $;
+        \item Application to discrete outcomes: $ Y = \ind \left\{ \hstar ( X ) + \varepsilon > 0 \right\} $;
+        % \item Explore more options for $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $.
     \end{itemize}
 }
 
-\headerbox{7. References}{name=references,column=1,below=experiment,span=1,above=bottom}{
-    \tiny
+\headerbox{7. References}{name=references,column=1,below=experiment,above=bottom,span=1}{
+    \nocite{sagd, yuri2022}
     \printbibliography[heading=none]
 }
 
