@@ -83,7 +83,7 @@ An exogenous covariate, in contrast to an endogenous one, is a variable that is 
 Condition \ref{en: Z is exogenous} is just one of the possible meanings for the statement that $ Z $ is exogenous.
 Two possible alternatives are requiring that $ Z $ be (A) independent from, or (B) uncorrelated with $ \varepsilon $.
 Of course, (A) is a much more strict requirement which implies \ref{en: Z is exogenous}, while (B) is a softer condition, implied by \ref{en: Z is exogenous}.
-Independence is almost always impossible to verify in real scenarios, so (a) is not a good option.
+Independence is almost always impossible to verify in real scenarios, so (A) is not a good option.
 In contrast, there are situations where condition (B) is enough for ensuring good properties of IV estimators, including one we will present shortly, the linear model \cite{wooldridge2001}.
 However, in order to prepare grounds for the nonparametric methods that will come later, we chose to use the definition which serves both.
 
@@ -120,7 +120,7 @@ In this section, we restrict the structural function $ \hstar $ in (\ref{eq: str
 ,\end{equation}
 and assume to have access to a random variable $ Z $, taking values in $ \R^{ d_{ Z } } $, satisfying conditions \ref{en: Z influences X} and \ref{en: Z is exogenous} in Definition \ref{def: iv}, so that $ Z $ is a valid instrumental variable.
 To ease the notation, we augment the variables $ X $ and $ Z $ to have a ones as a first coordinate, so we may write $ \hstar ( X ) = \beta^{ \trp } X $, where $ \beta = ( \beta_{ 0 }, \dots, \beta_{ d_{ X } } ) $.
-Their new dimensions are $ d_{ X } + 1 $ and $ d_{ Z } + 1 $ but, by an abuse of notation, we will continue writing $ d_{ X } $ and $ d_{ Z } $
+Their new dimensions are $ d_{ X } + 1 $ and $ d_{ Z } + 1 $ but, by an abuse of notation, we will continue writing $ d_{ X } $ and $ d_{ Z } $ until the end of this section.
 Our data is then composed of $ n $ independent joint samples $ \left\{ ( X_{ i }, Z_{ i }, Y_{ i } ) \right\}_{ i=1 }^{ n } $.
 Let $ \bX \in \R^{ n \times d_{ X } } $ and $ \bZ \in \R^{ n \times d_{ Z } } $ be the experiment design matrices with ones in the first column, and let $ \bY \in \R^{ n } $ be the vector with all observations of $ Y $.
 Each line of $ \bX $ and $ \bZ $ corresponds to one sample of the vectors $ X $ and $ Z $, respectively.
@@ -356,10 +356,10 @@ Hence, we start by precisely defining the nonparametric regression problem given
 \label{sec: problem specification}
 
 Let $ ( \Omega, \mathcal{A}, \prob ) $ be the underlying probability space.
-Assume that $ X : ( \Omega, \mathcal{A} ) \to ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ) ) $ and $ \varepsilon : ( \Omega, \mathcal{A} ) \to ( \R, \mathcal{B} ( \R ) ) $ are measurable\footnotemark~and, furthermore, that $ \varepsilon \in L^{ 1 } ( \Omega, \mathcal{A}, \prob ) $ with $ \mean [ \varepsilon ] = 0 $.
+Assume that $ X : ( \Omega, \mathcal{A} ) \to ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ) ) $ and $ \varepsilon : ( \Omega, \mathcal{A} ) \to ( \R, \mathcal{B} ( \R ) ) $ are measurable\footnotemark~and, furthermore, that $ \varepsilon \in L^{ 2 } ( \Omega, \mathcal{A}, \prob ) $ with $ \mean [ \varepsilon ] = 0 $.
 \footnotetext{We denote by $ \mathcal{B} ( \R^{ k } ) $ the Borel $ \sigma $-algebra in $ \R^{ k } $.}
 We also assume that $ \mean [ \varepsilon \mid X ] $ is \emph{not} almost surely null and, hence, $ X $ is endogenous.
-Denote by $ \prob_{ X } $ the distribution of the random variable\footnote{We use the term ``random variable'' when referring to scalar or vector valued measurable functions defined on $ ( \Omega, \mathcal{A} ) $.} $ X $, that is, the pushforward measure $ \prob \circ X^{ -1 } $ defined on $ \mathcal{B} ( \R^{ d_{ X } } ) $.
+Denote by $ \prob_{ X } $ the distribution of the random variable\footnote{We use the term ``random variable'' when referring to scalar or vector valued measurable functions defined on $ ( \Omega, \mathcal{A} ) $.} $ X $, that is, the pushforward measure $ X_{ * } \prob = \prob \circ X^{ -1 } $ defined on $ \mathcal{B} ( \R^{ d_{ X } } ) $.
 We write $ L^{ 2 } ( X ) $ as a shorthand for the space $ L^2 ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ), \prob_{ X } ) $ of real and square integrable (equivalence classes of) measurable functions defined on the measure space $ ( \R^{ d_{ X } }, \mathcal{B} ( \R^{ d_{ X } } ), \prob_{ X } ) $.
 It is important to recall that the inner product and norm in $ L^{ 2 } ( X ) $ are given by $ \dotprod{ h, g }_{ L^{ 2 } ( X ) } = \mean [ h ( X ) g ( X ) ] $ and $ \norm{ h }_{ L^{ 2 } ( X ) }^2 = \dotprod{ h, h }_{ L^{ 2 } ( X ) } = \mean [ h ( X )^2 ] $.
 
@@ -449,6 +449,7 @@ Then, a remarkable fact about the exponential family is the completeness of the 
 
 Using this result and under suitable hypotheses, we can reformulate the identification condition.
 \begin{thm}
+    \label{thm: iv identification}
     For $ z \in \R^{ d_{ z } } $, let $ \probq_{ z } : \mathcal{B} ( \R^{ d_{ X } } ) \to [0, 1] $ denote the conditional distribution of $ X $ given $ Z = z $.
     Assume there exists $ U \in \borel ( R^{ d_{ Z } } ) $ such that $ \prob_{ Z } ( U ) = 1 $ and for all $ z \in U $ we have
     \begin{equation*}
@@ -459,37 +460,5 @@ Using this result and under suitable hypotheses, we can reformulate the identifi
     Then, $ \hstar $ is identified.
 \end{thm}
 \begin{proof}
-    Taking $ \Xi = \alpha ( U ) $ and $ \theta = \alpha ( z ) $, we see that the hypotheses of theorem \ref{thm: completeness of exp family} are satisfied and, hence,
-    \begin{equation*}
-        \mathscr{P} \defeq \left\{ \probq_{ z } \circ T^{ -1 } : z \in U \right\}
-    \end{equation*}
-    is a complete family of probability distributions.
-    Let $ h \in L^2 ( X ) $ be such that $ \meanop [ h ] = 0 $, i.e., $ \mean [ h ( X ) \mid Z ] = 0 $ $ \prob_{ Z } $-a.s.
-    This means that the function
-    \begin{equation*}
-        z \longmapsto \int_{ \R^{ d_{ x } } } h ( x ) \ \probq_{ z } ( \ddrm x )
-    \end{equation*}
-    is null $ \prob_{ Z } $-a.s.
-    Without loss of generality, we may assume that its null on $ U $.
-    But notice that, since $ T $ is injective, we can rewrite this integral as
-    \begin{align*}
-        0 = \int_{ \R^{ d_{ x } } } h ( x ) \ \probq_{ z } ( \ddrm x )
-        &= \int_{ \R^{ d_{ x } } } ( h \circ T^{ -1 } ) ( T ( x ) ) \ \probq_{ z } ( \ddrm x ) \\
-        &= \int_{ \R^{ s } } ( h \circ T^{ -1 } ) ( t )  \ ( \probq_{ z } \circ T^{ -1 } ) ( \ddrm t )
-    \end{align*}
-    for all $ z \in U $ and some left inverse $ T^{ -1 } $ of $ T $.
-    By completeness of $ \mathscr{P} $, this implies $ h \circ~T^{ -1 } ( t ) = 0 $ $ \mathscr{P} $-a.s. which, in turn, means that for all $ z \in U $ we have
-    \begin{align*}
-        1 = ( \probq_{ z } \circ T^{ -1 } ) [ ( h \circ T^{ -1 } ) ( t ) = 0 ]
-        &= \probq_{ z } [ ( h \circ T^{ -1 } ) ( T ( x ) ) = 0 ] \\
-        &= \probq_{ z } [ h ( x ) = 0 ]
-    .\end{align*}
-    Now, by the definition of conditional probability we have
-    \begin{align*}
-        \prob_{ X } [ h ( x ) = 0 ]
-        &= \int_{ \R^{ d_{ z } } } \probq_{ z } [ h ( x ) = 0 ] \ \prob_{ Z } ( \ddrm z ) \\
-        &= \int_{ U } \probq_{ z } [ h ( x ) = 0 ] \ \prob_{ Z } ( \ddrm z ) \\
-        &= 0
-    .\end{align*}
-    Therefore, $ h $ is the null function, which means $ \hstar $ is identified.
+    See Appendix \ref{sec: proof identification}.
 \end{proof}

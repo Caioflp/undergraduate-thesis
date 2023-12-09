@@ -1,6 +1,58 @@
 \chapter{Proofs of theoretical results}
 
+\section{Proof of Theorem \ref{thm: iv identification}}
+\label{sec: proof identification}
+
+To serve as a reference when reading the proof, we restate the theorem here:
+\begin{thm*}
+    For $ z \in \R^{ d_{ z } } $, let $ \probq_{ z } : \mathcal{B} ( \R^{ d_{ X } } ) \to [0, 1] $ denote the conditional distribution of $ X $ given $ Z = z $.
+    Assume there exists $ U \in \borel ( R^{ d_{ Z } } ) $ such that $ \prob_{ Z } ( U ) = 1 $ and for all $ z \in U $ we have
+    \begin{equation*}
+        \probq_{ z } ( \ddrm x ) = C ( z ) \exp ( \alpha ( z )^{ \trp } T ( x ) ) \; \mu ( \ddrm x )
+    \end{equation*}
+    for an underlying measure $ \mu $ on $ \borel ( \R^{ d_{ X } } ) $ and some functions $ \alpha : \R^{ d_{ z } } \to \R^{ s } $ and $ T : \R^{ d_{ x } } \to \R^{ s } $.
+    Assume that $ T $ is injective and that the image of $ \alpha $ restricted to $ U $ contains an open set.
+    Then, $ \hstar $ is identified.
+\end{thm*}
+
+\begin{proof}
+    Taking $ \Xi = \alpha ( U ) $ and $ \theta = \alpha ( z ) $, we see that the hypotheses of theorem \ref{thm: completeness of exp family} are satisfied and, hence,
+    \begin{equation*}
+        \mathscr{P} \defeq \left\{ T_{ * }\probq_{ z } : z \in U \right\}
+    \end{equation*}
+    is a complete family of probability distributions.
+    Let $ h \in L^2 ( X ) $ be such that $ \meanop [ h ] = 0 $, i.e., $ \mean [ h ( X ) \mid Z ] = 0 $ $ \prob_{ Z } $-a.s.
+    This means that the function
+    \begin{equation*}
+        z \longmapsto \int_{ \R^{ d_{ x } } } h ( x ) \ \probq_{ z } ( \ddrm x )
+    \end{equation*}
+    is null $ \prob_{ Z } $-a.s.
+    Without loss of generality, we may assume that its null on $ U $.
+    But notice that, since $ T $ is injective, we can rewrite this integral as
+    \begin{align*}
+        0 = \int_{ \R^{ d_{ x } } } h ( x ) \ \probq_{ z } ( \ddrm x )
+        &= \int_{ \R^{ d_{ x } } } ( h \circ T^{ -1 } ) ( T ( x ) ) \ \probq_{ z } ( \ddrm x ) \\
+        &= \int_{ \R^{ s } } ( h \circ T^{ -1 } ) ( t ) \ T_{ * }\probq_{ z } ( \ddrm t )
+    \end{align*}
+    for all $ z \in U $ and some left inverse $ T^{ -1 } $ of $ T $.
+    By completeness of $ \mathscr{P} $, this implies $ (h \circ~T^{ -1 }) ( t ) = 0 $ $ \mathscr{P} $-a.s. which, in turn, means that for all $ z \in U $ we have
+    \begin{align*}
+        1 = T_{ * } \probq_{ z } [ ( h \circ T^{ -1 } ) ( t ) = 0 ]
+        &= \probq_{ z } [ ( h \circ T^{ -1 } ) ( T ( x ) ) = 0 ] \\
+        &= \probq_{ z } [ h ( x ) = 0 ]
+    .\end{align*}
+    Now, by the definition of conditional probability we have
+    \begin{align*}
+        \prob_{ X } [ h ( x ) = 0 ]
+        &= \int_{ \R^{ d_{ z } } } \probq_{ z } [ h ( x ) = 0 ] \ \prob_{ Z } ( \ddrm z ) \\
+        &= \int_{ U } \probq_{ z } [ h ( x ) = 0 ] \ \prob_{ Z } ( \ddrm z )
+        = 1
+    .\end{align*}
+    Therefore, $ h $ is the null function, which means $ \hstar $ is identified.
+\end{proof}
+
 \section{Proof of Theorem \ref{thm: main theorem}}
+\label{sec: proof main theorem}
 
 To lighten the notation, the symbols $ \norm{ \cdot } $ and $ \dotprod{ \cdot, \cdot } $, when written without a subscript to specify which space they refer to, will act as the norm and inner product, respectively, of $ L^2 ( X ) $.
 Before presenting the proof of Theorem \ref{thm: main theorem}, we need to prove two auxiliary lemmas:

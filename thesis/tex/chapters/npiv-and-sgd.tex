@@ -72,7 +72,7 @@ Some useful facts which follow immediately from these assumptions are:
                 \abs{ \partial_{ 2 } \ell ( y, y' ) } \leq C_{ 0 } + L ( \abs{ y } + \abs{ y' } )
             \end{equation*}
             for all $ y, y' \in \R $;
-        \item \label{continuous composition} The map $ f \mapsto \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), f ( \cdot ) ) $ from $ L^{ 2 } ( Z ) $ to $ L^{ 2 } ( Z ) $ is well-defined and $ L $-Lipschitz.
+        \item \label{continuous composition} The map $ f \mapsto \partial_{ 2 } \ell ( r ( \cdot ), f ( \cdot ) ) $ from $ L^{ 2 } ( Z ) $ to $ L^{ 2 } ( Z ) $ is well-defined and $ L $-Lipschitz.
         \item \label{bounded second derivative} The second derivative with respect to the second argument is bounded: $ \abs{ \partial_{ 2 }^{ 2 } \ell ( y, y' ) } \leq L $ for all $ y, y' \in \R $;
     \end{enumerate}
 \end{prop}
@@ -83,11 +83,11 @@ Some useful facts which follow immediately from these assumptions are:
         \item From the previous item we know this map is well-defined.
             If $ f $ and $ g $ belong to $ L^{ 2 } ( Z ) $, we have
             \begin{align*}
-                \norm{ \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), f ( \cdot ) ) - \partial_{ 2 } \ell ( r_{ 0 } ( \cdot ), g ( \cdot ) ) }_{ L^2 ( Z ) }^2
+                \norm{ \partial_{ 2 } \ell ( r ( \cdot ), f ( \cdot ) ) - \partial_{ 2 } \ell ( r ( \cdot ), g ( \cdot ) ) }_{ L^2 ( Z ) }^2
                 &= \mean \left[
                     \abs{ 
-                        \partial_{ 2 } ( r_{ 0 } ( Z ), f ( Z ) )
-                        - \partial_{ 2 } ( r_{ 0 } ( Z ), g ( Z ) )
+                        \partial_{ 2 } ( r ( Z ), f ( Z ) )
+                        - \partial_{ 2 } ( r ( Z ), g ( Z ) )
                     }^2
                 \right] \\
                 &\leq L^2 \mean \left[
@@ -247,7 +247,7 @@ The drawback is that we have to estimate $ r $.
 \end{rem}
 
 Since we are directly optimizing the risk measure, we are able to provide guarantees for $ \risk ( \hat{ h } ) $ in mean with respect to the training data $ \bz_{ 1:M } = \left\{ \bz_{ 1 }, \dots, \bz_{ m } \right\} $.
-Our main result is the following, whose proof we present in the Appendix:
+Our main result is the following:
 \begin{thm}
     \label{thm: main theorem}
     Let $ \hat{ h }_{ 0 }, \dots, \hat{ h }_{ M-1 } $ be generated according to Algorithm \ref{algo: sagdiv}.
@@ -281,6 +281,9 @@ Our main result is the following, whose proof we present in the Appendix:
         \right\}
     .\end{align*}
 \end{thm}
+\begin{proof}
+    See Appendix \ref{sec: proof main theorem}
+\end{proof}
 
 It is productive to analyze the RHS of the bound in (\ref{eq: main bound}) more carefully.
 If we choose the sequence $ ( \alpha_{ m } ) $ to satisfy
