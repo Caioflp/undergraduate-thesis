@@ -1,5 +1,16 @@
 \chapter{Introduction}
 
-Remember to cite every person \cite{newey2003}.
+When choosing a method to tackle a regression problem $ Y = h_{ \theta } ( X ) + \varepsilon $, one is often concerned with certain properties of the resulting estimator $ \hat{ \theta } $, such as consistency and unbiasedness.
+The widely employed linear model estimator, for example, enjoys these properties if the problem at hand satisfies its usual hypotheses, which include assuming that the noise term $ \varepsilon $ is uncorrelated with the covariate $ X $.
+However, in practical scenarios it is very common to have external unmeasured factors influence both $ X $ and $ \varepsilon $, which introduces some correlation between these variables.
+In these cases, where $ X $ is said to be \emph{endogenous}, methods based on ordinary least squares turn out to be biased and inconsistent.
+To address this problem, econometric practitioners invented the method of instrumental variables, which uses a third measurable quantity, $ Z $, that influences $ X $ but is uncorrelated with $ \varepsilon $, to correct the faults in ordinary least squares estimators.
 
+This work deals with the nonparametric version of this problem, where $ h_{ \theta } $ is a member of an infinite dimensional space.
+In recent years we have seen a ressurgence of interest in nonparametric instrumental variable (NPIV) regression, with multiple methods being devised and published, such as the ones in \cite{singh2019}, \cite{deepiv2017}, \cite{deepgmm2019} and \cite{dualiv2020}.
 
+About the structure of this document, in Chapter 2 we provide an overview of instrumental variables in econometric practice and present the Two Stages Least Squares estimator, which generalizes the linear model to the case where some covariates are endogenous.
+In Chapter 3 we show how NPIV regression can be seen as an ill-posed linear inverse problem and present two well established methods to tackle it.
+Chapter 4 then derives and analyses SAGD-IV, our own estimator for NPIV regression problems based on a functional variant of stochastic first order methods.
+A convergence speed bound is shown, as well as an empirical performance check using artificial data.
+Our method differentiates itself because it can increase the quality of the estimator only using additional samples from $ Z $, and our theoretical results, albeit not as strong, are proved under weak assumptions when compared to the literature.

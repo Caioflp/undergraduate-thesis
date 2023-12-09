@@ -1,5 +1,5 @@
 \babel@toc {brazil}{}\relax 
 \babel@toc {english}{}\relax 
-\contentsline {figure}{\numberline {1}{\ignorespaces Causal diagram for equation (\ref {eq: structural equation}), where $ X $ is endogenous and $ Z $ is an IV.\relax }}{16}{figure.caption.15}%
-\contentsline {figure}{\numberline {2}{\ignorespaces Comparison between OLS and 2SLS under two different levels of endogeneity.\relax }}{20}{figure.caption.16}%
-\contentsline {figure}{\numberline {3}{\ignorespaces SAGD-IV and KIV for two different response functions. \relax }}{40}{figure.caption.18}%
+\contentsline {figure}{\numberline {1}{\ignorespaces Causal diagram for equation (\ref {eq: structural equation}), where $ X $ is endogenous and $ Z $ is an IV.\relax }}{15}{figure.caption.13}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Comparison between OLS and 2SLS under two different levels of endogeneity.\relax }}{19}{figure.caption.14}%
+\contentsline {figure}{\numberline {3}{\ignorespaces SAGD-IV and KIV for two different response functions. \relax }}{39}{figure.caption.15}%

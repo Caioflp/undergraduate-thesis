@@ -7,7 +7,7 @@ To make the exposition more fluid, we chose to delay the precise definition of a
 % Until then, only knowledge of non-measure theoretic probability theory is required.
 % This is sufficient to understand the motivation behind instrumental variables, as well as the most widely used tool to perform regression using them: two stages least squares.
 The second goal is to precisely state the nonparametric regression problem which will be addressed in the remainder of this thesis.
-Along the exposition, we will cover the basics of Two Stages Least Squares, the IV regression method most widely employed in practice.%  and of the nonparametric approach developed by Newey and Powell in their seminal paper \cite{newey2003}.
+Along the exposition, we will cover the basics of Two Stages Least Squares, the IV regression method most widely employed in econometric practice.%  and of the nonparametric approach developed by Newey and Powell in their seminal paper \cite{newey2003}.
 % From that point on, we assume the reader is familiar with measure theory and linear functional analysis.
 % All of the less usual objects and results we make use of will be recalled in a corresponding appendix.
 % we turn our attention back to the main application being considered in this thesis: instrumental variable  regression.
@@ -34,7 +34,7 @@ The simplest estimation method for this model specification --- and, therefore, 
 A reasonable and ample choice for $ \mathcal{H} $ is the set of all square-integrable functions of $ X $, that is, such that $ \mean [ h ( X )^2 ] < \infty $.
 Under this choice, we recover the conditional expectation of $ Y $ given $ X $, i.e., $ \hat{ h } ( X ) = \mean [ Y \mid X ] $.
 Expanding $ Y $ through (\ref{eq: structural equation}), we find that $ \hat{ h } ( X ) = \hstar ( X ) + \mean [ \varepsilon \mid X ] $.
-Hence, if $ \mean [ \varepsilon \mid X ] $ is not identically null, we have introduced bias in our estimation.
+Hence, if $ \mean [ \varepsilon \mid X ] $ is not identically null, we have introduced bias in our estimation of $ \hstar $.
 
 This is one of the problems which appear when $ \mean [ \varepsilon \mid X ] \neq 0 $, or, more generally, when $ X $ and $ \varepsilon $ are correlated in some way.
 When this happens, we say that $ X $ is \emph{endogenous}.
@@ -49,10 +49,10 @@ There are several causes for endogenous covariates, the most common of  which ar
             &= \hstar ( X ) + \mean [ \gstar ( W ) \mid X ]
         \end{align*}
         which is likely different from $ \hstar ( X ) $, if $ W $ is correlated with $ X $.
-        For example, if we want to regress a person's wage solely on her number of schooling years (this is $ X $), there are other variables, unaccounted for, which influence both wages and schooling, such as natural ability (this is $ W $).
+        For example, if we want to regress a person's wage solely on her number of schooling years (this is $ X $), there are other variables, unaccounted for, which influence both wages and schooling years, such as natural ability (this is $ W $).
         Innately skilled people may tend to be successful in school --- and, therefore, pursue higher levels of education --- as well as show higher performance in their future jobs, resulting in better wages.
         Thus, we fail to estimate $ \hstar $.
-    \item[Measurement Error] If we are unable to exactly measure one of the covariates, $ X_{ k } $, and instead measure $ X_{ k }' $ subject to some stochastic error, by using $ X_{ k }' $ in our regression instead of $ X_{ k } $ we are delegating to $ \varepsilon $ some measure of the difference between $ X_{ k } $ and $ X_{ k }' $.
+    \item[Measurement Error] If we are unable to exactly measure one of the covariates, say, $ X_{ k } $, and instead measure $ X_{ k }' $ subject to some stochastic error, by using $ X_{ k }' $ in our regression instead of $ X_{ k } $ we are delegating to $ \varepsilon $ some measure of the difference between $ X_{ k } $ and $ X_{ k }' $.
         Depending on how these two variables are related, we may introduce endogeneity.
         For example, $ X_{ k } $ may be a marginal tax rate, but we may only have access to an average tax rate $ X_{ k }' $.
     \item[Simultaneity] Simultaneity arises when one covariate $ X_{ k } $ is determined simultaneously with $ Y $.
@@ -69,22 +69,22 @@ To overcome endogeneity a few approaches exist, but by far the one most used by 
     \label{def: iv}
     An \emph{instrumental variable} for regression problem (\ref{eq: structural equation}) is a random variable $ Z $ such that
     \begin{enumerate}
-        \item There is some influence of $ Z $ upon $ X $, that is, the marginal distribution of $ X $ is not the same as the distribution of $ X $ conditioned on $ Z $; \label{en: Z influences X}
+        \item There is some influence of $ Z $ upon $ X $, that is, $ Z $ is not independent of $ X $; \label{en: Z influences X}
         \item The conditional mean of $ \varepsilon $ given $ Z $ is almost surely null, i.e., $ \mean [ \varepsilon \mid Z ] = 0 $. \label{en: Z is exogenous}
     \end{enumerate}
 \end{deff}
 
 % \improvement{Causal graph, discuss strength of $ \mean[\varepsilon \mid Z] = 0$, discuss $ Z $ only influences $ Y $ through $ X $.}
 
-The idea behind an instrumental variable is that it is exogenous \ref{en: Z is exogenous} while still influencing $ Y $ through $ X $ \ref{en: Z influences X}.
-An exogenous covariate, in contrast to an endogenous one, as a variable that is determined outside of the system described by (\ref{eq: structural equation}).
+The idea behind an instrumental variable $ Z $ is that it is exogenous \ref{en: Z is exogenous} while still influencing $ Y $ through $ X $ \ref{en: Z influences X}.
+An exogenous covariate, in contrast to an endogenous one, is a variable that is determined outside of the system described by (\ref{eq: structural equation}).
 % The examples ahead will clarify how instrumental variables may be chosen in practice.
 
-Condition \ref{en: Z is exogenous} is only one of the possible meanings for the statement that $ Z $ is exogenous.
-Two possible alternatives are requiring that $ Z $ be (1) independent from, or (2) uncorrelated with $ \varepsilon $.
-Of course, (1) is a much more strict requirement which implies \ref{en: Z is exogenous}, while (2) is a softer condition, implied by \ref{en: Z is exogenous}.
-Independence is almost always impossible to verify in real scenarios, so (1) is not a good option.
-In contrast, there are situations where condition (2) is enough for ensuring good properties of IV estimators, including one we will present shortly, the linear model \cite{wooldridge2001}.
+Condition \ref{en: Z is exogenous} is just one of the possible meanings for the statement that $ Z $ is exogenous.
+Two possible alternatives are requiring that $ Z $ be (A) independent from, or (B) uncorrelated with $ \varepsilon $.
+Of course, (A) is a much more strict requirement which implies \ref{en: Z is exogenous}, while (B) is a softer condition, implied by \ref{en: Z is exogenous}.
+Independence is almost always impossible to verify in real scenarios, so (a) is not a good option.
+In contrast, there are situations where condition (B) is enough for ensuring good properties of IV estimators, including one we will present shortly, the linear model \cite{wooldridge2001}.
 However, in order to prepare grounds for the nonparametric methods that will come later, we chose to use the definition which serves both.
 
 Instrumental variables are also studied in the context of causal inference, where the conditions above are presented differently, in terms of causal diagrams.
@@ -118,11 +118,11 @@ In this section, we restrict the structural function $ \hstar $ in (\ref{eq: str
     \label{}
     \hstar ( x ) = \beta_{ 0 } + \beta_{ 1 } x_{ 1 } + \cdots + \beta_{ d_{ X } } x_{ d_{ X } }
 ,\end{equation}
-and assume to have access to a random variable $ Z $, taking values in $ \R^{ d_{ Z } } $, satisfying conditions \ref{def: iv} \ref{en: Z influences X} and \ref{en: Z is exogenous}, so that $ Z $ is a valid instrumental variable.
-To ease the notation, we augment the variables $ X $ and $ Z $ to have a $ 1 $ as a first coordinate, so we may write $ \hstar ( X ) = \beta^{ \trp } X $, where $ \beta = ( \beta_{ 0 }, \dots, \beta_{ d_{ X } } ) $.
-Their new dimensions are $ d_{ X }' = d_{ X } + 1 $ and $ d_{ Z }' = d_{ Z } + 1 $.
+and assume to have access to a random variable $ Z $, taking values in $ \R^{ d_{ Z } } $, satisfying conditions \ref{en: Z influences X} and \ref{en: Z is exogenous} in Definition \ref{def: iv}, so that $ Z $ is a valid instrumental variable.
+To ease the notation, we augment the variables $ X $ and $ Z $ to have a ones as a first coordinate, so we may write $ \hstar ( X ) = \beta^{ \trp } X $, where $ \beta = ( \beta_{ 0 }, \dots, \beta_{ d_{ X } } ) $.
+Their new dimensions are $ d_{ X } + 1 $ and $ d_{ Z } + 1 $ but, by an abuse of notation, we will continue writing $ d_{ X } $ and $ d_{ Z } $
 Our data is then composed of $ n $ independent joint samples $ \left\{ ( X_{ i }, Z_{ i }, Y_{ i } ) \right\}_{ i=1 }^{ n } $.
-Let $ \bX \in \R^{ n \times d_{ X }' } $ and $ \bZ \in \R^{ n \times d_{ Z }' } $ be the experiment design matrices with $ 1 $'s in the first column, and let $ \bY \in \R^{ n } $ be the vector with all observations of $ Y $.
+Let $ \bX \in \R^{ n \times d_{ X } } $ and $ \bZ \in \R^{ n \times d_{ Z } } $ be the experiment design matrices with ones in the first column, and let $ \bY \in \R^{ n } $ be the vector with all observations of $ Y $.
 Each line of $ \bX $ and $ \bZ $ corresponds to one sample of the vectors $ X $ and $ Z $, respectively.
 The idea of 2SLS is to first perform a regression of $ X $ on $ Z $ (the \emph{first stage}) and then regress $ Y $ on the fitted values $ \hat{ X } $ (the \emph{second stage}).
 In what follows, we will derive this method and give some numerical examples to show its applicability.
@@ -133,8 +133,9 @@ To avoid misunderstandings during computations, we explicitly state that all vec
 Since we have access to an exogenous covariate, a possible idea is to use this covariate to extract from $ X $ a component which is uncorrelated with $ \varepsilon $.
 The simplest way to do this is to perform the \emph{linear orthogonal projection} of $ X $ onto $ Z $, that is, to find the matrix $ P $ which minimizes the MSE:
 \begin{equation*}
-    P = \argmin_{ M \in \R^{ d_{ X }' \times d_{ Z }' } } \mean [ \norm{ X - M Z }^2 ] = \mathcal{L} ( M )
-.\end{equation*}
+    P = \argmin_{ M \in \R^{ d_{ X } \times d_{ Z } } } \mathcal{L} ( M )
+,\end{equation*}
+where $ \mathcal{L} ( M ) = \mean [ \norm{ X - M Z }^2 ] $
 A straightforward computation shows that $ \nabla \mathcal{L} ( M ) = M \mean [ Z Z^{ \trp } ] - \mean [ X Z^{ \trp } ] $.
 Since $ \mathcal{L} $ is clearly convex, we may find the optimal value by setting the gradient to $ 0 $:
 \begin{equation*}
@@ -189,8 +190,8 @@ Expanding we have:
     = P \mean [ Z Z^{ \trp } ] P^{ \trp }
     = \mean [ X Z^{ \trp } ] \mean [ Z Z^{ \trp } ]^{ -1 } \mean [ Z X^{ \trp } ]
 .\end{equation*}
-Therefore, if we require the rank of the matrix $ \mean [ Z X^{ \trp } ] $ to be $ d_{ X }' $, we have invertibility of $ \mean [ \hat{ X } \hat{ X }^{ \trp } ] $.
-Thus, we need to make two more assumptions: $ d_{ Z }' \geq d_{ X }' $, which is equivalent to $ d_{ Z } \geq d_{ X } $, and $ \rk \mean [ Z X^{ \trp } ] = d_{ X }' $.
+Therefore, if we require the rank of the matrix $ \mean [ Z X^{ \trp } ] $ to be $ d_{ X } $, we have invertibility of $ \mean [ \hat{ X } \hat{ X }^{ \trp } ] $.
+Thus, we need to make two more assumptions: $ d_{ Z } \geq d_{ X } $, which is equivalent to $ d_{ Z } \geq d_{ X } $, and $ \rk \mean [ Z X^{ \trp } ] = d_{ X } $.
 The first assumption is a requirement of the second, and means that we need at least as many exogenous covariates as endogenous covariates in order to identify $ \beta $.
 As for the second assumption, it is satisfied if $ X $ is sufficiently linearly related to $ Z $ \cite{wooldridge2001}. Under these conditions, we have
 \begin{align}
@@ -283,7 +284,7 @@ For further theoretical properties of the 2SLS estimator, we refer the reader to
 
 We now provide numerical examples to strengthen our intuition about the differences between OLS and 2SLS.
 We present two scenarios with the same joint distribution for $ X $ and $ Z $, in which both are one dimensional.
-The scenarios also share the same structural function, which we set to be $ \hstar ( x ) = \beta_{ 0 } + \beta_{ 1 }x $, with $ \beta_{ 0 } = 0.3 $ and $ \beta_{ 1 } = 0.7 $.
+The scenarios also share the same structural function, which we set to be $ \hstar ( x ) = \beta_{ 0 } + \beta_{ 1 }x $.
 The difference between both experiments is the distribution of $ \varepsilon $, which is mildly codependent with that of $ X $ in the first experiment, and strongly codependent in the second.
 
 The data generating process we use for $ X $ and $ Z $ is the following:
@@ -292,13 +293,13 @@ The data generating process we use for $ X $ and $ Z $ is the following:
     Z &= \Phi ( \delta_{ 1 } ); \\
     X &= \Phi ( \rho \delta_{ 1 } + \sqrt{ 1 - \rho^2 } \delta_{ 2 } )
 ,\end{align*}
-where $ \Phi $ is the cumulative distribution function of the standard normal and $ \rho \in ( 0, 1 ) $ is fixed at $ 0.8 $.
+where $ \Phi $ is the cumulative distribution function of the standard normal and $ \rho \in ( 0, 1 ) $.
 For the first scenario, we generate $ \varepsilon $ as follows:
 \begin{align*}
     \delta_{ 3 } &\sim \mathcal{N} ( 0, 1 ), \quad \delta_{ 3 } \indep ( \delta_{ 1 }, \delta_{ 2 } ); \\
     \varepsilon &= \sigma \cdot ( \eta \delta_{ 2 } + \sqrt{ 1 - \eta^2 } \delta_{ 3 } )
 ,\end{align*}
-where $ \sigma > 0 $ and $ \eta \in ( 0, 1 ) $ are set to be $ 0.1 $ and $ 0.6 $, respectively.
+where $ \sigma > 0 $ and $ \eta \in ( 0, 1 ) $.
 For the second scenario, we introduce more interdependence between $ X $ and $ \varepsilon $:
 \begin{align*}
     \varepsilon = \sigma \cdot \left(
@@ -306,9 +307,29 @@ For the second scenario, we introduce more interdependence between $ X $ and $ \
         + C_{ b } ( \delta_{ 2 } - b )^{ + } - C_{ a } ( \delta_{ 2 } - a )^{ - }
     \right)
 .\end{align*}
-Here, $ \sigma $ and $ \eta $ have the same values as before.
-The additional terms are $ C_{ b } = 6, b = 0.7, C_{ a } = 2 $ and $ a = 0.3 $.
-Finally, in both formulations we have $ Y = \hstar ( x ) + \varepsilon $.
+Finally, in both formulations we have $ Y = \hstar ( X ) + \varepsilon $.
+The parameter values which were used are in Table \ref{parameters tsls}.
+\begin{table}[htb]
+    \begin{center}
+        \begin{tabular}{|cccc|}
+            \hline
+            Parameter & Value & Parameter & Value \\
+            \hline
+             $ \rho $   & 0.8 &       $ C_{ b } $ & 6  \\
+                                       \hline
+             $ \sigma $ & 0.1 &       $ C_{ a } $ & 2   \\
+                                       \hline
+             $ \eta $ & 0.6 &         $ b $       & 0.7 \\
+                                       \hline
+             $ \beta_{ 0 } $ & 0.3  & $ a $       & 0.3  \\
+             \hline
+             $ \beta_{ 1 } $ & 0.7 &              &     \\
+            \hline
+        \end{tabular}
+        \caption{Parameter values for 2SLS example.}
+        \label{parameters tsls}
+    \end{center}
+\end{table}
 
 The results of the experiments are in Figure \ref{fig: 2sls vs ols}.
 We can see that in both of them the 2SLS estimate is closer to the true values of $ \beta_{ 0 } $ and $ \beta_{ 1 } $ than the OLS estimate.
@@ -343,7 +364,7 @@ We write $ L^{ 2 } ( X ) $ as a shorthand for the space $ L^2 ( \R^{ d_{ X } }, 
 It is important to recall that the inner product and norm in $ L^{ 2 } ( X ) $ are given by $ \dotprod{ h, g }_{ L^{ 2 } ( X ) } = \mean [ h ( X ) g ( X ) ] $ and $ \norm{ h }_{ L^{ 2 } ( X ) }^2 = \dotprod{ h, h }_{ L^{ 2 } ( X ) } = \mean [ h ( X )^2 ] $.
 
 We assume there exists $ \hstar \in L^{ 2 } ( X ) $ such that (\ref{eq: structural equation}) holds, that is, $ Y = \hstar ( X ) + \varepsilon $.
-Finally, we assume there exists a random variable $ Z : ( \Omega, \mathcal{A} ) \to ( \R^{ d_{ Z } }, \mathcal{B} ( \R^{ d_{ Z } } ) ) $ such that $ Z $ qualifies as an instrumental variable, i.e., $ Z $ satisfies conditions \ref{def: iv} \ref{en: Z influences X} and \ref{en: Z is exogenous}.
+Finally, we assume there exists a random variable $ Z : ( \Omega, \mathcal{A} ) \to ( \R^{ d_{ Z } }, \mathcal{B} ( \R^{ d_{ Z } } ) ) $ such that $ Z $ qualifies as an instrumental variable, i.e., $ Z $ satisfies conditions \ref{en: Z influences X} and \ref{en: Z is exogenous} in Definition \ref{def: iv}.
 We define $ \prob_{ Z } $ and $ L^{ 2 } ( Z ) $ in an manner analogous to $ \prob_{ X } $ and $ L^{ 2 } ( X ) $.
 Our goal is to estimate $ \hstar $ based on i.i.d. samples from the joint distribution of $ X, Z $ and $ Y $.
 
@@ -420,7 +441,7 @@ Then, a remarkable fact about the exponential family is the completeness of the 
     \cite{lehmann59} Let $ \Xi $ be a subset of an Euclidian space with nonempty interior.
     Let $ X $ be a random vector with distribution $ P^{ \theta } $ parametrized by $ \theta \in \Xi $ in the following manner:
     \begin{equation*}
-        P^{ \theta } ( \ddrm x ) = C ( \theta ) \exp \left\{ \sum_{ i=1 }^{ s } \theta_{ i } T_{ i } ( x ) \right\} \mu ( \ddrm x )
+        P^{ \theta } ( \ddrm x ) = C ( \theta ) \exp \left\{ \theta^{ \trp } T ( x ) \right\} \mu ( \ddrm x )
     ,\end{equation*}
     where $ \mu $ is the underlying measure.
     Then, the family $ \mathscr{P}_{ T } $, formed by the distributions of the random vector $ T ( X ) = ( T_{ 1 } ( X ), \dots, T_{ s } ( X ) ) $ as $ \theta $ ranges through $ \Xi $, is complete.
@@ -472,5 +493,3 @@ Using this result and under suitable hypotheses, we can reformulate the identifi
     .\end{align*}
     Therefore, $ h $ is the null function, which means $ \hstar $ is identified.
 \end{proof}
-
-\improvement{Maybe say something more about identification and conclude the chapter a bit better?}

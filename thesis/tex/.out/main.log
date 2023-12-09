@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.6.1)  7 DEC 2023 13:45
+This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.6.1)  9 DEC 2023 00:33
  restricted system commands enabled.
  file:line:error style messages enabled.
 **main.tex
@@ -1700,57 +1700,87 @@ warning  (pdf backend): ignoring duplicate destination with the name 'page.1'
 
 ] [6
 
-]) (./structure/resumo.tex [7
-
-] [8
-
-]) (./.out/main.lof
-Tight \hbox (badness 3) in paragraph at lines 3--3
- [][] [][][]\TU/lmr/m/n/12 Causal di-a-gram for equa-tion ([][]2.1[][]), where $\OML/cmm/m/it/12 X$ \TU/lmr/m/n/12 is en-doge-nous and $\OML/cmm/m/it/12 Z$ \TU/lmr/m/n/12 is an 
+]) (./structure/resumo.tex
+Loose \hbox (badness 9) in paragraph at lines 5--10
+\TU/lmr/m/n/12 prob-lems in which some co-vari-ates are cor-re-lated with the er-ror term. In the non-para-
  []
 
 
-Loose \hbox (badness 4) in paragraph at lines 4--4
- [][] [][][]\TU/lmr/m/n/12 Com-par-i-son be-tween OLS and 2SLS un-der two dif-fer-ent lev-els of en- 
+Loose \hbox (badness 1) in paragraph at lines 5--10
+\TU/lmr/m/n/12 met-ric frame-work, one would like to find the true func-tional pa-ram-e-ter from an in-fi-nite
  []
 
-) [9
 
-] (./.out/main.lot) [10
-
-] (./structure/siglas-simbolos.tex
-Tight \hbox (badness 4) in paragraph at lines 2--3
-[]\TU/lmr/m/n/12 Ker-nel of the op-er-a-tor $\OMS/cmsy/m/n/12 P$\TU/lmr/m/n/12 , that is, the set of vec-tors $\OML/cmm/m/it/12 h$ \TU/lmr/m/n/12 such that $\OMS/cmsy/m/n/12 P\OT1/cmr/m/n/12 [\OML/cmm/m/it/12 h\OT1/cmr/m/n/12 ] =
+Tight \hbox (badness 12) in paragraph at lines 5--10
+\TU/lmr/m/n/12 di-men-sional search space. This work pro-vides an in-tro-duc-tion to IV re-gres-sion, both in its
  []
 
-[11
+
+Loose \hbox (badness 3) in paragraph at lines 5--10
+\TU/lmr/m/n/12 para-met-ric and non-para-met-ric forms, and presents a novel method to tackle the lat-ter,
+ []
 
 
-]) (./.out/main.toc) [12
+Loose \hbox (badness 31) in paragraph at lines 5--10
+\TU/lmr/m/n/12 based on a func-tional vari-ant of stochas-tic first or-der meth-ods. The-o-ret-i-cal as well as
+ []
 
-] (./chapters/introduction.tex) (./chapters/instrumental-variable.tex [13
+[7
+
+]
+Tight \hbox (badness 9) in paragraph at lines 15--19
+\TU/lmr/m/n/12 termo de erro. No âm-bito não paramétrico, o ob-je-tivo é en-con-trar o ver-dadeiro parâmetro
+ []
 
 
-] [14
+Loose \hbox (badness 84) in paragraph at lines 15--19
+\TU/lmr/m/n/12 fun-cional em um es-paço de procura de di-men-são in-finita. Este tra-balho fornece uma
+ []
 
-] [15] [16] [17] [18]
-<../fig//tsls_examples.pdf, id=265, 454.5783pt x 483.4863pt>
+
+Loose \hbox (badness 1) in paragraph at lines 15--19
+\TU/lmr/m/n/12 ap-re-senta um novo método para tratar o úl-timo, baseado em uma vari-ante fun-cional de
+ []
+
+
+Tight \hbox (badness 14) in paragraph at lines 20--21
+[]\TU/lmr/m/n/12 Palavras-chave: Re-gressão Não Paramética, Var-iáveis In-stru-men-tais, Otimiza-ção Es-tocás-
+ []
+
+[8
+
+]) (./.out/main.toc) [9
+
+] (./chapters/introduction.tex) (./chapters/instrumental-variable.tex [10
+
+
+] [11
+
+] [12] [13] [14] [15]
+<../fig//tsls_examples.pdf, id=248, 454.5783pt x 483.4863pt>
 File: ../fig//tsls_examples.pdf Graphic file (type pdf)
 <use ../fig//tsls_examples.pdf>
-Package luatex.def Info: ../fig//tsls_examples.pdf  used on input line 321.
+Package luatex.def Info: ../fig//tsls_examples.pdf  used on input line 342.
 (luatex.def)             Requested size: 454.57718pt x 483.4851pt.
- [19] [20<../fig//tsls_examples.pdf>] [21] [22] [23]
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 476.
-) (./chapters/npiv-and-lip.tex [24] [25
+ [16] [17] [18<../fig//tsls_examples.pdf>] [19] [20]) (./chapters/npiv-and-lip.tex [21] [22
 
 ]
 
 Class memoir Warning: The material used in the headers is too large
 (28.99998pt) for the given head height (14.5pt), it is recommended to
 either increase the head height or redesign the header
-(in both cases you will find help in the memoir manual). on input line 87.
+(in both cases you will find help in the memoir manual). on input line 85.
 
 
+Overfull \vbox (14.49998pt too high) has occurred while \output is active []
+
+ [23]
+Overfull \vbox (14.49998pt too high) has occurred while \output is active []
+
+ [24]
+Overfull \vbox (14.49998pt too high) has occurred while \output is active []
+
+ [25]
 Overfull \vbox (14.49998pt too high) has occurred while \output is active []
 
  [26]
@@ -1759,57 +1789,42 @@ Overfull \vbox (14.49998pt too high) has occurred while \output is active []
  [27]
 Overfull \vbox (14.49998pt too high) has occurred while \output is active []
 
- [28]
+ [28]) (./chapters/npiv-and-sgd.tex
 Overfull \vbox (14.49998pt too high) has occurred while \output is active []
 
- [29]
-Overfull \vbox (14.49998pt too high) has occurred while \output is active []
+ [29] [30
 
- [30]
-Overfull \vbox (14.49998pt too high) has occurred while \output is active []
-
- [31]) (./chapters/npiv-and-sgd.tex
-Overfull \vbox (14.49998pt too high) has occurred while \output is active []
-
- [32] [33
-
-] [34] [35] [36] [37] [38]
-<../fig//sagd-iv_kiv_comparison.pdf, id=618, 625.8582pt x 341.1144pt>
+] [31] [32] [33] [34] [35]
+<../fig//sagd-iv_kiv_comparison.pdf, id=605, 625.8582pt x 341.1144pt>
 File: ../fig//sagd-iv_kiv_comparison.pdf Graphic file (type pdf)
 <use ../fig//sagd-iv_kiv_comparison.pdf>
-Package luatex.def Info: ../fig//sagd-iv_kiv_comparison.pdf  used on input line 337.
+Package luatex.def Info: ../fig//sagd-iv_kiv_comparison.pdf  used on input line 338.
 (luatex.def)             Requested size: 455.0pt x 247.99124pt.
-) (./chapters/conclusion.tex [39] [40<../fig//sagd-iv_kiv_comparison.pdf>]) [41
+) (./chapters/conclusion.tex [36] [37<../fig//sagd-iv_kiv_comparison.pdf>]) [38
 
-] [42
+] [39
 
-] [43]
+] [40]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\uppercase' on input line 137.
 
-[44
+[41
 
 
-] (./chapters/appendix.tex [45
+] (./chapters/appendix.tex [42
 
-] [46] [47] [48]) (./.out/main.ind)
+] [43] [44] [45]) (./.out/main.ind)
 
 Class memoir Warning: The material used in the headers is too large
 (28.99998pt) for the given head height (14.5pt), it is recommended to
 either increase the head height or redesign the header
 (in both cases you will find help in the memoir manual). on input line 158.
 
-[49]
-\tf@lof=\write7
+[46]
+\tf@toc=\write7
 
-\openout7 = main.lof
-\tf@lot=\write8
-
-\openout8 = main.lot
-\tf@toc=\write9
-
-\openout9 = main.toc
+\openout7 = main.toc
  (./.out/main.aux)
 Package logreq Info: Writing requests to 'main.run.xml'.
 
@@ -1817,12 +1832,12 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 )
 
 Here is how much of LuaTeX's memory you used:
- 45030 strings out of 478285
+ 44936 strings out of 478285
  125081,1977958 words of node,token memory allocated
- 8270 words of node memory still in use:
-   187 hlist, 35 vlist, 6 rule, 8 disc, 2 local_par, 12 math, 127 glue, 44 kern, 8 penalty, 4 sub_mlist, 228 glyph, 607 attribute, 225 glue_spec, 305 attribute_list, 5 write, 2 save_pos, 67 pdf_literal, 8 pdf_action, 2 pdf_colorstack nodes
-   avail lists: 1:2,2:1826,3:546,4:179,5:639,6:81,7:6582,8:101,9:1994,10:73,11:516
- 63188 multiletter control sequences out of 65536+600000
+ 5817 words of node memory still in use:
+   146 hlist, 32 vlist, 6 rule, 12 math, 61 glue, 37 kern, 4 sub_mlist, 147 glyph, 389 attribute, 225 glue_spec, 196 attribute_list, 3 write, 9 pdf_action nodes
+   avail lists: 1:1,2:1826,3:554,4:184,5:638,6:80,7:6604,8:101,9:1994,10:73,11:518
+ 63133 multiletter control sequences out of 65536+600000
  98 fonts using 7287231 bytes
  89i,19n,118p,1148b,4448s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
@@ -1831,10 +1846,10 @@ warning  (pdf backend): unreferenced destination with name 'thm.4.5'
 warning  (pdf backend): unreferenced destination with name 'thm.4.2'
 </usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmmono12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman7-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman8-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-italic.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-italic.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans10-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmsans17-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/
 local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/rsfs/rsfs10.pfb>
-Output written on main.pdf (50 pages, 856475 bytes).
+Output written on main.pdf (47 pages, 860851 bytes).
 
-PDF statistics: 1013 PDF objects out of 1200 (max. 8388607)
- 876 compressed objects within 9 object streams
- 206 named destinations out of 1000 (max. 131072)
- 312 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 991 PDF objects out of 1000 (max. 8388607)
+ 857 compressed objects within 9 object streams
+ 198 named destinations out of 1000 (max. 131072)
+ 288 words of extra memory for PDF output out of 10000 (max. 100000000)
 

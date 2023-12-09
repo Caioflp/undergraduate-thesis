@@ -655,12 +655,6 @@ INPUT ./structure/dedicatoria-agradecimentos.tex
 INPUT /Users/caio/.texlive2020/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-italic.luc
 INPUT ./structure/resumo.tex
 INPUT ./structure/resumo.tex
-INPUT ./.out/main.lof
-INPUT ./.out/main.lof
-INPUT ./.out/main.lot
-INPUT ./.out/main.lot
-INPUT ./structure/siglas-simbolos.tex
-INPUT ./structure/siglas-simbolos.tex
 INPUT ./.out/main.toc
 INPUT ./.out/main.toc
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
@@ -710,8 +704,6 @@ INPUT ./chapters/appendix.tex
 INPUT ./chapters/appendix.tex
 INPUT ./.out/main.ind
 INPUT ./.out/main.ind
-OUTPUT .out/main.lof
-OUTPUT .out/main.lot
 OUTPUT .out/main.toc
 INPUT ./.out/main.aux
 INPUT ./.out/main.run.xml

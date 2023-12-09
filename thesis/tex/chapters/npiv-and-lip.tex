@@ -1,7 +1,8 @@
 \chapter{NPIV Regression and Linear Inverse \\Problems}
 \label{chap: npiv and lip}
 
-Having defined what we mean by nonparametric regression instrumental variable (NPIV) regression, we now present two well established approaches, namely the ones in \cite{darolles2011} and \cite{newey2003}, the first of which will serve as a starting point for our method.
+Having defined what we mean by nonparametric instrumental variable (NPIV) regression, we now present two well established approaches, namely the ones in \cite{darolles2011} and \cite{newey2003}.
+Our goal is to supply the reader with two solid examples of NPIV methods, so that they may serve as a reference for when we discuss our own method in Chapter \ref{chap: sagdiv}.
 We start by connecting nonparametric instrumental variable regression with inverse problems.
 % We will describe the idea behind Newey's seminal paper on NPIV \cite{newey2003}, which develops a nonparametric analog of 2SLS, and them move on to the more inverse problem (IP) oriented approach presented in \cite{florens2007} as well as \cite{darolles2011}.
 
@@ -227,7 +228,7 @@ Substituting this into (\ref{eq: expectation equation}), we get
 .\end{equation}
 This suggests a two stage procedure analogous to 2SLS.
 In the first stage, a nonparametric estimate of $ \mean [ p_{ j } ( X ) \mid Z = z ] $ is obtained for $ j = 1, \dots, J $.
-Then, in the second stage, the $ Y $ samples on these estimates to obtain the vector of coefficients $ \gamma $.
+Then, in the second stage, the $ Y $ samples are regressed on these estimates to obtain the vector of coefficients $ \gamma $.
 It is worth emphasizing that the second stage regression is substantially sensitive to the number $ J $ of approximating functions and the precision of the first stage estimators \cite{newey2003}.
 
 More specifically, their search space consists of structural functions which take the following form:
@@ -240,7 +241,7 @@ The compactness property is obtained by placing bounds on $ \beta $ and restrict
 The details can be found in \cite{newey2003}.
 It is important to notice that (\ref{eq: newey functions}) is a semiparametric model which allows $ h $ to be nonparametric in the center of the support of $ X $, but restricts it to be parametric in the tails.
 Let us denote by $ \mathcal{G} $ the set of functions which are of the form (\ref{eq: newey functions}) and satisfy the mentioned regularity conditions.
-It is assumed that $ \hstar = ( \beta^{ \star } ) ^{ \trp } a ( x ) + \hstar_{ 1 } ( x ) \in \mathcal{G} $.
+It is assumed that $ \hstar = ( \beta^{ \star } )^{ \trp } a + \hstar_{ 1 }  \in \mathcal{G} $.
 
 The nonparametric estimate for $ \hstar_{ 1 } $ is based on an expansion such as (\ref{eq: expansion on basis functions}), where the $ p_{ j } $ are chosen to be Hermite polynomials and the coefficients are restricted in a way that the final estimate belongs to $ \mathcal{G} $.
 

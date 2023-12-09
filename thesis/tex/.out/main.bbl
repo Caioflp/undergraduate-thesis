@@ -144,6 +144,59 @@
       \field{pages}{1541\bibrangedash 5165}
       \range{pages}{3625}
     \endentry
+    \entry{deepiv2017}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=143a99e1bf9a8f87cdd73994c9a88f4b}{%
+           family={Hartford},
+           familyi={H\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=aaab2d46d427908668fc97c86171164b}{%
+           family={Lewis},
+           familyi={L\bibinitperiod},
+           given={Greg},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=91d47c0d6ebf96d50082140932162381}{%
+           family={Leyton-Brown},
+           familyi={L\bibinithyphendelim B\bibinitperiod},
+           given={Kevin},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=16e5ccc34f2ccb8bb3c2e92bb0f64013}{%
+           family={Taddy},
+           familyi={T\bibinitperiod},
+           given={Matt},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Sydney, NSW, Australia}%
+      }
+      \list{publisher}{1}{%
+        {JMLR.org}%
+      }
+      \strng{namehash}{e68d488e65f79803be728406819939a3}
+      \strng{fullhash}{5a42ed8c588c6f434ee886bbb683ff67}
+      \strng{bibnamehash}{e68d488e65f79803be728406819939a3}
+      \strng{authorbibnamehash}{e68d488e65f79803be728406819939a3}
+      \strng{authornamehash}{e68d488e65f79803be728406819939a3}
+      \strng{authorfullhash}{5a42ed8c588c6f434ee886bbb683ff67}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Counterfactual prediction requires understanding causal relationships between so-called treatment and outcome variables. This paper provides a recipe for augmenting deep learning methods to accurately characterize such relationships in the presence of instrument variables (IVs)—sources of treatment randomization that are conditionally independent from the outcomes. Our IV specification resolves into two prediction tasks that can be solved with deep neural nets: a first-stage network for treatment prediction and a second-stage network whose loss function involves integration over the conditional treatment distribution. This Deep IV framework allows us to take advantage of off-the-shelf supervised learning techniques to estimate causal effects by adapting the loss function. Experiments show that it outperforms existing machine learning approaches.}
+      \field{booktitle}{Proceedings of the 34th International Conference on Machine Learning - Volume 70}
+      \field{series}{ICML'17}
+      \field{title}{Deep IV: A Flexible Approach for Counterfactual Prediction}
+      \field{year}{2017}
+      \field{pages}{1414\bibrangedash 1423}
+      \range{pages}{10}
+    \endentry
     \entry{hernan2020}{book}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=4bfbae7bd65c55b2dceaaa88a09d6acc}{%
@@ -295,6 +348,58 @@
       \field{labeltitlesource}{title}
       \field{title}{Density Ration Estimation in Machine Learning}
       \field{year}{2012}
+    \endentry
+    \entry{dualiv2020}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=dcf6b49e94085101ab325f2ba89c8678}{%
+           family={Muandet},
+           familyi={M\bibinitperiod},
+           given={Krikamol},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d5042bea9b7252d12678744245bb71c7}{%
+           family={Mehrjou},
+           familyi={M\bibinitperiod},
+           given={Arash},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=91b9b351c112252adb6db62fe4dfffca}{%
+           family={Lee},
+           familyi={L\bibinitperiod},
+           given={Si\bibnamedelima Kai},
+           giveni={S\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=de2f7f93013545477c6fa4bfe296a8ca}{%
+           family={Raj},
+           familyi={R\bibinitperiod},
+           given={Anant},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Vancouver, BC, Canada}%
+      }
+      \list{publisher}{1}{%
+        {Curran Associates Inc.}%
+      }
+      \strng{namehash}{5d6d95705db158c95242eb0e58c8b3e6}
+      \strng{fullhash}{93fcc20bdf1e32b9d65975f2059e137f}
+      \strng{bibnamehash}{5d6d95705db158c95242eb0e58c8b3e6}
+      \strng{authorbibnamehash}{5d6d95705db158c95242eb0e58c8b3e6}
+      \strng{authornamehash}{5d6d95705db158c95242eb0e58c8b3e6}
+      \strng{authorfullhash}{93fcc20bdf1e32b9d65975f2059e137f}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{We present a novel algorithm for non-linear instrumental variable (IV) regression, DualIV, which simplifies traditional two-stage methods via a dual formulation. Inspired by problems in stochastic programming, we show that two-stage procedures for non-linear IV regression can be reformulated as a convex-concave saddle-point problem. Our formulation enables us to circumvent the first-stage regression which is a potential bottleneck in real-world applications. We develop a simple kernel-based algorithm with an analytic solution based on this formulation. Empirical results show that we are competitive to existing, more complicated algorithms for non-linear instrumental variable regression.}
+      \field{booktitle}{Proceedings of the 34th International Conference on Neural Information Processing Systems}
+      \field{isbn}{9781713829546}
+      \field{series}{NIPS'20}
+      \field{title}{Dual Instrumental Variable Regression}
+      \field{year}{2020}
     \endentry
     \entry{munkres2000}{book}{}
       \name{author}{1}{}{%
