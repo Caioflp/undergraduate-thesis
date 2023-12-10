@@ -319,36 +319,6 @@
       \field{title}{Testing Statistical Hypotheses}
       \field{year}{1959}
     \endentry
-    \entry{sugiyama2012}{book}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=066347a8709208293387340f375d1dea}{%
-           family={Masashi\bibnamedelima Sugiyama},
-           familyi={M\bibinitperiod\bibinitdelim S\bibinitperiod},
-           given={Takafumi\bibnamedelima Kanamori},
-           giveni={T\bibinitperiod\bibinitdelim K\bibinitperiod},
-           givenun=0,
-           suffix={Taiji\bibnamedelima Suzuki},
-           suffixi={T\bibinitperiod\bibinitdelim S\bibinitperiod},
-           suffixun=0}}%
-      }
-      \list{publisher}{1}{%
-        {Cambridge University Press}%
-      }
-      \strng{namehash}{066347a8709208293387340f375d1dea}
-      \strng{fullhash}{066347a8709208293387340f375d1dea}
-      \strng{bibnamehash}{066347a8709208293387340f375d1dea}
-      \strng{authorbibnamehash}{066347a8709208293387340f375d1dea}
-      \strng{authornamehash}{066347a8709208293387340f375d1dea}
-      \strng{authorfullhash}{066347a8709208293387340f375d1dea}
-      \field{sortinit}{M}
-      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Density Ration Estimation in Machine Learning}
-      \field{year}{2012}
-    \endentry
     \entry{dualiv2020}{inproceedings}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=dcf6b49e94085101ab325f2ba89c8678}{%
@@ -788,6 +758,45 @@
       \field{series}{Information Science and Statistics}
       \field{title}{Support Vector Machines}
       \field{year}{2008}
+    \endentry
+    \entry{sugiyama2012}{book}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=39334f77cbd67c8922133952b8095d89}{%
+           family={Sugiyama},
+           familyi={S\bibinitperiod},
+           given={Masashi},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7711a6705081fe0ff1f732d71e5db596}{%
+           family={Suzuki},
+           familyi={S\bibinitperiod},
+           given={Taiji},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ebdf71fd63bd2c210ee2bdc6d3a54869}{%
+           family={Kanamori},
+           familyi={K\bibinitperiod},
+           given={Takafumi},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{8fcba3c7d6c7c32d9127555bbea5b671}
+      \strng{fullhash}{8fcba3c7d6c7c32d9127555bbea5b671}
+      \strng{bibnamehash}{8fcba3c7d6c7c32d9127555bbea5b671}
+      \strng{authorbibnamehash}{8fcba3c7d6c7c32d9127555bbea5b671}
+      \strng{authornamehash}{8fcba3c7d6c7c32d9127555bbea5b671}
+      \strng{authorfullhash}{8fcba3c7d6c7c32d9127555bbea5b671}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Density Ration Estimation in Machine Learning}
+      \field{year}{2012}
     \endentry
     \entry{watson64}{article}{}
       \name{author}{1}{}{%

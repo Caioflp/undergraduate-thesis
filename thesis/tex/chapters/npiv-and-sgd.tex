@@ -11,13 +11,13 @@ Motivated by the fact that $ \hstar $ satisfies\footnote{Recall the notation int
 \begin{equation*}
     \meanop [ \hstar ] = r
 ,\end{equation*}
-we introduce a pointwise loss function $ \ell : \R \times \R \to \R $ and define the \emph{populational risk measure} $ \risk : L^{ 2 } ( X ) \to \R $ associated with it to be
+we introduce a pointwise loss function $ \ell : \R \times \R \to \R $ and define the associated \emph{populational risk measure} $ \risk : L^{ 2 } ( X ) \to \R $ as
 \begin{equation*}
     \risk ( h ) = \mean [ \ell ( r ( Z ), \meanop [ h ] ( Z ) ) ]
 .\end{equation*}
-Throughout the rest of this chapter, the example the reader should keep in mind is the quadratic\footnotemark~loss function $ \ell ( y, y' ) = \frac{ 1 }{ 2 } ( y - y' )^2 $.
+Throughout the rest of this chapter, the example the reader should keep in mind is the squared\footnotemark~loss function $ \ell ( y, y' ) = \frac{ 1 }{ 2 } ( y - y' )^2 $.
 \footnotetext{Although our results apply to more general loss functions, detailed experiments with setups in which other loss functions are more suitable are left for future work.}
-Our goal is to solve the NPIV regression problem stated in subsection \ref{sec: problem specification} by solving
+Our goal is to solve the NPIV regression problem stated in Section \ref{sec: problem specification} by solving
 \begin{equation*}
     \inf_{ h \in \searchset } \risk ( h )
 ,\end{equation*}
@@ -31,7 +31,7 @@ For future reference, we state these conditions in
 \end{assump}
 The only part of this assumption which concerns the data generating process is $ ( \hstar + \ker \meanop ) \cap \searchset \neq \emptyset $.
 This essentially means that the set $ \searchset $ is large enough so that there exists $ h \in \searchset $ to that $ \risk ( h ) = \risk ( \hstar ) $.
-For $ \searchset $ satisfying assumption \ref{assumption on H}, we let $ D \defeq \diam \searchset < \infty $, so that $ \norm{ h } < D $ for every $ h \in \searchset $, since $ \norm{ h } = \norm{ h - 0 } < \diam \searchset $, as $ 0 \in \searchset $.
+For $ \searchset $ satisfying Assumption \ref{assumption on H}, we let $ D \defeq \diam \searchset < \infty $, so that $ \norm{ h } < D $ for every $ h \in \searchset $, since $ \norm{ h } = \norm{ h - 0 } < \diam \searchset $, as $ 0 \in \searchset $.
 One possible choice for the set $ \searchset $ is the $ L^{ \infty } ( X ) $ ball contained in $ L^2 ( X ) $, that is
 \begin{equation}
     \label{eq: H is L infinity ball}
@@ -47,7 +47,7 @@ In case $ \searchset $ is given by (\ref{eq: H is L infinity ball}), we have the
 .\end{equation*}
 
 We now state all the assumptions needed on the pointwise loss $ \ell $.
-We denote by $ \partial_{ 2 } $ a partial derivative with respect to the second argument.
+We denote by $ \partial_{ 2 } $ a partial derivative with respect to its second argument.
 \begin{assump}[Regularity of $ \ell $]
     \label{assumption loss}
     \begin{enumerate}
@@ -163,10 +163,10 @@ From section \ref{sec: npiv and ill posed lip}, we know that $ \meanop^{ * } $ i
 \begin{equation*}
     \meanop^{ * } [ g ] ( x ) = \mean [ \Phi ( x, Z ) g ( Z ) ] \quad \text{for all } g \in L^2 ( Z )
 .\end{equation*}
-Therefore, taking $ g ( z ) = \Phi ( x, z ) \partial_{ 2 } \ell ( r ( z ), \meanop [ h ] ( z ) ) $, we have that the random variable $ \Phi ( x, Z ) \partial_{ 2 } \ell ( r ( Z ), \meanop [ h ] ( Z ) ) $ is an unbiased stochastic estimate of $ \nabla \risk ( h ) ( x ) $.
+Therefore, taking $ g ( z ) = \partial_{ 2 } \ell ( r ( z ), \meanop [ h ] ( z ) ) $, we have that the random variable given by $ \Phi ( x, Z ) \partial_{ 2 } \ell ( r ( Z ), \meanop [ h ] ( Z ) ) $ is an unbiased stochastic estimate of $ \nabla \risk ( h ) ( x ) $.
 In fact, a stronger result is true: we can consider $ \Phi ( \cdot, Z ) \partial_{ 2 } \ell ( r ( Z ), \meanop [ h ] ( Z ) ) $ as a random element of the Hilbert space $ L^2 ( X ) $, with mean vector --- in the Bochner integral sense, see \cite[Chapter~7]{hsing2015} --- equal to $ \nabla \risk ( h ) $.
 
-A hypothesis which is needed for this proof and which is necessary for the following theoretical analysis is a finite $ L^2 ( \prob_{ X } \otimes \prob_{ Z } ) $--norm of $ \Phi $, which, as we have seen in section \ref{sec: npiv and ill posed lip}, amounts to saying $ \meanop $ is Hilbert-Schmidt.
+A hypothesis which is needed for this proof and which is necessary for the following theoretical analysis is a finite $ L^2 ( \prob_{ X } \otimes \prob_{ Z } ) $--norm of $ \Phi $, which, as we have seen in Section \ref{sec: npiv and ill posed lip}, amounts to saying $ \meanop $ is Hilbert-Schmidt.
 \begin{assump}
     \label{assumption Phi}
     The kernel $ \Phi $ satisfies
@@ -174,7 +174,7 @@ A hypothesis which is needed for this proof and which is necessary for the follo
         \norm{ \Phi }_{ L^2 ( \prob_{ X } \otimes \prob_{ Z } ) } \defeq \left( \int_{ \R^{ d_{ X } } \times \R^{ d_{ Z } } } \Phi ( x, z )^2 p_{ X } ( x ) p_{ Z } ( z ) \drm x \ddrm z \right)^{ \frac{ 1 }{ 2 } } < \infty
     .\end{equation*}
 \end{assump}
-This is the only restrictive assumption on the data generating process we have made so far, and, as we have discussed in section \ref{sec: npiv and ill posed lip}, it still allows the problem to be ill-posed.
+This is the only restrictive assumption on the data generating process we have made so far, and, as we have discussed in Section \ref{sec: npiv and ill posed lip}, it still allows the problem to be ill-posed.
 This assumption is also present in the paper analyzed in section \ref{sec: tikhonov}.
 
 \section{Stochastic Approximate Gradient Descent IV}
@@ -254,18 +254,13 @@ Our main result is the following:
     Assume that $ \ell $ satisfies Assumption \ref{assumption loss}, $ \searchset $ satisfies Assumption \ref{assumption on H}, $ \Phi $ satisfies Assumption \ref{assumption Phi} and $ \hat{ \Phi }, \hat{ r }, \hat{ \meanop } $ satisfy Assumption \ref{assumption estimators}.
     Then, if we let $ \hat{ h } = \sum_{ m=1 }^{ M } \hat{ h }_{ m-1 } $, the following bound holds:
     \begin{align}
-        \begin{split}
             \mean_{ \bz_{ 1:M } } \left[
                 \risk ( \hat{ h } ) - \risk ( \hstar )
             \right]
             &\leq \frac{ D^2 }{ 2 M \alpha_{ M } }
-            + \frac{ \xi }{ M } \sum_{ m=1 }^{ M } \alpha_{ m } \\
-            &\hspace{1cm}
-            + \tau \cdot \left(
-                \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \prob_{ X } \otimes \prob_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2
-            \right)^{ \frac{ 1 }{ 2 } },
+            + \frac{ \xi }{ M } \sum_{ m=1 }^{ M } \alpha_{ m }
+            + \tau \sqrt{ \zeta } ,
             \label{eq: main bound}
-        \end{split}
     \end{align}
     where
     \begin{align*}
@@ -278,7 +273,9 @@ Our main result is the following:
             3 ( C_{ 0 }^2 + L^2 \mean [ Y^2 ] + L^2 D^2 ),
             2L^2 \norm{ \hat{ \Phi } }_{ \infty }^2,
             2L^2 D^2 \norm{ \hat{ \Phi } }_{ \infty }^2
-        \right\}
+        \right\}, \\
+        \zeta = \zeta ( \hat{ \Phi }, \hat{ r }, \hat{ \meanop } )
+        &= \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \prob_{ X } \otimes \prob_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2
     .\end{align*}
 \end{thm}
 \begin{proof}
@@ -291,13 +288,13 @@ If we choose the sequence $ ( \alpha_{ m } ) $ to satisfy
     M \alpha_{ M } \to \infty \quad \text{and} \quad \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \alpha_{ m } \to 0
 \end{equation*}
 as $ M \to \infty $, then the first two terms in the sum vanish as $ M $ grows.
-The last term is due to the fact that we do not know $ \Phi, r $ nor $ \meanop $, but it explicitly quantifies how the estimation errors of $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $ come together to determine the quality of the final estimator.
+The last term appears due to the fact that we do not know $ \Phi, r $ nor $ \meanop $, but it explicitly quantifies how the estimation errors of $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $ come together to determine the quality of the final estimator and converges to zero if the chosen estimation methods are consistent.
 
 \section{Computing the necessary estimators with kernel methods}
 \label{sec: kernel methods}
 
 In this section, we give references for how we chose to compute $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $ in our practical implementation.
-All of these estimators are based on kernel Ridge regression, where the unknown function is approximated using members of a Reproducing Kernel Hilbert Space (RKHS) --- see \cite[Chapter~4]{svm2008} for an introduction to these spaces. 
+All of these estimators are based on kernel Ridge regression, where the unknown function is approximated using members of a Reproducing Kernel Hilbert Space (RKHS) --- see \cite[Chapter~4]{svm2008} for an introduction. 
 Kernel methods have the advantage of providing closed form solutions to regression problems due to the Representer Theorem \cite[Theorem~1]{representer2001}.
 
 Starting with the estimator of
@@ -305,12 +302,12 @@ Starting with the estimator of
     \Phi ( x, z ) = \frac{ p ( x, z ) }{ p ( x ) p ( z ) }
 ,\end{equation*}
 we chose to use the Unconstrained Least Squares Importance Fitting (uLSIF) framework described in \cite[Chapter~6]{sugiyama2012}.
-Using a gaussian kernel for the estimator, wee can see that it adheres to Assumption \ref{assumption estimators}.
+Using a Gaussian kernel for the estimator, one can show that it adheres to Assumption \ref{assumption estimators}.
 
 The method of estimation of $ \hat{ \meanop } $ was taken to be the first stage of Kernel Instrumental Variable (KIV) \cite{singh2019}, a method for NPIV regression which provides two stages based on kernel Ridge regression.
 The first stage consists of computing a conditional mean embedding \cite{cme2009} of the conditional distribution of $ X $ given $ Z = z $ in a RKHS of functions $ \mathcal{H}_{ \mathcal{X} } $, which acts as a proxy for $ L^2 ( X ) $.
 This conditional mean embedding encodes the same information as $ \meanop $.
-To estimate $ r ( Z ) = \mean [ Y \mid Z ] $, we simply used this same method to obtain an approximation to the operator $ L^2 ( Y ) : f \mapsto \mean [ f ( Y ) \mid Z = \cdot \ ] \in L^2 ( Z ) $, which we then apply to the identity function.
+To estimate $ r ( Z ) = \mean [ Y \mid Z ] $, we simply used this same method to obtain an approximation to the operator $ f \in L^2 ( Y ) \mapsto \mean [ f ( Y ) \mid Z = \cdot \ ] \in L^2 ( Z ) $, which we then apply to the identity function.
 
 \section{Numerical experiment}
 
@@ -327,9 +324,9 @@ We tested SAGD-IV using the following data generating process, obtained from \ci
 \begin{equation*}
     \bsin: \hstar ( x ) = \sin ( x ) \quad \text{and} \quad \babs: \hstar ( x ) = \abs{ x }
 .\end{equation*}
-We chose to compare our model to a direct competitor: Kernel Instrumental Variable (KIV) \cite{singh2019}, due to the relationship between both methods discussed in section \ref{sec: kernel methods}.
+We chose to compare our model to a direct competitor: Kernel Instrumental Variable (KIV) \cite{singh2019}, due to the relationship between both methods discussed in Section \ref{sec: kernel methods}.
 All regularization parameters necessary for the computation of $ \hat{ \Phi }, \hat{ r }, \hat{ \meanop } $, as well as the ones in the two stages of KIV, were chosen using cross-validation on held-out training samples.
-All kernels employed were gaussian, with lenghtscale parameter set to be equal to the inverse of the median distance between samples.
+All kernels employed were Gaussian, with lenghtscale parameter set to be equal to the inverse of the median distance between samples.
 With the notation of Algorithm \ref{algo: sagdiv}, for SAGD-IV we set the learning rate to be $ \alpha_{ m } = \frac{ 1 }{ \sqrt{ M } } $ for $ 1 \leq m \leq M $.
 For SAGD-IV, the dataset was comprised of $ 600 $ samples from the triple $ ( X, Z, Y ) $ and an additional $ 1200 $ samples of $ Z $ alone, to conduct the loop in Algorithm \ref{algo: sagdiv}.
 The dataset for KIV was comprised of the same $ 600 $ samples of the triple $ ( X, Z, Y ) $, plus additional $ 600 $ samples of the pair $ ( Z, Y ) $ (these are necessary for the algorithm, see \cite{singh2019}).
@@ -349,4 +346,4 @@ We can see that, while both methods performed similarly in the $ \bsin $ case, K
 This might be due to the smooth nature of the KIV estimator, since both stages are conducted using Kernel Ridge Regression.
 However, the relative performance changes drastically when looking at the $ \babs $ case, where SAGD-IV greatly outperformed KIV.
 This indicates that SAGD-IV may perform better with non-smooth response functions.
-Of course, this isn't a thorough investigation of the empirical performance of SAGD-IV, nor irrefutable proof that it is better then KIV, and a more detailed analysis, involving other recent methods which have appeared in the NPIV literature, is left for future work.
+Of course, this is not a thorough investigation of the empirical performance of SAGD-IV, nor irrefutable proof that it is better then KIV, and a more detailed analysis, involving other recent methods which have appeared in the NPIV literature, is left for future work.

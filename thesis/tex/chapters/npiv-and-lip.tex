@@ -75,13 +75,13 @@ Furthermore, since
     &= \mean \left[ h ( X ) \mean [ g ( Z ) \mid X ] \right] \\
     &= \dotprod{ h, \mean [ g ( Z ) \mid X = \cdot ] }_{ L^{ 2 } ( X ) }
 ,\end{align*}
-by the defining inequality of the adjoint operator $ \meanop^{ * } : L^{ 2 } ( Z ) \to L^{ 2 } ( X ) $ we have
+by the defining equality of the adjoint operator $ \meanop^{ * } : L^{ 2 } ( Z ) \to L^{ 2 } ( X ) $ we have
 \begin{equation*}
     \meanop^{ * } [ g ] ( X ) = \mean [ g ( Z ) \mid X ]
 .\end{equation*}
 Proceeding in a manner analogous to the one which got us (\ref{eq: finding kernel}), we may find that $ \meanop^{ * } $ is also an integral operator with the same kernel $ \Phi $ of $ \meanop $.
 
-This observation is useful because, from \cite[theorem 2.34]{florens2007} we know that if the kernel $ \Phi $ satisfies
+This observation is useful because, from \cite[theorem 2.34]{florens2007} for instance, we know that if the kernel $ \Phi $ satisfies
 \begin{equation}
     \label{eq: Phi square integrable}
     \int_{ \R^{ d_{ X } } } \int_{ \R^{ d_{ Z } } } \Phi ( x, z )^2 p_{ X } ( x ) p_{ Z } ( z ) \drm z \ddrm x < \infty
@@ -108,10 +108,10 @@ We remark that, aside from requiring $ r \in \image ( \meanop ) $, we leave the 
 
 In \cite{darolles2011}, the authors assume identification and also that the joint density $ p_{ X, Z } $ is dominated by the product of marginals $ p_{ x } \cdot p_{ Z } $.
 This is the same as demanding the kernel $ \Phi $ to be bounded, which implies (\ref{eq: Phi square integrable}).
-Hence, the operators $ \meanop $ and $ \meanop^{ * } $ are assumed to be Hilbert-Schmidt.
-Ill-posedness can then be characterized in terms of the singular values of $ \meanop $, which we will show nextly.
+Hence, the operators $ \meanop $ and $ \meanop^{ * } $ are Hilbert-Schmidt.
+Ill-posedness can then be characterized in terms of the singular values of $ \meanop $, which we will show next.
 
-Since $ \meanop $ is compact, it has a \emph{singular value decomposition (SVD)} --- see \cite[section 15.4]{kress89} --- that is, there exists orthonormal sequences $ ( \varphi_{ n } )_{ n\in\N } $ and $ ( \psi_{ n } )_{ n\in\N } $, in $ L^2 ( X ) $ and $ L^2 ( Z ) $ respectively, as well as a decreasing sequence $ \lambda_{ 0 } \geq \lambda_{ 1 } \geq \dots \geq 0 $ of nonnegative real numbers (the singular values), such that
+Since $ \meanop $ is compact, it has a countable \emph{singular value decomposition (SVD)} --- see \cite[section 15.4]{kress89} --- that is, there exists orthonormal sequences $ ( \varphi_{ n } )_{ n\in\N } $ and $ ( \psi_{ n } )_{ n\in\N } $, in $ L^2 ( X ) $ and $ L^2 ( Z ) $ respectively, as well as a decreasing sequence $ \lambda_{ 0 } \geq \lambda_{ 1 } \geq \dots \geq 0 $ of nonnegative real numbers (the singular values), such that
 \begin{enumerate}[label=(\alph*)]
     \item The eigenvalues of $ \meanop^{ * } \meanop $ are precisely $ ( \lambda_{ i }^2 )_{ i \geq 0 } $ \label{en: singular values};
     \item $ \meanop [ \varphi_{ i } ] = \lambda_{ i } \psi_{ i } $ and $ \meanop^{ * } [ \psi_{ i } ] = \lambda_{ i } \varphi_{ i } $ for all $ i \geq 0 $;
@@ -151,9 +151,13 @@ Observe that solving $ \meanop [ h ] = r $ is equivalent to solving
     \argmin_{ h \in L^2 ( X ) } \norm{ \meanop [ h ] - r }_{ L^2 ( Z ) }^2
 .\end{equation*}
 Tikhonov regularization modifies this objective function by adding a penalization for large norm solutions.
-Given a regularization parameter $ \alpha > 0 $, the new optimization problem is 
+Given a regularization parameter $ \alpha > 0 $, we define
 \begin{equation*}
-    \argmin_{ h \in L^2 ( X ) } L_{ \alpha } ( h ) = \norm{ \meanop [ h ] - r }_{ L^2 ( Z ) }^2 + \alpha \norm{ h }_{ L^2 ( X ) }^2
+    L_{ \alpha } ( h ) \defeq \norm{ \meanop [ h ] - r }_{ L^2 ( Z ) }^2 + \alpha \norm{ h }_{ L^2 ( X ) }^2  
+\end{equation*}
+and the new optimization problem is 
+\begin{equation*}
+    \argmin_{ h \in L^2 ( X ) } L_{ \alpha } ( h )
 .\end{equation*}
 The function $ L_{ \alpha } $ is clearly convex and a straightforward application of the chain rule gives us
 \begin{equation}
@@ -205,7 +209,7 @@ The important aspects of this method that the reader should keep in mind are the
 
 \section{Nonparametric 2SLS}
 
-In \cite{newey2003}, the authors overcome the difficulties presented in section \ref{sec: npiv and ill posed lip} by assuming identification and restricting the solution $ \hstar $ to belong to a compact set.
+In \cite{newey2003}, the authors overcome the difficulties presented in Section \ref{sec: npiv and ill posed lip} by assuming identification and restricting the solution $ \hstar $ to belong to a compact set.
 With this assumption, the problem of continuous inverse is automatically satisfied, since the inverse of a continuous function defined on a compact set and taking values in a Hausdorff space is automatically continuous \cite{munkres2000}.
 
 However, we must advise the reader that the formulation of the nonparametric regression problem presented in \cite{newey2003} is a somewhat different then ours.
@@ -213,7 +217,7 @@ More specifically, the authors do not use the notation presented in subsection \
 Therefore, the compact set where the solution is restricted to live is not necessarily a compact subset of $ L^{ 2 } ( X ) $, and it becomes difficult to compare both approaches from a theoretical perspective, a task which is left for future work.
 Nonetheless, we decided to include a section on this paper because of its importance to the research in nonparametric methods for instrumental variables.
 In the following, we will provide a high level description of their method, adapting the notation and focusing on the aspects we feel are the most important.
-We refer the reader to the original paper for details.
+We refer the reader to the original paper for further details.
 
 Suppose that the structural function can be approximated as follows:
 \begin{equation}
@@ -224,7 +228,7 @@ where $ p_{ 1 }, p_{ 2 }, \dots $ is a sequence of ``basis'' functions and $ \ga
 Substituting this into (\ref{eq: expectation equation}), we get
 \begin{equation}
     \label{eq: projected expansion}
-    \mean [ Y \mid Z = z ] = r ( z ) = \sum_{ j=1 }^{ J } \gamma_{ j } \mean [ p_{ j } ( X ) \mid Z = z ]
+    \mean [ Y \mid Z = z ] \approx r ( z ) = \sum_{ j=1 }^{ J } \gamma_{ j } \mean [ p_{ j } ( X ) \mid Z = z ]
 .\end{equation}
 This suggests a two stage procedure analogous to 2SLS.
 In the first stage, a nonparametric estimate of $ \mean [ p_{ j } ( X ) \mid Z = z ] $ is obtained for $ j = 1, \dots, J $.
