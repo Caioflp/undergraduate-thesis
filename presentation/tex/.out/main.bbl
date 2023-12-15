@@ -19,6 +19,47 @@
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global}
+    \entry{darolles2011}{article}{}
+      \name{author}{4}{}{%
+        {{hash=53098a7c62874e7e454b80d03a285478}{%
+           family={Darolles},
+           familyi={D\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+        {{hash=9f7fd6fb881501ca5ea978714193f2e1}{%
+           family={Fan},
+           familyi={F\bibinitperiod},
+           given={Y.},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=e26be5c3814ff01372f4a8499cec892d}{%
+           family={Florens},
+           familyi={F\bibinitperiod},
+           given={J.\bibnamedelimi P.},
+           giveni={J\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=44864e4ffe54fcd03b5091c5cf7f990c}{%
+           family={Renault},
+           familyi={R\bibinitperiod},
+           given={E.},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{a4eb813331de03bf6038ff10c03667ab}
+      \strng{fullhash}{8ec6a67d72d9f87028edb6287456af46}
+      \strng{bibnamehash}{a4eb813331de03bf6038ff10c03667ab}
+      \strng{authorbibnamehash}{a4eb813331de03bf6038ff10c03667ab}
+      \strng{authornamehash}{a4eb813331de03bf6038ff10c03667ab}
+      \strng{authorfullhash}{8ec6a67d72d9f87028edb6287456af46}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometrica}
+      \field{number}{5}
+      \field{title}{Nonparametric Instrumental Regression}
+      \field{volume}{79}
+      \field{year}{2011}
+      \field{pages}{1541\bibrangedash 5165}
+      \range{pages}{3625}
+    \endentry
     \entry{fonseca2022statistical}{misc}{}
       \name{author}{2}{}{%
         {{hash=7288af19bfc023d832d3f7941b6f79db}{%
@@ -51,7 +92,7 @@
       \verb 2209.14967
       \endverb
     \endentry
-    \entry{newey03}{article}{}
+    \entry{newey2003}{article}{}
       \name{author}{2}{}{%
         {{hash=058d74ae5e89fbd5a49ebdbe97b4c922}{%
            family={Newey},
@@ -88,7 +129,6 @@
       \field{volume}{71}
       \field{year}{2003}
       \field{urldateera}{ce}
-      \true{nocite}
       \field{pages}{1565\bibrangedash 1578}
       \range{pages}{14}
       \verb{urlraw}
@@ -97,6 +137,42 @@
       \verb{url}
       \verb http://www.jstor.org/stable/1555512
       \endverb
+    \endentry
+    \entry{singh2019}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=b417395e2c10f7be5dbda235bb6fdd4c}{%
+           family={Singh},
+           familyi={S\bibinitperiod},
+           given={Rahul},
+           giveni={R\bibinitperiod}}}%
+        {{hash=277241c95489c0dc41e83a400c407cc8}{%
+           family={Sahani},
+           familyi={S\bibinitperiod},
+           given={Maneesh},
+           giveni={M\bibinitperiod}}}%
+        {{hash=1f42dc1a2d390bd84511cbccb6397013}{%
+           family={Gretton},
+           familyi={G\bibinitperiod},
+           given={Arthur},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Curran Associates, Inc.}%
+      }
+      \strng{namehash}{0d2d66d61b6e9aceadb21fd56e8576b7}
+      \strng{fullhash}{0d2d66d61b6e9aceadb21fd56e8576b7}
+      \strng{bibnamehash}{0d2d66d61b6e9aceadb21fd56e8576b7}
+      \strng{authorbibnamehash}{0d2d66d61b6e9aceadb21fd56e8576b7}
+      \strng{authornamehash}{0d2d66d61b6e9aceadb21fd56e8576b7}
+      \strng{authorfullhash}{0d2d66d61b6e9aceadb21fd56e8576b7}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Advances in Neural Information Processing Systems}
+      \field{title}{Kernel Instrumental Variable Regression}
+      \field{volume}{32}
+      \field{year}{2019}
     \endentry
   \enddatalist
 \endrefsection

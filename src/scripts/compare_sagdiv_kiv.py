@@ -25,7 +25,8 @@ plt.rcParams.update({
 
 fgv_light_blue = (6/255, 143/255, 203/255)
 fgv_dark_blue = (1/255, 62/255, 125/255)
-background = "#F6FBFD"
+# background = "#F6FBFD"
+background = "#FFFFFF"
 orange = "#DA511F"
 
 def plot_data(
@@ -119,7 +120,8 @@ def plot_estimate(
         fig.savefig(title.lower().replace(" ", "_") + ".pdf")
 
 # @experiment("new_version/sandbox")
-@experiment("benchmark/benchmark_KIV")
+# @experiment("benchmark/benchmark_KIV")
+@experiment("presentation")
 def main():
     cm = 1/2.54
     fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(33*cm, 12*cm))

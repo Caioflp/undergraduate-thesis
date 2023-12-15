@@ -6,27 +6,18 @@
 
     \frame{\titlepage}
 
-    \section{NPIV estimation}
+    \section{Instrumental Variable Regression}
 
     \begin{frame}{Instrumental Variables}
         \begin{itemize}
-            \item<1-> Consider a generic regression problem:
+            \item<1-> Regression: $ Y = \hstar ( X ) + \varepsilon $, with $ \mean [ \varepsilon ] = 0 $.
+                Find $ \hstar $.
+            \item<2-> Minimizing $ \mse ( h ) = \mean [ ( Y - h ( X ) )^2 ] $ gives 
                 \begin{equation*}
-                    Y = \hstar ( X ) + \varepsilon
-                ,\end{equation*}
-                where $ \mean [ \varepsilon ] = 0 $ and we wish to estimate $ h^{ \star } $.
-
-                \item<2-> What happens if $ \varepsilon \not\kern-1pt\indep X $? More specifically, if $ \mean [ \varepsilon \mid X ] \neq 0 $?
-                \item<3-> Minimizing $ \mse ( h ) = \mean [ ( Y - h ( X ) )^2 ] $ over $ h $ gives biased results:
-                \uncover<4->{
-                    \begin{equation*}
-                        \argmin_{ W = h ( X ) \text{ for some } h } \mean [ ( Y - W )^2 ]
-                        = \mean [ Y \mid X ]
-                        = \hstar ( X ) + \underbrace{\mean [ \varepsilon \mid X ]}_{\neq 0}
-                    .\end{equation*}
-                }
-                \item<5-> We end up estimating $ \hstar ( X ) + \mean [ \varepsilon \mid X ] $.
-                    Other problems may occur.
+                    \hat{ h } ( X ) = \mean [ Y \mid X ] = \hstar ( X ) + \mean [ \varepsilon \mid X ]
+                .\end{equation*}
+            \item<3-> What if $ \mean [ \varepsilon \mid X ] \neq 0 $?
+                That is, if $ X $ is \emph{endogenous}?
         \end{itemize}
     \end{frame}
 
@@ -34,257 +25,280 @@
         \begin{itemize}
             \item<1-> Suppose we have access to a variable $ Z $ such that
                 \begin{enumerate}
-                    \item<2-> $ p_{ X\mid Z } ( x \mid z ) $ is not constant in $ z $, that is, $ Z $ influences $ X $;
-                    \item<3-> $ \varepsilon $ is uncorrelated with $ Z $, that is, $ \mean [ \varepsilon \mid Z ] = 0 $.
+                    \item<2-> $ Z $ influences $ X $, that is, $ Z \notindep X $;
+                    \item<3-> $ Z $ is \emph{exogenous}, that is, $ \mean [ \varepsilon \mid Z ] = 0 $.
                 \end{enumerate}
-                \uncover<5->{$ Z $ is called an \emph{instrumental variable}.}
-                \item<6-> How does it help us?
+                \uncover<4->{$ Z $ is called an \emph{instrumental variable}.}
         \end{itemize}
     \end{frame}
 
     \begin{frame}{Instrumental Variables}
-       \begin{itemize}
-           \item<1->  Structural equation:
-               \begin{equation*}
-                   Y = \hstar ( X ) + \varepsilon
-               ,\end{equation*}
-               where $ \mean [ \varepsilon \mid Z ] = 0 $.
-           \item<2-> Consider minimizing $ \risk ( h ) = \mean \left[ \left( \mean [ Y - h ( X ) \mid Z ] \right)^2 \right] $ over $ h $.
-            \item<3-> Compare:
-                \begin{equation*}
-                    {\color{red}
-                        \mse ( h ) = \mean [ ( Y - h ( X ) )^2 ]
-                    }
-                    \quad \text{v.s.} \quad
-                    {\color{blue}
-                        \risk ( h ) = \mean \left[ \left( \mean [ Y - h ( X ) \mid Z ] \right)^2 \right] 
-                    }
-                .\end{equation*}
-       \end{itemize} 
+        \begin{figure}[t]
+            \begin{center}
+                \begin{tikzpicture}[node distance=3cm]
+                    \node[circle,draw] at (0,0) (X) {$X$};
+                    \node[circle,draw,right of=X] (Y) {$Y$};
+                    \node[circle,draw,left of=X] (Z) {$Z$};
+                    \node[circle,draw,above of=X,xshift=1.5cm,yshift=-1.5cm] (eps) {$\varepsilon$};
+                    \draw[->] (X) -- (Y);
+                    \draw[->] (Z) -- (X);
+                    \draw[->] (eps) -- (X);
+                    \draw[->] (eps) -- (Y);
+                \end{tikzpicture}
+            \end{center}
+            \caption{Causal diagram representing an instrumental variable for an endogenous covariate.}
+        \end{figure}
     \end{frame}
 
     \begin{frame}{Instrumental Variables}
+        Example:
         \begin{itemize}
-            \item<1-> Since
-                \begin{equation*}
-                    \mean [ Y \mid Z ]
-                    = \mean [ \hstar ( X ) + \varepsilon \mid Z ]
-                    = \mean [ \hstar ( X ) \mid X ] + \cancelto{0}{\mean [ \varepsilon \mid Z ]}
-                    = \mean [ \hstar ( X ) \mid Z ]
-                ,\end{equation*}
-                \uncover<2->{
-                    We have
-                    \begin{align*}
-                        \risk ( h )
-                        &= \mean \left[
-                            \left(
-                                \mean \left[
-                                    Y - h ( X ) \mid Z
-                                \right]
-                            \right)^2
-                        \right] \\
-                        &= \mean \left[
-                            \left(
-                                \mean \left[
-                                    ( \hstar - h ) ( X )
-                                    \mid Z
-                                \right]
-                            \right)^2
-                        \right]
-                    .\end{align*}
-                }
-                \item<3-> $ \risk ( h ) = 0 \iff \mean \left[ \left( \hstar - h \right) ( X ) \mid Z \right] = 0 \iff \mean [ \hstar ( X ) \mid Z ] = \mean [ h ( X ) \mid Z ] $.
+            \item $ X = $ is smoker?
+            \item $ Y = $ general health.
+            \item $ Z = $ tax rate on tobacco products.
+            \item $ \varepsilon = $ depression, self care.
         \end{itemize}
+        \begin{figure}[t]
+            \begin{center}
+                \begin{tikzpicture}[node distance=3cm]
+                    \node[circle,draw] at (0,0) (X) {$X$};
+                    \node[circle,draw,right of=X] (Y) {$Y$};
+                    \node[circle,draw,left of=X] (Z) {$Z$};
+                    \node[circle,draw,above of=X,xshift=1.5cm,yshift=-1.5cm] (eps) {$\varepsilon$};
+                    \draw[->] (X) -- (Y);
+                    \draw[->] (Z) -- (X);
+                    \draw[->] (eps) -- (X);
+                    \draw[->] (eps) -- (Y);
+                \end{tikzpicture}
+            \end{center}
+        \end{figure}
     \end{frame}
 
-    \begin{frame}{Example}
+    \begin{frame}{Linear Model}
         \begin{equation*}
-            \underbrace{\text{Grades}}_{Y} = \hstar \bigl( \underbrace{ \text{Attends tutoring sessions?} }_{X} \bigr) + \varepsilon
+            \bY = \bX \bstar + \varepsilon
         .\end{equation*}
         \begin{itemize}
-            \item<2-> Natural ability is a confounding variable: maybe only people who struggle a lot go to tutoring sessions.
-            \item<3-> $ Z = \text{Lives close to school?} $
-                \begin{enumerate}
-                    \item<4-> $ Z \not\kern-1pt\indep X $,
-                    \item<4-> $ \varepsilon \indep $ Z $ $.
-                \end{enumerate}
-        \end{itemize}
-    \end{frame}
-
-    \begin{frame}{NPIV estimation}
-        \begin{itemize}
-            \item<1-> Stands for ``Nonparametric Instrumental Variable estimation''.
-            \item<2-> No assumptions about some parametric form for $ \hstar $.
-        \end{itemize}
-    \end{frame}
-
-    \section{Our approach}
-
-    % Stochastic gradient computation
-    % Pseudo algorithm
-
-    \begin{frame}{Problem Formulation}
-        \begin{itemize}
-            \item<1-> We have
-                \begin{equation}
-                    \label{eq: structure}
-                    Y = \hstar ( X ) + \varepsilon   
-                ,\end{equation}
-                 where $ \mean [ \varepsilon \mid Z ] = 0 $, and want to estimate $ \hstar $.
-             \item<2-> Let $ \meanop [ h ] = \mean [ h ( X ) \mid Z = \cdot ] $, that is
-                 \begin{equation*}
-                     \meanop [ h ] ( Z ) = \mean [ h ( X ) \mid Z ]
-                 .\end{equation*}
-             \item<3-> Let $ r_{ 0 } ( Z ) = \mean [ Y \mid Z ] $.
-                 Then (\ref{eq: structure}) is equivalent to:
-                 \begin{equation*}
-                     \mean [ Y \mid Z ] = \mean [ \hstar ( X ) \mid Z ] \iff r_{ 0 } = \meanop [ \hstar ]
-                 .\end{equation*}
-            \item<4-> We wish to ``invert'' $ \meanop $.
-            \item<4-> Risk measure:
+            \item<2-> $ \betaols = ( \bX^{ \trp } \bX )^{ -1 } \bX^{ \trp } \bY $ is biased and inconsistent;
+            \item<3-> $ \betaiv = ( \hat{ \bX }^{ \trp } \hat{ \bX } )^{ -1 } \hat{ \bX }^{ \trp } \bY $, where
                 \begin{equation*}
-                    \risk ( h ) = \mean \left[ \frac{ 1 }{ 2 } \left( \mean \left[ Y - h ( X ) \mid Z \right] \right)^2 \right] = \mean \left[ \frac{ 1 }{ 2 } \left( r_{ 0 } ( Z ) - \mathcal{T} [ h ] ( Z ) \right)^2 \right]
-                .\end{equation*}
+                    \hat{ \bX } = \bZ ( \bZ^{ \trp } \bZ )^{ -1 } \bZ^{ \trp } \bX
+                ,\end{equation*}
+                is unbiased and consistent.
+            \item<3-> Two Stages Least Squares (2SLS).
         \end{itemize}
     \end{frame}
-    \begin{frame}{Problem Formulation}
+
+    \begin{frame}{Linear Model}
+        \begin{figure}[htb]
+            \begin{center}
+                \includegraphics[width=.9\textwidth]{tsls_examples.pdf}
+            \end{center}
+        \end{figure}
+    \end{frame}
+
+    \section{Nonparametric Instrumental Variable Regression}
+
+    \begin{frame}{Problem formulation}
+        \begin{equation*}
+            Y = \hstar ( X ) + \varepsilon, \quad \text{with $ \mean [ \varepsilon \mid X ] \neq 0 $, $ Z \notindep X $ and $ \mean [ \varepsilon \mid Z ] = 0 $}
+        .\end{equation*}
         \begin{itemize}
-            \item<1-> Our risk measure:
+            \item<1-> We have access to $ \left\{ ( X_{ i }, Y_{ i }, Z_{ i } ) \right\} $;
+            \item<2-> We assume $ \hstar \in L^2 ( X ) = \left\{ h : \mean [ h ( X )^2 ] < \infty \right\} $.
+            \item<3-> Conditioning in $ Z $:
+                \begin{equation*}
+                    \mean [ Y \mid Z ] = \mean [ \hstar ( X ) \mid Z ] \iff
+                    {\color{blue} r = \meanop [ \hstar ]}
+                ,\end{equation*}
+                where $ r ( Z ) = \mean [ Y \mid Z ] $ and $ \meanop : L^2 ( X ) \to L^2 ( Z ) $ is the \emph{conditional expectation operator}:
+                \begin{equation*}
+                    \meanop [ h ] ( z ) = \mean [ h ( X ) \mid Z = z \ ]
+                .\end{equation*}
+            \item<4-> $\mathrm{I}$ll posed problem.
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Classical Approaches}
+        \let\tempone\itemize
+        \let\temptwo\enditemize
+        \renewenvironment{itemize}{\tempone\addtolength{\itemsep}{0.7\baselineskip}}{\temptwo}
+        Problem: $ r = \meanop [ \hstar ] $, where $ r ( Z ) = \mean [ Y \mid Z ] $ and $ \meanop [ h ] ( Z ) = \mean [ h ( X ) \mid Z ] $.
+
+        \begin{itemize}
+            \item<2-> Nonlinear Two Stages Least Squares \cite{newey2003}:
+                \begin{itemize}
+                    \item $ \hstar ( x ) \approx \sum_{ j=1 }^{ J } \gamma_{ j } p_{ j } ( x ) $;
+                    \item $ \mean [ p_{ j } ( X ) \mid Z = z \ ] \approx \sum_{ i=1 }^{ n } a_{ ji } q_{ i } ( z ) $.
+                \end{itemize}
+
+            \item<3-> Iterated Tikhonov regularization \cite{darolles2011}:
+                \begin{itemize}
+                    \item $ \argmin_{ h } \ \norm{ \meanop [ h ] - r }_{ L^2 ( Z ) }^2 + \alpha \norm{ h }_{ L^2 ( X ) }^2 = ( \meanop^{ * } \meanop + \alpha I )^{ -1 } \meanop^{ * } [ r ] $;
+                    \item $ h_{ k+1 } = ( \meanop^{ * } \meanop + \alpha I )^{ -1 } [ \meanop^{ * } r + h_{ k } ] $
+                \end{itemize}
+        \end{itemize}
+    \end{frame}
+
+    \section{Stochastic Approximate Gradient Descent IV}
+
+    \begin{frame}{Risk measure}
+        We know that $ \hstar $ satisfies
+        \begin{equation*}
+            r = \meanop [ \hstar ]
+        .\end{equation*}
+        \begin{itemize}
+            \item<2-> Define the risk
+                \begin{equation*}
+                    \risk ( h ) = \mean [ \ell ( r ( Z ), \meanop [ h ] ( Z ) ) ]
+                .\end{equation*}
+                E.g., if $ \ell ( y, y' ) = ( y - y' )^2 $:
                 \begin{align*}
                     \risk ( h )
-                    &= \frac{ 1 }{ 2 } \mean \left[
+                    &= \mean \left[
                         \left(
-                            \mean \left[
-                                Y - h ( X ) \mid Z
-                            \right]
+                            r ( Z ) - \meanop [ h ] ( Z )
                         \right)^2
                     \right] \\
-                    &= \frac{ 1 }{ 2 } \mean \left[
+                    &= \mean \left[
                         \left(
-                            r_{ 0 } ( Z ) - \meanop [ h ] ( Z )
+                            \meanop [ h - \hstar ] ( Z )
                         \right)^2
-                    \right] \\
-                    &= \frac{ 1 }{ 2 } \mean \left[
-                        ( r_{ 0 }  - \meanop [ h ] ) ( Z )^2
                     \right]
                 .\end{align*}
         \end{itemize}
     \end{frame}
 
-    \begin{frame}{Stochastic Gradients}
+    \begin{frame}{Gradient Descent}
+        \begin{equation*}
+            \risk ( h ) = \mean [ \ell ( r ( Z ), \meanop [ h ] ( Z ) ) ]
+        .\end{equation*}
         \begin{itemize}
-            \item<1-> We showed that $ \nabla \risk ( h ) = \meanop^{ * } [ \meanop [ h ] - r_{ 0 } ] $, where
-                \begin{equation*}
-                    \meanop^{ * } [ f ] ( X ) = \mean [ f ( Z ) \mid X ]
-                .\end{equation*}
-            \item<2-> Immediate idea:
-                \begin{equation*}
-                    \begin{cases}
-                        h_{ 0 } \equiv 0, \\
-                        h_{ t } \leftarrow h_{ t-1 } - \alpha_{ t } \nabla \risk ( h_{ t-1 } ) \quad \text{for} $ t \geq 1 $.
-                    \end{cases}
-                \end{equation*}
-                \item<3-> There are problems\dots
-        \end{itemize}
-    \end{frame}
-
-    \begin{frame}{Stochastic Gradients}
-        \begin{itemize}
-            \item<1-> Another idea: notice that
+            \item<2-> We showed that
                 \begin{align*}
-                    \meanop^{ * } [ f ] ( x )
-                    &= \mean \left[ f ( Z ) \mid X = x \right] \\
-                    &= \int_{ \mathcal{Z} } f ( z ) p ( z \mid x ) \ \mathrm{d}z \\
-                    &= \int_{ \mathcal{Z} } f ( z ) \frac{ p ( x, z ) }{ p ( x ) p ( z ) } p ( z ) \ \mathrm{d} z \\
-                    &= \mean_{ Z } \left[ f ( Z ) \Phi ( x, Z ) \right]
+                    \nabla \risk ( h ) ( x )
+                    &= \meanop^{ * } [ \partial_{ 2 } ( r ( Z ), \meanop [ h ] ( Z ) ) ] \\
+                    &= \mean [ {\color{blue} \Phi ( x, Z ) \partial_{ 2 } ( r ( Z ), \meanop [ h ] ( Z ) )} ]
                 ,\end{align*}
-                where $ \Phi ( x, z ) = \frac{ p ( x, z ) }{ p ( x ) p ( z ) } $.
-            \item<2-> In the spirit of SGD, $ f ( Z ) \Phi ( x, Z ) $ is a stochastic estimate for $ \meanop^{ * } [ f ] ( x ) $.
+                where $ \Phi ( x, z ) = \frac{ p_{ XZ } ( x, z ) }{ p_{ X } ( x ) p_{ Z } ( z ) } $.
+            \item<3-> The term in blue is a stochastic gradient.
+            \item<4-> Problem: do not know $ \Phi, \meanop $ nor $ r $.
+                Only have access to $ \left\{ ( X_{ i }, Y_{ i }, Z_{ i } ) \right\} $.
         \end{itemize}
     \end{frame}
-    \begin{frame}{Stochastic Gradients}
+
+    \begin{frame}{Projected Gradient Descent}
         \begin{itemize}
-            \item<1-> Substitute $ \nabla \risk ( h ) = \meanop^{ * } [ \meanop [ h ] - r_{ 0 } ] $ for
+            \item<1-> Our regularization: look for solutions in $ \mathcal{H} \subseteq L^2 ( X ) $;
+            \item<2-> $ \mathcal{H} $ is convex, closed and bounded.
+            \item<3-> E.g. for $ A > 0 $:
+        \begin{equation*}
+            \mathcal{H} = \left\{ h \in L^2 ( X ) : \abs{ h ( x ) } \leq A \ \forall x \right\}
+        .\end{equation*}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Stochastic Approximate Gradient Descent}
+        \begin{itemize}
+            \item<1-> $ \nabla \risk ( h )(x) = \mean [ {\color{blue}\Phi ( x, Z ) \partial_{ 2 } ( r ( X ), \meanop [ h ] ( Z ) )} ] $, but we do not know $ \Phi, r, \meanop $;
+            \item<2->  Assume we have estimators $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $, so that
                 \begin{equation*}
-                    \hat{ \Phi } ( \cdot, Z ) \left(
-                        \hat{ \meanop } [ h ] ( Z ) - \hat{ r_{ 0 } } ( Z )
-                    \right)
-                .\end{equation*}
-            \item<2-> New algorithm:
-                \begin{equation*}
-                    \begin{cases}
-                        h_{ 0 } \equiv 0, \\
-                        h_{ t } \leftarrow h_{ t-1 } - \alpha_{ t } \hat{ \Phi } ( \cdot, z_{ t } ) \left(
-                            \hat{ \meanop } [ h ] ( z_{ t } ) - \hat{ r_{ 0 } } ( z_{ t } )
-                        \right) \quad \text{for} $ t \geq 1 $.
-                    \end{cases}
+                    u_{ h } ( x ) = {\color{blue}\hat{ \Phi } ( x, Z ) \partial_{ 2 } ( \hat{ r } ( Z ), \hat{ \meanop } [ h ] ( Z ) )}
                 \end{equation*}
-                \item<3-> We chose to use RKHS (kernel) methods for computing $ \hat{ \Phi }, \hat{ \meanop } $ and $ \hat{ r_{ 0 } } $.
-                \item<4-> One dataset with samples from $ ( X, Z, Y ) $ to compute $ \hat{ \Phi }, \hat{ \meanop }, \hat{ r_{ 0 } } $, and one dataset with samples from $ Z $ to conduct SGD loop.
+                is an \emph{approximate stochastic gradient} for $ \risk $ at $ h $.
         \end{itemize}
     \end{frame}
 
-    \section{Results}
-
-    \begin{frame}{Practical Results}
-        \begin{figure}[htb]
-            \begin{center}
-                \includegraphics[width=.6\textwidth]{estimate_sin.pdf}
-                \caption{In red we have $ \hstar = \sin $, in black we have $ \hat{ h }_{ N } $ and in blue, $ h = \frac{ 1 }{ N } \sum_{ t=1 }^{ N } h_{ N } $.
-                Results produced with $ 600 $ joint samples of $ ( X, Z, Y ) $ and $ 2000 $ more samples of $ Z $ only.}
-            \end{center}
-        \end{figure}
-    \end{frame}
-
-    \begin{frame}{Practical Results}
-        \begin{figure}[htb]
-            \begin{center}
-                \includegraphics[width=.6\textwidth]{estimate_pointy.pdf}
-                \caption{In red we have $ \hstar ( x ) = \exp ( \abs{ x } ) $, in black we have $ \hat{ h }_{ N } $ and in blue, $ h = \frac{ 1 }{ N } \sum_{ t=1 }^{ N } h_{ N } $.
-                Results produced with $ 600 $ joint samples of $ ( X, Z, Y ) $ and $ 2000 $ more samples of $ Z $ only.}
-            \end{center}
-        \end{figure}
-    \end{frame}
-
-
-    \begin{frame}{Practical Results}
-        \begin{figure}[htb]
-            \begin{center}
-                \includegraphics[width=.6\textwidth]{estimate_smooth.pdf}
-                \caption{In red we have $ \hstar ( x ) = 2 ( ( x - 1/2 )^{ + } )^2 + x/2 $, in black we have $ \hat{ h }_{ N } $ and in blue, $ h = \frac{ 1 }{ N } \sum_{ t=1 }^{ N } h_{ N } $.
-                Results produced with $ 600 $ joint samples of $ ( X, Z, Y ) $ and $ 2000 $ more samples of $ Z $ only.}
-            \end{center}
-        \end{figure}
-    \end{frame}
-
-    \begin{frame}{Theoretical properties}
-        Letting $ \bar{ h } = \frac{ 1 }{ N } \sum_{ t=1 }^{ N } h_{ t } $, we have
-        \begin{align*}
-            \begin{split}
-                \mean_{ z_{ 1:N } } \left[
-                    \risk \left(
-                        \bar{ h }
-                    \right)
-                \right]
-                &\leq \frac{ D^2 }{ 2 N \alpha_{ N } }
-                + \mathcal{O}_{ p } ( 1 ) \frac{ 1 }{ N } \sum_{ t=1 }^{ N } \alpha_{ t } \\
-                &\quad\quad\quad
-                + \mathcal{O}_{ p } ( 1 ) \left(
-                    \norm{ \hat{ \Phi } - \Phi }^2
-                    + \norm{ \hat{ r_{ 0 } } - r_{ 0 } }^2
-                    + \norm{ \hat{ \meanop } - \meanop }^2
-                \right)^{ 1/2 }.
-            \end{split}
-        \end{align*}
-        \uncover<2->{Choose $ ( \alpha_{ t } )_{ t=1 }^{ \infty } $ so that $ N \alpha_{ N } \to \infty $ but $ \frac{ 1 }{ N } \sum_{ t=1 }^{ N } \alpha_{ t } \to 0 $ as $ N \to \infty $.}
-    \end{frame}
-
-    \section{Next steps}
-
-    \begin{frame}{Next steps}
+    \begin{frame}{Kernel Methods}
         \begin{itemize}
-            \item<1-> Benchmark against current methods.
-            \item<1-> Discrete outcome models.
+            \item<1-> Kernel Ridge Regression to compute $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $;
+            \item<2-> Reproducing Kernel Hilbert Space (RKHS) as a class of approximating functions $\implies$ closed form solutions;
+            \item<3-> $ \hat{ \meanop } $ is tricky.
+                We used KIV's first stage \cite{singh2019}.
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{SAGD--IV}
+        \begin{algorithm}[H]\label{algo: sagdiv}
+            \caption{SAGD--IV}
+            \SetKwInOut{Input}{input}
+            \SetKwInOut{Output}{output}
+            \Input{
+                Samples $ \left\{ ( \bz_{ m } )_{ m=1 }^{ M } \right\} $.
+                Estimators $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $.
+                Sequence of learning rates $ ( \alpha_{ m } )_{ m=1 }^{ M } $.
+            }
+            \Output{ $ \hat{ h } $ }
+            \For{$ 1 \leq m \leq M $}{
+            Set $ u_{ m } = {\color{blue}\hat{ \Phi } ( \cdot , \bz_{ m } ) \partial_{ 2 } \ell \left( \hat{ r } ( \bz_{ m } ), \hat{ \meanop } [ \hat{ h }_{ m - 1 } ] ( \bz_{ m } ) \right)} $ \;
+            Set $ \hat{ h }_{ m }  = \proj_{ \mathcal{H} } \left[
+                \hat{ h }_{ m-1 } - \alpha_{ m } u_{ m }  
+            \right] $ \;
+        }
+        Set $ \hat{ h } = \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \hat{ h }_{ m } $ \;
+        \end{algorithm}
+    \end{frame}
+
+    \begin{frame}{Theory}
+        \begin{theorem}[SAGD--IV convergence rate]
+            Under suitable assumptions on $ \loss, \searchset, \meanop $ and the estimators $ \hat{ \Phi }, \hat{ r }, \hat{ \meanop } $, we have
+            \begin{align*}
+                \mean_{ \bz_{ 1:M } } \left[
+                    \risk ( \hat{ h } ) - \risk ( \hstar )
+                \right]
+                \leq \frac{ D^2 }{ 2 M \alpha_{ M } }
+                + \frac{ \xi }{ M } \sum_{ m=1 }^{ M } \alpha_{ m }
+                + \tau \sqrt{ {\color{orange}\zeta} },
+            \end{align*}
+            \uncover<2->{
+                Where
+                \begin{align*}
+                    &{\color{orange}\zeta = \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \prob_{ X } \otimes \prob_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2}, \\
+                    &\xi = \frac{ 3 }{ 2 } \norm{ \hat{ \Phi } }_{ \infty }^2 \left(
+                        C_{ 0 }^2 + L^2 \norm{ \hat{ r } }_{ L^2 ( Z ) }^2 + L^2 D ^2 \norm{ \hat{ \meanop } }_{ \op }^2
+                    \right), \\
+                    &\tau = 2 D \max \left\{
+                        3 ( C_{ 0 }^2 + L^2 \mean [ Y^2 ] + L^2 D^2 ),
+                        2L^2 \norm{ \hat{ \Phi } }_{ \infty }^2,
+                        2L^2 D^2 \norm{ \hat{ \Phi } }_{ \infty }^2
+                    \right\}
+                .\end{align*}
+            }
+        \end{theorem}
+    \end{frame}
+
+    \begin{frame}{Theory}
+        \begin{itemize}
+            \item<1-> The bound
+                \begin{align*}
+                    \mean_{ \bz_{ 1:M } } \left[
+                        \risk ( \hat{ h } ) - \risk ( \hstar )
+                    \right]
+                    \leq \frac{ D^2 }{ 2 M \alpha_{ M } }
+                    + \frac{ \xi }{ M } \sum_{ m=1 }^{ M } \alpha_{ m }
+                    + \tau \sqrt{ {\color{orange}\zeta} },
+                \end{align*}
+                suggests $ ( \alpha_{ m } ) $ should satisfy
+                \begin{equation*}
+                    M \alpha_{ M } \to \infty \quad \text{and} \quad \frac{ 1 }{ M } \sum_{ i=1 }^{ M } \alpha_{ m } \to 0
+                .\end{equation*}
+            \item<2-> Additional samples from just $ Z $ can already increase estimator's quality.
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Practice}
+        \begin{figure}[htb]
+            \begin{center}
+                \includegraphics[width=\textwidth]{sagdiv_kiv_comparison.pdf}
+            \end{center}
+            \caption{Benchmark against Kernel Instrumental Variable (KIV) \cite{singh2019}}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{Future Work}
+        \begin{itemize}
+            \item<1-> Robust benchmarks against other recent methods;
+            \item<1-> Application to discrete outcome models: $ Y = \ind \left\{ \hstar ( X ) + \varepsilon > 0 \right\} $.
         \end{itemize}
     \end{frame}
 

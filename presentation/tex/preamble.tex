@@ -1,9 +1,24 @@
 \usepackage{global-macros}
 \usepackage{graphicx}
 \graphicspath{{../fig}}
-\usepackage{algpseudocode, algorithm}
+\usepackage{tikz}
+\usetikzlibrary{patterns, shapes, decorations}
 \usepackage{biblatex}
 \usepackage{cancel}
+\usepackage{xcolor}
+\usepackage[algoruled,boxed,lined]{algorithm2e}
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    citecolor=blue,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+% \usepackage{enumitem}
 
 % \usetheme{Copenhagen}
 \setbeamertemplate{blocks}[rounded][shadow]
@@ -15,12 +30,12 @@
 
 \addbibresource{../bib/bibliography.bib}
 
-\title{NPIV Estimation through Stochastic Gradients and \\ Kernel Methods}
+\title{Nonparametric Instrumental Variable Regression through \\ Stochastic Gradients and Kernel Methods}
 \author{Student: Caio Lins
         \\ Advisor: Yuri Saporito
 }
 \institute{EMAp -- FGV}
-\date{\today}
+\date{December 15, 2023}
 
 \titlegraphic{
     \includegraphics[width=3cm]{logo.png}
@@ -43,6 +58,10 @@
 
 \newcommand{\boldf}{\boldsymbol{f}}
 
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bZ}{\mathbf{Z}}
+\newcommand{\bY}{\mathbf{Y}}
+
 \newcommand{\hstar}{h^{ \star }}
 \newcommand{\risk}{\mathcal{R}}
 \newcommand{\loss}{\ell}
@@ -52,5 +71,15 @@
 \newcommand{\data}{\mathcal{D}}
 \newcommand{\dataproj}{\mathcal{D}_{ \mathrm{proj} }}
 \newcommand{\meanop}{\mathcal{P}}
+\newcommand{\bstar}{\beta^{ \star }}
+\newcommand{\betaols}{\hat{ \beta }_{\mathrm{OLS}}}
+\newcommand{\betaiv}{\hat{ \beta }_{\mathrm{IV}}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\searchset}{\mathcal{H}}
+% \newcommand{\ind}{\mathbf{1}}
 
 \DeclareMathOperator{\mse}{MSE}
+\DeclareMathOperator{\proj}{proj}
+
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}[square]

@@ -17,7 +17,8 @@ from src.data.synthetic import (
 )
 
 
-fig_path = Path("../thesis/fig/")
+# fig_path = Path("../thesis/fig/")
+fig_path = Path("../presentation/fig/")
 
 colors = mcolors.CSS4_COLORS
 plt.rcParams.update({
@@ -43,13 +44,21 @@ def compute_ols_parameters(X, Y):
 
 if __name__ == "__main__":
     cm = 1/2.54
-    fig, axs = plt.subplots(
-        nrows=2,
+    # fig, axs = plt.subplots(
+    #     nrows=2,
+    #     ncols=1,
+    #     figsize=(16*cm, 17*cm),
+    #     layout="constrained",
+    # )
+    # noises = ["sensible", "absurd"]
+    fig, ax = plt.subplots(
+        nrows=1,
         ncols=1,
-        figsize=(16*cm, 17*cm),
+        figsize=(16*cm, 8*cm),
         layout="constrained",
     )
-    noises = ["sensible", "absurd"]
+    noises = ["absurd"]
+    axs = [ax]
     for noise, ax in zip(noises, axs):
         dataset = make_dummy_dataset(
             n_samples=250,
