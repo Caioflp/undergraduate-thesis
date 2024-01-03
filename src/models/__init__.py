@@ -1,6 +1,6 @@
 from .conditional_mean_operator import ConditionalMeanOperator
 from .density_ratio import DensityRatio
-from .functional_sgd import FunctionalSGD
+from .sagdiv import SAGDIV
 from .kiv import KIV
 from .functional_sgd_with_hacks import FunctionalSGDWithHacks
 from .naive_functional_sgd import NaiveFunctionalSGD

@@ -1,4 +1,4 @@
-"""Script to evaluate the FunctionalSGD algorithm
+"""Script to evaluate the SAGDIV algorithm
 
 Author: Caio
 
@@ -14,7 +14,7 @@ from src.data.synthetic import (
     make_poster_dataset,
     make_deep_gmm_dataset,
 )
-from src.models import FunctionalSGD
+from src.models import SAGDIV
 from src.scripts.utils import experiment
 
 
@@ -48,7 +48,7 @@ def plot_data(
     
     
 def plot_estimate(
-    model: FunctionalSGD,
+    model: SAGDIV,
     dataset: InstrumentalVariableDataset,
     figsize: Tuple[int] = (7, 5),
     with_data = True,
@@ -106,7 +106,7 @@ def main():
     response = "case_2"
     dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
                                   response=response)
-    model = FunctionalSGD(lr="inv_n_samples", warm_up_duration=100, bound=10)
+    model = SAGDIV(lr="inv_n_samples", warm_up_duration=100, bound=10)
     model.fit(dataset)
     
     # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))

@@ -14,7 +14,7 @@ from src.data.synthetic import (
     make_poster_dataset,
     make_deep_gmm_dataset,
 )
-from src.models import FunctionalSGD, KIV
+from src.models import SAGDIV, KIV
 from src.scripts.utils import experiment
 
 plt.rcParams.update({
@@ -140,7 +140,7 @@ def main():
     )
     model_kiv = KIV()
     model_kiv.fit(dataset_kiv)
-    model_sagdiv = FunctionalSGD(
+    model_sagdiv = SAGDIV(
         lr="inv_n_samples",
         warm_up_duration=100,
         bound=10,
@@ -160,7 +160,7 @@ def main():
     )
     model_kiv = KIV()
     model_kiv.fit(dataset_kiv)
-    model_sagdiv = FunctionalSGD(
+    model_sagdiv = SAGDIV(
         lr="inv_n_samples",
         warm_up_duration=100,
         bound=10,
@@ -179,7 +179,7 @@ def main():
     )
     model_kiv = KIV()
     model_kiv.fit(dataset_kiv)
-    model_sagdiv = FunctionalSGD(
+    model_sagdiv = SAGDIV(
         lr="inv_n_samples",
         warm_up_duration=100,
         bound=10,

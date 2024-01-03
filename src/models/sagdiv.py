@@ -1,5 +1,4 @@
-"""Implements a functional stochastic gradient descent algorithm for IV
-problems.
+"""Implements the algorithm 'Stochastic Approximate Gradient Descent IV'.
 
 Author: @Caioflp
 
@@ -24,7 +23,7 @@ from src.models.utils import (
 )
 
 
-class FunctionalSGD(BaseEstimator):
+class SAGDIV(BaseEstimator):
     """Regressor based on a variant of stochastic gradient descent.
 
     """
