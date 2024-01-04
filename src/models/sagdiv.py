@@ -4,6 +4,7 @@ Author: @Caioflp
 
 """
 import logging
+from time import time
 from typing import Literal, Tuple
 
 import matplotlib.pyplot as plt
@@ -121,7 +122,17 @@ class SAGDIV(BaseEstimator):
             momentum = 1/n_samples
             phi_current = estimates.on_all_points[0]
 
+        execution_times = {
+            "computing conditional expectations": [],
+            "computing pointwise loss gradient": [],
+            "creating joint x and z array": [],
+            "computing ratio of densities": [],
+            "computing functional gradient": [],
+            "computing projected gradient descent step": [],
+        }
+
         for i in tqdm(range(n_iter)):
+            start = time()
             # Project current estimate on Z, i.e., compute E [Th_{i-1}(X) | Z]
             projected_current_estimate = \
                     conditional_mean_xz.loop_predict(
@@ -129,24 +140,40 @@ class SAGDIV(BaseEstimator):
                     )
             # Project Y on current Z
             projected_y = conditional_mean_yz.loop_predict(Y, i)
+            end = time()
+            execution_times["computing conditional expectations"].append(end-start)
 
+            start = time()
             pointwise_loss_grad = \
                     projected_current_estimate - projected_y
+            end = time()
+            execution_times["computing pointwise loss gradient"].append(end-start)
 
+            start = time()
             # Compute the ratio of densities p(x, z)/(p(x) * p(z)) which
             # appears in the functional gradient expression
             z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z_loop[i])
             joint_x_and_current_z = np.concatenate(
                 (x_domain.all_points, z_i), axis=1
             )
+            end = time()
+            execution_times["creating joint x and z array"].append(end-start)
+
+            start = time()
             ratio_of_densities = density_ratio.predict(joint_x_and_current_z)
+            end = time()
+            execution_times["computing ratio of densities"].append(end-start)
 
             # Compute the stochastic estimates for the functional loss gradient
+            start = time()
             functional_grad = (
                 ratio_of_densities * pointwise_loss_grad
             )
+            end = time()
+            execution_times["computing functional gradient"].append(end-start)
 
             # Take one step in the negative gradient direction
+            start = time()
             gd_update = estimates.on_all_points[i] - lr(i+1)*functional_grad
             if self.nesterov:
                 phi_next = gd_update
@@ -166,6 +193,13 @@ class SAGDIV(BaseEstimator):
                 else:
                     estimates.on_all_points[i+1] = \
                             truncate(gd_update, self.bound)
+            end = time()
+            execution_times["computing projected gradient descent step"].append(end-start)
+
+        for action, times in execution_times.items():
+            mean = np.mean(times)
+            std = np.std(times)
+            print(f"Time spent {action}: {mean:1.2e}±{std:1.2e}")
 
         # Construct final estimate as average of sequence of estimates
         # Discard the first `self.warm_up_duration` samples if we have enough

@@ -98,14 +98,14 @@ def plot_estimate(
 
 
 # @experiment("new_version/sandbox")
-@experiment("new_version/presentation")
+@experiment("benchmarks/profiling")
 def main():
-    # response = "sin"
-    # dataset = make_deep_gmm_dataset(n_samples=600, n_samples_only_z=2000,
-    #                                 response=response)
-    response = "case_2"
-    dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
-                                  response=response)
+    response = "sin"
+    dataset = make_deep_gmm_dataset(n_samples=600, n_samples_only_z=1000,
+                                    response=response)
+    # response = "case_2"
+    # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
+    #                               response=response)
     model = SAGDIV(lr="inv_n_samples", warm_up_duration=100, bound=10)
     model.fit(dataset)
     

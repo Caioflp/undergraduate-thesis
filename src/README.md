@@ -1,6 +1,10 @@
+## Paper outline
+
+
 ## To do
 
 * Optimize SAGDIV implementation
+    * Keep using KIV first stage?
 * Revise KIV implementation
 
 * Benchmark against:
