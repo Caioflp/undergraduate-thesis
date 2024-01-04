@@ -1,20 +1,23 @@
 ## To do
 
-* Things that can be better:
-    - Choosing kernel through validation
-    - Choosing lengthscale through validation
+* Optimize SAGDIV implementation
+* Revise KIV implementation
 
-* Benchmark against KIV, DeepIV, DeepGMM, 2SLS.
-* Rewrite theory section of paper according to observations made in the
-  document.
+* Benchmark against:
+    * KIV - Revise
+    * DeepGMM
+    * DeepIV?
+    * SmoothIV?
+    * 2SLS?
+    * Include performance of non IV method?
 
+* Implement version for binary outcomes
+    * Compare with ??? See what methods can address binary outcomes
 
-* Implement way to save parameters in each execution
-* Take a look at the IV datasets that Moises sent me.
 * Setup a working logger
 
 
-## Meeting 19/07
+## Meeting 19/07/23
 
 * Difficulty understanding KIV stage 1
 * Strange assumptions
@@ -23,13 +26,13 @@
 * Don't know how to regress Y on Z
 
 
-## Meeting 12/07
+## Meeting 12/07/23
 
 * Marcelo Moreira
 * Next steps
 
 
-## Meeting 07/06
+## Meeting 07/06/23
 
 * Redo all the calculations we did, in LaTeX (copy the neurips paper's
   template and work on top of that, pointing out what's different in the
@@ -39,7 +42,7 @@
   each iteration.
 * Think about what are the biases when estimating phi, T and r_0.
 
-## What to show Yuri Rezende in 25/05 meeting
+## What to show Yuri Rezende in 25/05/23 meeting
 
 * Review algorithm formulation
     - Comment on exact gradient version and why it was discontinued
@@ -55,7 +58,7 @@
   to the IV case
 
 
-## Meeting 16/05
+## Meeting 16/05/23
 
 * Main thing: Compile everything we've done so far to show Yuri.
 * Run our algorithm (with estimates, KNN) in Deep GMM examples.
@@ -68,7 +71,7 @@
 * Maybe implement Mirror Descent or Nesterov Acceleration.
 
 
-## Meeting 10/05
+## Meeting 10/05/23
 
 * Plot density estimates for sgd model.
 * Implement DGP of poster
@@ -79,6 +82,11 @@
 
 ## Done
 
+* Rewrite theory section of paper according to observations made in the
+  document.
+* Things that can be better:
+    - Choosing kernel through validation
+    - Choosing lengthscale through validation
 * Implementation changes:
     - Use three datasets: (X, Z), (Y, Z), (Z), although the first two
       don't need to be independent from each other.
