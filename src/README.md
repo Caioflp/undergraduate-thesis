@@ -3,17 +3,24 @@
 
 ## To do
 
+* Compile everything we have on a paper draft
+
 * Optimize SAGDIV implementation
     * Keep using KIV first stage?
 * Revise KIV implementation
 
+* Include performance of non IV method
+
 * Benchmark against:
     * KIV - Revise
     * DeepGMM
-    * DeepIV?
-    * SmoothIV?
-    * 2SLS?
-    * Include performance of non IV method?
+    * DeepIV
+    * SmoothIV? No
+    * 2SLS? No
+
+* Benchmark datasets:
+    * Three functions used in poster
+    * Choice model
 
 * Implement version for binary outcomes
     * Compare with ??? See what methods can address binary outcomes
