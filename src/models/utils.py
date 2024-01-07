@@ -176,22 +176,6 @@ def ensure_two_dimensional(arr: np.ndarray):
     else:
         raise ValueError
 
-
-def default_regressor() -> KNN:
-    """Generates an instance of a regressor with chosen default parameters.
-
-    """
-    return KNN(weights="distance", n_neighbors=5)
-
-
-def default_density_estimator() -> KDE:
-    """Generates an instance of a density estimator with chosen default
-    parameters.
-
-    """
-    return KDE(bandwidth=0.1)
-
-
 def truncate(arr: np.ndarray, M: float):
     """Truncate the values of `arr` inside [-M, M]
     """

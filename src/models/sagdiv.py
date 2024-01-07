@@ -72,7 +72,7 @@ class SAGDIV(BaseEstimator):
         # random points and the unobserved grid points.
         x_domain = Domain(
             observed_points=X,
-            grid_points=create_covering_grid(X).reshape(-1, 1)
+            grid_points=create_covering_grid(X, step=1E-1).reshape(-1, 1)
         )
         n_grid_points = x_domain.grid_points.shape[0]
 
@@ -96,9 +96,42 @@ class SAGDIV(BaseEstimator):
                     weights=[10**k for k in range(-3, 3)],
                     max_iter=3,
                 )
-        print(f"Best density ratio loss: {best_loss_density_ratio}, " +
-              f"with weight {best_weight_density_ratio}")
+        print(
+            f"Best density ratio loss: {best_loss_density_ratio}, " +
+            f"with weight {best_weight_density_ratio}"
+        )
         density_ratio.fit(joint_samples, independent_samples)
+
+        # Compute density ratio on all necessary points
+        start = time()
+        n_total_points = n_grid_points + n_samples
+        dim_z = Z.shape[1]
+        dim_x = X.shape[1]
+        repeated_z_samples = np.full(
+            (n_total_points, *Z_loop.shape),
+            Z_loop,
+        )
+        repeated_z_samples = repeated_z_samples \
+                             .transpose((1, 0, 2)) \
+                             .reshape(
+                                 (n_iter*n_total_points, dim_z)
+                             )
+        repeated_x_points = np.full(
+            (n_iter, *x_domain.all_points.shape),
+            x_domain.all_points,
+        )
+        repeated_x_points = repeated_x_points.reshape(
+            (n_iter*n_total_points, dim_x)
+        )
+        joint_x_and_all_z = np.concatenate(
+            (repeated_x_points, repeated_z_samples),
+            axis=1
+        )
+        density_ratios = density_ratio.predict(joint_x_and_all_z)
+        density_ratios = density_ratios.reshape((n_iter, n_total_points))
+        end = time()
+        print(f"Time to pre-compute density ratios: {end-start:1.2e}")
+
 
         # Fit ConditionalMeanOperator model
         # For E[h(X) | Z]
@@ -149,18 +182,22 @@ class SAGDIV(BaseEstimator):
             end = time()
             execution_times["computing pointwise loss gradient"].append(end-start)
 
-            start = time()
-            # Compute the ratio of densities p(x, z)/(p(x) * p(z)) which
-            # appears in the functional gradient expression
-            z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z_loop[i])
-            joint_x_and_current_z = np.concatenate(
-                (x_domain.all_points, z_i), axis=1
-            )
-            end = time()
-            execution_times["creating joint x and z array"].append(end-start)
+            # start = time()
+            # # Compute the ratio of densities p(x, z)/(p(x) * p(z)) which
+            # # appears in the functional gradient expression
+            # z_i = np.full((n_grid_points + n_samples, Z.shape[1]), Z_loop[i])
+            # joint_x_and_current_z = np.concatenate(
+            #     (x_domain.all_points, z_i), axis=1
+            # )
+            # end = time()
+            # execution_times["creating joint x and z array"].append(end-start)
 
+            # start = time()
+            # ratio_of_densities = density_ratio.predict(joint_x_and_current_z)
+            # end = time()
+            # execution_times["computing ratio of densities"].append(end-start)
             start = time()
-            ratio_of_densities = density_ratio.predict(joint_x_and_current_z)
+            ratio_of_densities = density_ratios[i]
             end = time()
             execution_times["computing ratio of densities"].append(end-start)
 
