@@ -7,6 +7,7 @@
 
 * Optimize SAGDIV implementation
     * Keep using KIV first stage?
+    * Remove grid points and implement predict method
 * Revise KIV implementation
 
 * Include performance of non IV method
