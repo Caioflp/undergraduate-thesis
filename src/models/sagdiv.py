@@ -42,6 +42,13 @@ class SAGDIV(BaseEstimator):
         self.warm_up_duration = 50
         self.bound = bound
         self.nesterov = nesterov
+        self.fit_dataset_name = None
+        self.pointwise_loss_grad_array = None
+        self.sequence_of_estimates = None
+        self.estimate = None
+        self.domain = None
+        self.Z_loop = None
+        self.is_fitted = False
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:
         """Fits model to dataset.
@@ -134,7 +141,8 @@ class SAGDIV(BaseEstimator):
 
 
         # Fit ConditionalMeanOperator model
-        # For E[h(X) | Z]
+
+        ## For E[h(X) | Z]
         conditional_mean_xz = ConditionalMeanOperator()
         best_weight_xz, best_loss_xz = \
                 conditional_mean_xz.find_best_regularization_weight(Z, X)
@@ -142,7 +150,7 @@ class SAGDIV(BaseEstimator):
               f"{best_weight_xz}")
         conditional_mean_xz.loop_fit(Z, Z_loop)
 
-        # For E[Y | Z]
+        ## For E[Y | Z]
         Y_array = Y.reshape(-1, 1)
         conditional_mean_yz = ConditionalMeanOperator()
         best_weight_yz, best_loss_yz = \
@@ -150,6 +158,9 @@ class SAGDIV(BaseEstimator):
         print(f"Best conditional mean YZ loss: {best_loss_yz}, with weight " +
               f"{best_weight_yz}")
         conditional_mean_yz.loop_fit(Z, Z_loop)
+
+        # Create array for storing \partial_{2} \ell values
+        self.pointwise_loss_grad_array = np.empty(n_iter, dtype=np.float64)
 
         if self.nesterov:
             momentum = 1/n_samples
@@ -180,6 +191,7 @@ class SAGDIV(BaseEstimator):
             pointwise_loss_grad = \
                     projected_current_estimate - projected_y
             end = time()
+            self.pointwise_loss_grad_array[i] = pointwise_loss_grad
             execution_times["computing pointwise loss gradient"].append(end-start)
 
             # start = time()
@@ -251,10 +263,45 @@ class SAGDIV(BaseEstimator):
                                .on_grid_points[self.warm_up_duration:] \
                                .mean(axis=0),
             )
+            self.Z_loop = Z_loop[self.warm_up_duration:]
+            self.pointwise_loss_grad_array = self.pointwise_loss_grad_array[self.warm_up_duration:]
         else:
             self.estimate = FinalEstimate(
                 on_observed_points=estimates.on_observed_points[1:].mean(axis=0),
                 on_grid_points=estimates.on_grid_points[1:].mean(axis=0),
             )
+            self.Z_loop = Z_loop
         self.domain = x_domain
         self.is_fitted = True
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        # Compute all necessary density ratios
+        X = ensure_two_dimensional(X)
+        n_x_samples = X.shape[0]
+        n_z_samples = self.Z_loop.shape[0]
+        dim_z = self.Z_loop.shape[1]
+        dim_x = X.shape[1]
+        repeated_z_samples = np.full(
+            (n_x_samples, *Z_loop.shape),
+            self.Z_loop,
+        )
+        repeated_z_samples = repeated_z_samples \
+                             .transpose((1, 0, 2)) \
+                             .reshape(
+                                 (n_z_samples*n_x_samples, dim_z)
+                             )
+        repeated_x_samples = np.full(
+            (n_x_samples, *X.shape),
+            X,
+        )
+        repeated_x_samples = repeated_x_points.reshape(
+            (n_z_samples*n_x_samples, dim_x)
+        )
+        joint_x_and_z = np.concatenate(
+            (repeated_x_samples, repeated_z_samples),
+            axis=1
+        )
+        density_ratios = density_ratio.predict(joint_x_and_z)
+        density_ratios = density_ratios.reshape((n_z_samples, n_x_samples))
+        stochastic_subgradients = \
+                density_ratios * self.pointwise_loss_grad_array.reshape(-1, 1)
