@@ -18,7 +18,7 @@ from src.data.synthetic import (
 from src.models import SAGDIV
 from src.scripts.utils import experiment, setup_logger
 
-logger = logging.getLogger("experiment")
+logger = logging.getLogger("src.experiment")
 
 
 def plot_data(
@@ -59,30 +59,21 @@ def plot_estimate(
 ) -> None:
     fig, ax = plt.subplots(layout="constrained", figsize=figsize)
     # Sorting is necessary to make line plots
-    sorted_idx_observed = np.argsort(model.domain.observed_points.flatten())
+    sorted_idx = np.argsort(dataset.X.flatten())
+    sorted_x = dataset.X.flatten()[sorted_idx]
     ax.plot(
-        dataset.X.flatten()[sorted_idx_observed],
-        dataset.Y_denoised[sorted_idx_observed],
+        sorted_x,
+        dataset.Y_denoised[sorted_idx],
         c="r",
         label="Denoised response",
         alpha=.8,
     )
-    sort_idx = np.argsort(model.domain.all_points.flatten())
-    sorted_x = model.domain.all_points.flatten()[sort_idx]
-    sorted_estimate = model.estimate.on_all_points[sort_idx]
-    sorted_last_estimate = \
-            model.sequence_of_estimates.on_all_points[-1][sort_idx]
+
     ax.plot(
         sorted_x,
-        sorted_estimate,
+        model.predict(sorted_x),
         c="b",
         label="Average estimate",
-    )
-    ax.plot(
-        sorted_x,
-        sorted_last_estimate,
-        c="k",
-        label="Last estimate",
     )
     if with_data:
         ax.scatter(
@@ -93,7 +84,6 @@ def plot_estimate(
             alpha=0.2,
             label="Observed response",
         )
-
     ax.set_title(title)
     # ax.set_xlim(-4, 4)
     ax.legend()
@@ -101,11 +91,14 @@ def plot_estimate(
 
 
 # @experiment("new_version/sandbox")
-@experiment("benchmarks/profiling")
+@experiment("refactoring/testing")
 def main():
     response = "sin"
-    dataset = make_deep_gmm_dataset(n_samples=600, n_samples_only_z=1000,
-                                    response=response)
+    dataset = make_deep_gmm_dataset(
+        n_samples=1000,
+        n_samples_only_z=2000,
+        response=response,
+    )
     # response = "case_2"
     # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
     #                               response=response)
@@ -115,7 +108,7 @@ def main():
     # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))
     # plt.show()
     # plot_estimate(model, dataset, title=f"Estimate for {response} in {dataset.name}")
-    plot_estimate(model, dataset, title=" ")
+    plot_estimate(model, dataset, title="SAGD-IV")
 
 
 if __name__ == "__main__":

@@ -20,10 +20,10 @@ def setup_logger() -> None:
         level=logging.DEBUG,
     )
     console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
+    console.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
     console.setFormatter(formatter)
-    logging.getLogger("").addHandler(console)
+    logging.getLogger("src").addHandler(console)
 
 
 # Decorator with arguments syntax is weird
@@ -40,6 +40,7 @@ def experiment(path: str = None) -> Callable:
         inner_output_dir = output_dir / now.strftime("%Y-%m-%d")
     else:
         inner_output_dir = output_dir / path.lower().replace(" ", "_")
+    inner_output_dir.mkdir(parents=True, exist_ok=True)
     run_dir = inner_output_dir / ("run_" + str(len(os.listdir(inner_output_dir))))
     run_dir.mkdir(parents=True, exist_ok=False)
 

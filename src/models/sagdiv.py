@@ -26,7 +26,7 @@ from src.models.utils import (
 )
 
 
-logger = logging.getLogger("model")
+logger = logging.getLogger("src.model")
 
 
 class SAGDIV(BaseEstimator):
@@ -36,7 +36,7 @@ class SAGDIV(BaseEstimator):
     def __init__(
         self,
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
-        loss: Loss = QuadraticLoss()
+        loss: Loss = QuadraticLoss(),
         warm_up_duration: int = 50,
         bound: float = 10,
         update_scheme: Literal["sgd", "nesterov"] = "sgd",
@@ -59,13 +59,13 @@ class SAGDIV(BaseEstimator):
         self.Z_loop = None
 
     def fit_density_ratio_model(
-        """ Fits density ratio model.
-
-        """
         self,
         X: np.ndarray,
         Z: np.ndarray,
     ) -> None:
+        """ Fits density ratio model.
+
+        """
         start = time()
         self.density_ratio_model = DensityRatio(regularization="rkhs")
         joint_samples = np.concatenate([X, Z], axis=1)
@@ -123,7 +123,7 @@ class SAGDIV(BaseEstimator):
         density_ratios = self.density_ratio_model.predict(joint_x_and_all_z)
         density_ratios = density_ratios.reshape((n_iter, n_samples))
         end = time()
-        logger.debug(f"Time to pre-compute density ratios: {end-start:1.2e}")
+        logger.debug(f"Time to pre-compute density ratios: {end-start:1.2e}s")
         logger.info("Density ratios pre-computed.")
         return density_ratios
 
@@ -188,8 +188,8 @@ class SAGDIV(BaseEstimator):
         self.lr_func = lr_dict[self.lr]
 
         # Create array which will store the gradient descent path of estimates
-        # `n_samples+1` is due to the first estimate, which is the null function
-        estimates = np.zeros((n_samples+1, dim_x), dtype=float)
+        # `n_iter+1` is due to the first estimate, which is the null function
+        estimates = np.zeros((n_iter+1, n_samples), dtype=float)
 
         self.fit_density_ratio_model(X, Z)
         density_ratios = self.compute_density_ratios(X, Z_loop)
@@ -206,7 +206,6 @@ class SAGDIV(BaseEstimator):
         execution_times = {
             "computing conditional expectations": [],
             "computing pointwise loss gradient": [],
-            "creating joint x and z array": [],
             "computing ratio of densities": [],
             "computing functional gradient": [],
             "computing projected gradient descent step": [],
@@ -224,11 +223,11 @@ class SAGDIV(BaseEstimator):
 
             start = time()
             loss_derivative = self.loss.derivative_second_argument(
-                projeted_y,
+                projected_y,
                 projected_current_estimate,
             )
             end = time()
-            self.pointwise_loss_grad_array[i] = loss_derivative
+            self.loss_derivative_array[i] = loss_derivative
             execution_times["computing pointwise loss gradient"].append(end-start)
 
             start = time()
@@ -264,11 +263,12 @@ class SAGDIV(BaseEstimator):
         for action, times in execution_times.items():
             mean = np.mean(times)
             std = np.std(times)
-            logger.debug(f"Time spent {action}: {mean:1.2e}±{std:1.2e}")
+            logger.debug(f"Time spent {action}: {mean:1.2e}s±{std:1.2e}s")
 
         # Save Z_loop values for predict method
         if self.warm_up_duration < n_samples:
             self.Z_loop = Z_loop[self.warm_up_duration:]
+            self.loss_derivative_array = self.loss_derivative_array[self.warm_up_duration:]
         else:
             self.Z_loop = Z_loop
         self.is_fitted = True
@@ -277,25 +277,27 @@ class SAGDIV(BaseEstimator):
         assert self.is_fitted
         # Compute all necessary density ratios
         X = ensure_two_dimensional(X)
+        n_iter = self.Z_loop.shape[0]
         density_ratios = self.compute_density_ratios(X, self.Z_loop)
         stochastic_approximate_gradients = \
                 density_ratios * self.loss_derivative_array.reshape(-1, 1)
-        result = np.zeros(n_x_samples, dtype=np.float64)
+        estimates = np.zeros((n_iter+1, X.shape[0]), dtype=np.float64)
         if self.update_scheme == "nesterov":
             momentum = 1/n_samples
             phi_current = result
         for i, grad in enumerate(stochastic_approximate_gradients):
-            sagd_update = result - self.lr_func(i+1)*grad
+            sagd_update = \
+                    estimates[i] - self.lr_func(i+self.warm_up_duration+1)*grad
             if self.update_scheme == "nesterov":
                 phi_next = gd_update
-                result = truncate(
+                estimates[i+1] = truncate(
                     phi_next + momentum*(phi_next - phi_current),
                     self.bound
                 )
                 phi_current = phi_next
             else:
-                result = truncate(gd_update, self.bound)
-        return result
+                estimates[i+1] = truncate(sagd_update, self.bound)
+        return np.mean(estimates, axis=0)
 
     def __call__(self, X: np.ndarray) -> np.ndarray:
         return self.predict(X)

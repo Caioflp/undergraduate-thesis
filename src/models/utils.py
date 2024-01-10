@@ -106,6 +106,7 @@ class Loss(abc.ABC):
 
     @abc.abstractmethod
     def __call__(
+        self,
         x: np.ndarray,
         y: np.ndarray,
     ) -> np.ndarray:
@@ -113,6 +114,7 @@ class Loss(abc.ABC):
 
     @abc.abstractmethod
     def derivative_second_argument(
+        self,
         x: np.ndarray,
         y: np.ndarray,
     ) -> np.ndarray:
@@ -125,9 +127,10 @@ class QuadraticLoss(Loss):
         \ell (y, y') = 1/2 * (y - y')^2
     """
     def __init__(self):
-        super.__init__()
+        super().__init__()
     
     def __call__(
+        self,
         x: np.ndarray,
         y: np.ndarray,
     ) -> np.ndarray:
@@ -135,6 +138,7 @@ class QuadraticLoss(Loss):
         return 0.5 * (x - y)**2
 
     def derivative_second_argument(
+        self,
         x: np.ndarray,
         y: np.ndarray,
     ) -> np.ndarray:
