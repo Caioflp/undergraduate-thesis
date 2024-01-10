@@ -3,6 +3,7 @@
 Author: @Caioflp
 
 """
+import abc
 from dataclasses import dataclass
 
 import numpy as np
@@ -95,6 +96,50 @@ class FinalEstimate:
     @property
     def on_all_points(self):
         return self._estimate
+
+
+class Loss(abc.ABC):
+    """ Base class for pointwise loss function.
+    """
+    def __init__(self):
+        pass
+
+    @abc.abstractmethod
+    def __call__(
+        x: np.ndarray,
+        y: np.ndarray,
+    ) -> np.ndarray:
+        pass
+
+    @abc.abstractmethod
+    def derivative_second_argument(
+        x: np.ndarray,
+        y: np.ndarray,
+    ) -> np.ndarray:
+        pass
+
+class QuadraticLoss(Loss):
+    """ Quadratic loss.
+
+    .. math::
+        \ell (y, y') = 1/2 * (y - y')^2
+    """
+    def __init__(self):
+        super.__init__()
+    
+    def __call__(
+        x: np.ndarray,
+        y: np.ndarray,
+    ) -> np.ndarray:
+        assert x.shape == y.shape
+        return 0.5 * (x - y)**2
+
+    def derivative_second_argument(
+        x: np.ndarray,
+        y: np.ndarray,
+    ) -> np.ndarray:
+        assert x.shape == y.shape
+        return y - x
 
 
 def create_covering_grid(

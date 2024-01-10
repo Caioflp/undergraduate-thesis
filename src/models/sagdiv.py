@@ -18,10 +18,15 @@ from src.models.utils import (
     Estimates,
     FinalEstimate,
     Domain,
+    Loss,
+    QuadraticLoss,
     create_covering_grid,
     ensure_two_dimensional,
     truncate,
 )
+
+
+logger = logging.getLogger("model")
 
 
 class SAGDIV(BaseEstimator):
@@ -34,21 +39,24 @@ class SAGDIV(BaseEstimator):
     def __init__(
         self,
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
+        loss_func: Loss = QuadraticLoss()
         warm_up_duration: int = 50,
         bound: int = 10,
         nesterov: bool = False,
     ):
         self.lr = lr
+        self.loss_func = loss_func
         self.warm_up_duration = 50
         self.bound = bound
         self.nesterov = nesterov
+        self.is_fitted = False
         self.fit_dataset_name = None
+        self.lr_func = None
         self.pointwise_loss_grad_array = None
         self.sequence_of_estimates = None
         self.estimate = None
         self.domain = None
         self.Z_loop = None
-        self.is_fitted = False
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:
         """Fits model to dataset.
@@ -73,13 +81,13 @@ class SAGDIV(BaseEstimator):
             "inv_n_samples": lambda i: 1/np.sqrt(n_samples),
             "inv_sqrt": lambda i: 1/np.sqrt(i)
         }
-        lr = lr_dict[self.lr]
+        self.lr_func = lr_dict[self.lr]
 
         # Create domain for estimates. This Domain object contais the observed
         # random points and the unobserved grid points.
         x_domain = Domain(
             observed_points=X,
-            grid_points=create_covering_grid(X, step=1E-1).reshape(-1, 1)
+            grid_points=create_covering_grid(X, step=1).reshape(-1, 1)
         )
         n_grid_points = x_domain.grid_points.shape[0]
 
@@ -223,7 +231,7 @@ class SAGDIV(BaseEstimator):
 
             # Take one step in the negative gradient direction
             start = time()
-            gd_update = estimates.on_all_points[i] - lr(i+1)*functional_grad
+            gd_update = estimates.on_all_points[i] - self.lr_func(i+1)*functional_grad
             if self.nesterov:
                 phi_next = gd_update
                 if self.bound is None:
@@ -275,6 +283,7 @@ class SAGDIV(BaseEstimator):
         self.is_fitted = True
 
     def predict(self, X: np.ndarray) -> np.ndarray:
+        assert self.is_fitted
         # Compute all necessary density ratios
         X = ensure_two_dimensional(X)
         n_x_samples = X.shape[0]
@@ -305,3 +314,27 @@ class SAGDIV(BaseEstimator):
         density_ratios = density_ratios.reshape((n_z_samples, n_x_samples))
         stochastic_subgradients = \
                 density_ratios * self.pointwise_loss_grad_array.reshape(-1, 1)
+        result = np.zeros(n_x_samples, dtype=np.float64)
+        if self.nesterov:
+            momentum = 1/n_samples
+            phi_current = result
+        for i, subgrad in enumerate(stochastic_subgradients):
+            gd_update = result - self.lr_func(i+1)*subgrad
+            if self.nesterov:
+                phi_next = gd_update
+                if self.bound is None:
+                    result = (
+                        phi_next + momentum*(phi_next - phi_current)
+                    )
+                else:
+                    result = truncate(
+                        phi_next + momentum*(phi_next - phi_current),
+                        self.bound
+                    )
+                phi_current = phi_next
+            else:
+                if self.bound is None:
+                    result = gd_update
+                else:
+                    result = truncate(gd_update, self.bound)
+        return result
