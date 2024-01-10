@@ -6,7 +6,7 @@
 * Compile everything we have on a paper draft
 
 * Optimize SAGDIV implementation
-    * Keep using KIV first stage?
+    * Keep using KIV first stage? Yes
     * Remove grid points and implement predict method
 * Revise KIV implementation
 
