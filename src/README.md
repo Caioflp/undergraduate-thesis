@@ -8,6 +8,7 @@
 * Optimize SAGDIV implementation
     * Keep using KIV first stage? Yes
     * Remove grid points and implement predict method
+    * Rename InstrumentalVariableDataset to SAGDIVDataset
 * Revise KIV implementation
 
 * Include performance of non IV method
