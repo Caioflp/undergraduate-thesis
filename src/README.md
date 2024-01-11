@@ -3,7 +3,9 @@
 
 ## To do
 
-* Compile everything we have on a paper draft
+* Talk about r(Z) vs Y in section about risk measure
+* Create folder with articles for Yuri to read in dropbox folder
+* Start working on choice models
 
 * Optimize SAGDIV implementation
     * Keep using KIV first stage? Yes
