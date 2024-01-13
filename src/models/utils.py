@@ -225,10 +225,21 @@ def ensure_two_dimensional(arr: np.ndarray):
     else:
         raise ValueError
 
+
 def truncate(arr: np.ndarray, M: float):
     """Truncate the values of `arr` inside [-M, M]
     """
     return np.minimum(np.maximum(arr, 0), M) - np.minimum(np.maximum(-arr, 0), M)
+
+
+def distance_squared_matrix(X: np.ndarray, Y: np.ndarray):
+    assert len(X.shape) == len(Y.shape) == 2
+    assert X.shape[1] == Y.shape[1]
+    X_i_squared = np.sum(X**2, axis=1, keepdims=True)
+    Y_j_squared = np.sum(Y**2, axis=1, keepdims=True).T
+    X_i_dot_Y_j = X@Y.T
+    return (X_i_squared + Y_j_squared) - 2*X_i_dot_Y_j
+
 
 
 if __name__ == "__main__":

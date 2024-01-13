@@ -92,7 +92,7 @@ class SAGDIV(BaseEstimator):
         Z_loop: np.ndarray,
     ) -> np.ndarray:
         """ Computes all necessary density ratio evaluations for
-        evaluating/fitting the estimator on some `X` and `Z_loop` samples.
+        evaluating/fitting the SAGD-IV estimator on some `X` and `Z_loop` samples.
 
         """
         start = time()
@@ -169,6 +169,8 @@ class SAGDIV(BaseEstimator):
             Dataset containing X, Z and Y.
 
         """
+        fit_start = time()
+
         self.fit_dataset_name = dataset.name
 
         X, Z, Y, Z_loop = dataset.X, dataset.Z, dataset.Y, dataset.Z_loop
@@ -273,6 +275,9 @@ class SAGDIV(BaseEstimator):
             self.Z_loop = Z_loop
         self.is_fitted = True
 
+        fit_end = time()
+        logger.debug(f"Time spent fitting SAGD-IV model: {fit_end-fit_start:1.2e}s")
+
     def predict(self, X: np.ndarray) -> np.ndarray:
         assert self.is_fitted
         # Compute all necessary density ratios
@@ -288,6 +293,8 @@ class SAGDIV(BaseEstimator):
         for i, grad in enumerate(stochastic_approximate_gradients):
             sagd_update = \
                     estimates[i] - self.lr_func(i+self.warm_up_duration+1)*grad
+            # sagd_update = \
+            #         estimates[i] - self.lr_func(i+1)*grad
             if self.update_scheme == "nesterov":
                 phi_next = gd_update
                 estimates[i+1] = truncate(

@@ -59,25 +59,26 @@ def plot_estimate(
 ) -> None:
     fig, ax = plt.subplots(layout="constrained", figsize=figsize)
     # Sorting is necessary to make line plots
-    sorted_idx = np.argsort(dataset.X.flatten())
-    sorted_x = dataset.X.flatten()[sorted_idx]
+    x_samples = dataset.X.flatten()
+    sorted_idx = np.argsort(x_samples)
+    sorted_x_samples = x_samples[sorted_idx]
     ax.plot(
-        sorted_x,
+        sorted_x_samples,
         dataset.Y_denoised[sorted_idx],
         c="r",
         label="Denoised response",
         alpha=.8,
     )
-
+    x_linspace = np.linspace(np.min(x_samples), np.max(x_samples), 300)
     ax.plot(
-        sorted_x,
-        model.predict(sorted_x),
+        x_linspace,
+        model.predict(x_linspace),
         c="b",
         label="Average estimate",
     )
     if with_data:
         ax.scatter(
-            dataset.X.flatten(),
+            x_samples,
             dataset.Y,
             c="k",
             s=1,
@@ -95,7 +96,7 @@ def plot_estimate(
 def main():
     response = "sin"
     dataset = make_deep_gmm_dataset(
-        n_samples=1000,
+        n_samples=600,
         n_samples_only_z=2000,
         response=response,
     )

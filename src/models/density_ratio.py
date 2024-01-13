@@ -11,6 +11,8 @@ from scipy.spatial import distance_matrix
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import KFold
 
+# from src.models.utils import distance_squared_matrix
+
 
 class DensityRatio(BaseEstimator):
     def __init__(
@@ -68,6 +70,7 @@ class DensityRatio(BaseEstimator):
         self,
         numerator_samples: np.ndarray,
         denominator_samples: np.ndarray,
+        max_support_points: int = 500,
     ):
         """Fits estimator to provided samples.
 
@@ -84,6 +87,10 @@ class DensityRatio(BaseEstimator):
         denominator_samples: np.ndarray
             Array with shape `(n_samples, dim)`.
             of the estimator.
+        max_support_points: int
+            Maximum number of numerator samples to use as support points.
+            Using too many has severe impacts on computation time during
+            training and inference.
 
         """
         msg_n_samples = (
@@ -114,20 +121,25 @@ class DensityRatio(BaseEstimator):
         self.lengthscale = 1 / median**2
 
         n_samples, self.dim = numerator_samples.shape
-        self.support_points = numerator_samples
+        if max_support_points <= n_samples:
+            self.support_points = numerator_samples[:max_support_points]
+        else:
+            self.support_points = numerator_samples
+        n_support_points = self.support_points.shape[0]
 
-        K = self.kernel(numerator_samples, numerator_samples)
+        K = self.kernel(self.support_points, numerator_samples)
         h_hat = np.mean(K, axis=1, keepdims=True)
-        cross_K = self.kernel(numerator_samples, denominator_samples)
+        cross_K = self.kernel(self.support_points, denominator_samples)
         H_hat = cross_K @ cross_K.T / n_samples
 
         if self.regularization == "l2":
             self.theta = np.linalg.solve(
-                H_hat + self.regularization_weight * np.eye(n_samples), h_hat
+                H_hat + self.regularization_weight * np.eye(n_support_points), h_hat
             )
         elif self.regularization == "rkhs":
             self.theta = np.linalg.solve(
-                H_hat + self.regularization_weight * K, h_hat
+                H_hat + self.regularization_weight * self.kernel(self.support_points, self.support_points),
+                h_hat
             )
         self.fitted = True
 

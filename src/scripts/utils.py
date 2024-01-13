@@ -14,15 +14,23 @@ from typing import Callable
 def setup_logger() -> None:
     """ Performs basic logging configuration.
     """
-    logging.basicConfig(
-        filename="run.log",
-        format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s",
-        level=logging.DEBUG,
-    )
+    # logging.basicConfig(
+    #     filename="run.log",
+    #     format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s",
+    #     level=logging.DEBUG,
+    # )
+    logging.getLogger("src").setLevel(logging.DEBUG)
+
+    file = logging.FileHandler(filename="run.log")
+    file.setLevel(logging.DEBUG)
+    file_formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+    file.setFormatter(file_formatter)
+    logging.getLogger("src").addHandler(file)
+
     console = logging.StreamHandler()
     console.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
-    console.setFormatter(formatter)
+    console_formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+    console.setFormatter(console_formatter)
     logging.getLogger("src").addHandler(console)
 
 
