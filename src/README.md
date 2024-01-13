@@ -3,6 +3,7 @@
 
 ## To do
 
+* Test neural networks as density estimator
 * Talk about r(Z) vs Y in section about risk measure
 * Create folder with articles for Yuri to read in dropbox folder
 * Start working on choice models
