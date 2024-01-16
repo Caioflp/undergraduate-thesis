@@ -12,7 +12,7 @@ import numpy as np
 import scipy
 
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def make_dummy_dataset(
@@ -166,7 +166,6 @@ def make_deep_gmm_dataset(
         the denoised versions of Y.
 
     """
-    LOGGER.info("Generating deep gmm dataset.")
 
     response_dict = {
         "sin": np.sin,
@@ -215,6 +214,8 @@ def make_deep_gmm_dataset(
         # of KIV, so that the total number of random variables used by
         # each method is the same.
         return sagdiv_dataset, kiv_dataset
+
+    logger.info("Deep GMM dataset generated.")
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt

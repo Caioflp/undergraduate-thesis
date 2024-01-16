@@ -96,8 +96,8 @@ def plot_estimate(
 def main():
     response = "sin"
     dataset = make_deep_gmm_dataset(
-        n_samples=600,
-        n_samples_only_z=2000,
+        n_samples=5000,
+        n_samples_only_z=15000,
         response=response,
     )
     # response = "case_2"
