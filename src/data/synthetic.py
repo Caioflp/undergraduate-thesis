@@ -217,8 +217,91 @@ def make_deep_gmm_dataset(
 
     logger.info("Deep GMM dataset generated.")
 
+
+def make_binary_response_dataset(
+    n_samples: int = 500, 
+    n_samples_only_z: int = 500,
+    response: Literal["sin", "linear"] = "sin",
+    seed: int = None,
+) -> InstrumentalVariableDataset:
+    """Creates a dataset in which the response is binary
+
+    Parameters
+    ----------
+    n_samples: int
+        Number of samples on the dataset. Each sample is a joint
+        observation of X, Z and Y.
+    response: str
+        Specifies the response function for the data generation process.
+    seed: int
+        Seed for RNG.
+
+    Returns
+    -------
+    InstrumentalVariableDataset
+        Object containing the joint observations of X, Z and Y, as well as
+        the denoised versions of Y.
+
+    """
+
+    response_dict = {
+        "sin": np.sin,
+        "step": lambda x: x >= 0,
+        "abs": np.abs,
+        "linear": lambda x: x,
+    }
+    # Computes the conditional expectation of response_func(X) given Z = z
+    conditional_mean_dict = {
+        "sin": lambda Z: np.sin(Z[:, 0])*np.pi*np.exp(-1/2)/np.sinh(np.pi),
+        "linear": lambda Z: Z[:, 0]
+    }
+    assert response in ["sin", "linear"]
+    response_func = response_dict[response]
+    conditional_mean = conditional_mean_dict[response]
+
+    rng = np.random.default_rng(seed)
+
+    Z = rng.uniform(low=-3, high=3, size=(n_samples, 2))
+    eta = rng.logistic(loc=0, scale=1, size=n_samples)
+    gamma = rng.normal(loc=0, scale=1, size=n_samples)
+    X = Z[:, 0] + eta + gamma
+    Y_denoised = response_func(X)
+    Y = (conditional_mean(Z) + eta > 0).astype(float)
+
+    
+    Z_loop = rng.uniform(low=-3, high=3, size=(n_samples_only_z, 2))
+    sagdiv_dataset = InstrumentalVariableDataset(
+            X, Z, Z_loop, Y, Y_denoised, "Binary response dataset"
+        )
+    return sagdiv_dataset
+
+    logger.info("Binary response dataset generated.")
+
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
+
+    dataset = make_binary_response_dataset(500, response="sin")
+    # plt.scatter(
+    #     dataset.X,
+    #     dataset.Y,
+    #     s=.2
+    # )
+    # plt.scatter(
+    #     dataset.X,
+    #     dataset.Y_denoised,
+    #     s=.3
+    # )
+    plt.scatter(
+        dataset.Z[:, 0],
+        dataset.Y_denoised,
+        s = 1,
+    )
+    plt.scatter(
+        dataset.Z[:, 0],
+        dataset.Y,
+        s = 1,
+    )
+    plt.show()
 
     # dataset = make_deep_gmm_dataset(500, response="abs")
     # plt.scatter(
@@ -233,15 +316,15 @@ if __name__ == "__main__":
     # )
     # plt.show()
 
-    dataset = make_poster_dataset(500, response="case_1")
-    plt.scatter(
-        dataset.X,
-        dataset.Y,
-        s=.2
-    )
-    plt.scatter(
-        dataset.X,
-        dataset.Y_denoised,
-        s=.3
-    )
-    plt.show()
+    # dataset = make_poster_dataset(500, response="case_1")
+    # plt.scatter(
+    #     dataset.X,
+    #     dataset.Y,
+    #     s=.2
+    # )
+    # plt.scatter(
+    #     dataset.X,
+    #     dataset.Y_denoised,
+    #     s=.3
+    # )
+    # plt.show()

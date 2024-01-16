@@ -107,16 +107,16 @@ class Loss(abc.ABC):
     @abc.abstractmethod
     def __call__(
         self,
-        x: np.ndarray,
         y: np.ndarray,
+        y_prime: np.ndarray,
     ) -> np.ndarray:
         pass
 
     @abc.abstractmethod
     def derivative_second_argument(
         self,
-        x: np.ndarray,
         y: np.ndarray,
+        y_prime: np.ndarray,
     ) -> np.ndarray:
         pass
 
@@ -131,19 +131,55 @@ class QuadraticLoss(Loss):
     
     def __call__(
         self,
-        x: np.ndarray,
         y: np.ndarray,
+        y_prime: np.ndarray,
     ) -> np.ndarray:
-        assert x.shape == y.shape
-        return 0.5 * (x - y)**2
+        assert y.shape == y_prime.shape
+        return 0.5 * (y - y_prime)**2
 
     def derivative_second_argument(
         self,
-        x: np.ndarray,
         y: np.ndarray,
+        y_prime: np.ndarray,
     ) -> np.ndarray:
-        assert x.shape == y.shape
-        return y - x
+        assert y.shape == y_prime.shape
+        return y_prime - y
+
+
+class BCELogisticLoss(Loss):
+    """ BCE + logistic function loss
+
+    .. math::
+        \ell (y, y') = BCE(y, 1 - logistic(-y'))
+    """
+    def __init__(self):
+        super().__init__()
+
+    def logistic(self, x: np.ndarray) -> np.ndarray:
+        return 1 / (1 + np.exp(-x))
+
+    def BCE(
+        self,
+        p: np.ndarray,
+        q_prime: np.ndarray,
+    ) -> np.ndarray:
+        return - ( p * np.log(q) + (1 - p) * np.log(q) )
+    
+    def __call__(
+        self,
+        y: np.ndarray,
+        y_prime: np.ndarray,
+    ) -> np.ndarray:
+        assert y.shape == y_prime.shape
+        return self.BCE(y, 1 - self.logistic(-y_prime))
+
+    def derivative_second_argument(
+        self,
+        y: np.ndarray,
+        y_prime: np.ndarray,
+    ) -> np.ndarray:
+        assert y.shape == y_prime.shape
+        return y - self.logistic(y_prime)
 
 
 def create_covering_grid(
