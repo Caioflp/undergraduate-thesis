@@ -15,12 +15,8 @@ from tqdm import tqdm
 from src.data.utils import InstrumentalVariableDataset
 from src.models import DensityRatio, ConditionalMeanOperator
 from src.models.utils import (
-    Estimates,
-    FinalEstimate,
-    Domain,
     Loss,
     QuadraticLoss,
-    create_covering_grid,
     ensure_two_dimensional,
     truncate,
 )
@@ -194,7 +190,8 @@ class SAGDIV(BaseEstimator):
         estimates = np.zeros((n_iter+1, n_samples), dtype=float)
 
         self.fit_density_ratio_model(X, Z)
-        density_ratios = self.compute_density_ratios(X, Z_loop)
+        # density_ratios = self.compute_density_ratios(X, Z_loop)
+
         self.fit_conditional_mean_models(X, Z, Y, Z_loop)
 
         # Create array for storing \partial_{2} \ell values for later
@@ -233,7 +230,12 @@ class SAGDIV(BaseEstimator):
             execution_times["computing pointwise loss gradient"].append(end-start)
 
             start = time()
-            ratio_of_densities = density_ratios[i]
+            # ratio_of_densities = density_ratios[i]
+            joint_x_and_z_i = np.concatenate(
+                [X, np.full((n_samples, dim_z), Z_loop[i])],
+                axis=1
+            )
+            ratio_of_densities = self.density_ratio_model.predict(joint_x_and_z_i)
             end = time()
             execution_times["computing ratio of densities"].append(end-start)
 
@@ -265,7 +267,7 @@ class SAGDIV(BaseEstimator):
         for action, times in execution_times.items():
             mean = np.mean(times)
             std = np.std(times)
-            logger.debug(f"Time spent {action}: {mean:1.2e}s±{std:1.2e}s")
+            logger.debug(f"Average time spent {action}: {mean:1.2e}s±{std:1.2e}s")
 
         # Save Z_loop values for predict method
         if self.warm_up_duration < n_samples:

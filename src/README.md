@@ -5,7 +5,6 @@
 
 * Test neural networks as density estimator
 * Talk about r(Z) vs Y in section about risk measure
-* Create folder with articles for Yuri to read in dropbox folder
 * Start working on choice models
 
 * Optimize SAGDIV implementation
@@ -98,6 +97,7 @@
 
 ## Done
 
+* Create folder with articles for Yuri to read in dropbox folder
 * Rewrite theory section of paper according to observations made in the
   document.
 * Things that can be better:

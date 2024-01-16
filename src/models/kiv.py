@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 from src.data.utils import KIVDataset
 from src.models.utils import ensure_two_dimensional
-)
+
 
 class KIV(BaseEstimator):
     def __init__(self):
