@@ -5,11 +5,16 @@ the Kernel Instrumental Variable algorithm, and relies on kernel methods.
 Author: @Caioflp
 
 """
+import logging
+
 import numpy as np
 
 from scipy.spatial import distance_matrix
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import KFold
+
+
+logger = logging.getLogger("src.models.conditional_mean_operator")
 
 
 class ConditionalMeanOperator(BaseEstimator):
@@ -105,7 +110,13 @@ class ConditionalMeanOperator(BaseEstimator):
             np.ravel(distance_matrix(x_samples, x_samples)),
             .5
         )
-        self.lengthscale_x = 1 / median_x**2
+        # logger.debug(f"Median X distance: {median_x:1.2e}")
+        # If we are computing E[Y|Z] and Y is binary, then the median is
+        # 0. In that case, set the lenghtscale to 1/2
+        if np.isclose(median_x, 0):
+            self.lengthscale_x = .5
+        else:
+            self.lengthscale_x = 1 / median_x**2
 
         self.kernel_gramian_regularized = (
             self.kernel_z(z_samples, z_samples)

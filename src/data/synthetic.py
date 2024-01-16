@@ -252,21 +252,21 @@ def make_binary_response_dataset(
     }
     # Computes the conditional expectation of response_func(X) given Z = z
     conditional_mean_dict = {
-        "sin": lambda Z: np.sin(Z[:, 0])*np.pi*np.exp(-1/2)/np.sinh(np.pi),
+        "sin": lambda Z: np.sin(Z[:, 0])*np.pi*np.exp(-(0.1**2)/2)/np.sinh(np.pi),
         "linear": lambda Z: Z[:, 0]
     }
     assert response in ["sin", "linear"]
     response_func = response_dict[response]
-    conditional_mean = conditional_mean_dict[response]
+    conditional_mean_given = conditional_mean_dict[response]
 
     rng = np.random.default_rng(seed)
 
     Z = rng.uniform(low=-3, high=3, size=(n_samples, 2))
     eta = rng.logistic(loc=0, scale=1, size=n_samples)
-    gamma = rng.normal(loc=0, scale=1, size=n_samples)
+    gamma = rng.normal(loc=0, scale=0.1, size=n_samples)
     X = Z[:, 0] + eta + gamma
     Y_denoised = response_func(X)
-    Y = (conditional_mean(Z) + eta > 0).astype(float)
+    Y = (conditional_mean_given(Z) + eta > 0).astype(float)
 
     
     Z_loop = rng.uniform(low=-3, high=3, size=(n_samples_only_z, 2))

@@ -153,7 +153,7 @@ class SAGDIV(BaseEstimator):
             f"{best_weight_yz}"
         )
         self.conditional_mean_model_yz.loop_fit(Z, Z_loop)
-        logger.info("Conditional Mean Operator of X|Z fitted.")
+        logger.info("Conditional Mean Operator of Y|Z fitted.")
 
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:

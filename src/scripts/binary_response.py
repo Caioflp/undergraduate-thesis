@@ -1,4 +1,4 @@
-"""Script to evaluate the SAGDIV algorithm
+"""Script to evaluate the SAGDIV algorithm on binary response data
 
 Author: Caio
 
@@ -11,12 +11,11 @@ import numpy as np
 import seaborn as sns
 
 from src.data import InstrumentalVariableDataset
-from src.data.synthetic import (
-    make_poster_dataset,
-    make_deep_gmm_dataset,
-)
+from src.data.synthetic import make_binary_response_dataset
 from src.models import SAGDIV
+from src.models.utils import BCELogisticLoss
 from src.scripts.utils import experiment, setup_logger
+
 
 logger = logging.getLogger("src.experiment")
 
@@ -92,10 +91,10 @@ def plot_estimate(
 
 
 # @experiment("new_version/sandbox")
-@experiment("refactoring/testing")
+@experiment("binary_response")
 def main():
     response = "sin"
-    dataset = make_deep_gmm_dataset(
+    dataset = make_binary_response_dataset(
         n_samples=500,
         n_samples_only_z=1500,
         response=response,
@@ -103,7 +102,12 @@ def main():
     # response = "case_2"
     # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
     #                               response=response)
-    model = SAGDIV(lr="inv_n_samples", warm_up_duration=100, bound=10)
+    model = SAGDIV(
+        lr="inv_n_samples",
+        loss=BCELogisticLoss(),
+        warm_up_duration=100,
+        bound=10,
+    )
     model.fit(dataset)
     
     # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))
