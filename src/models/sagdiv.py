@@ -13,7 +13,12 @@ from sklearn.base import BaseEstimator
 from tqdm import tqdm
 
 from src.data.utils import InstrumentalVariableDataset
-from src.models import DensityRatio, ConditionalMeanOperator
+from src.models import (
+    DensityRatio,
+    ConditionalMeanOperator,
+    MeanRegressionYZ,
+    OperatorRegressionYZ,
+)
 from src.models.utils import (
     Loss,
     QuadraticLoss,
@@ -33,12 +38,14 @@ class SAGDIV(BaseEstimator):
         self,
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
         loss: Loss = QuadraticLoss(),
+        mean_regressor_yz: MeanRegressionYZ = OperatorRegressionYZ(),
         warm_up_duration: int = 50,
         bound: float = 10,
         update_scheme: Literal["sgd", "nesterov"] = "sgd",
     ):
         self.lr = lr
         self.loss = loss
+        self.mean_regressor_yz = mean_regressor_yz
         self.warm_up_duration = 50
         self.bound = bound
         self.update_scheme = update_scheme
@@ -47,7 +54,7 @@ class SAGDIV(BaseEstimator):
         self.lr_func = None
         self.density_ratio_model = None
         self.conditional_mean_model_xz = None
-        self.conditional_mean_model_yz = None
+        # self.conditional_mean_model_yz = None
         self.loss_derivative_array = None
         self.sequence_of_estimates = None
         self.Z_loop = None
@@ -121,15 +128,14 @@ class SAGDIV(BaseEstimator):
         logger.info("Density ratios pre-computed.")
         return density_ratios
 
-    def fit_conditional_mean_models(
+    def fit_conditional_mean_xz(
         self,
-        X: np.ndarray,
         Z: np.ndarray,
-        Y: np.ndarray,
         Z_loop: np.ndarray,
+        X: np.ndarray,
     ) -> None:
         """ Fits models for estimating the conditional expectation operators of
-        X conditioned on Z and Y conditioned on Z.
+        X conditioned on Z.
 
         """
         self.conditional_mean_model_xz = ConditionalMeanOperator()
@@ -142,16 +148,16 @@ class SAGDIV(BaseEstimator):
         self.conditional_mean_model_xz.loop_fit(Z, Z_loop)
         logger.info("Conditional Mean Operator of X|Z fitted.")
 
-        Y_array = Y.reshape(-1, 1)
-        self.conditional_mean_model_yz = ConditionalMeanOperator()
-        best_weight_yz, best_loss_yz = \
-                self.conditional_mean_model_yz.find_best_regularization_weight(Z, Y_array)
-        logger.debug(
-            f"Best conditional mean YZ loss: {best_loss_yz}, with weight " +
-            f"{best_weight_yz}"
-        )
-        self.conditional_mean_model_yz.loop_fit(Z, Z_loop)
-        logger.info("Conditional Mean Operator of Y|Z fitted.")
+        # Y_array = Y.reshape(-1, 1)
+        # self.conditional_mean_model_yz = ConditionalMeanOperator()
+        # best_weight_yz, best_loss_yz = \
+        #         self.conditional_mean_model_yz.find_best_regularization_weight(Z, Y_array)
+        # logger.debug(
+        #     f"Best conditional mean YZ loss: {best_loss_yz}, with weight " +
+        #     f"{best_weight_yz}"
+        # )
+        # self.conditional_mean_model_yz.loop_fit(Z, Z_loop)
+        # logger.info("Conditional Mean Operator of Y|Z fitted.")
 
 
     def fit(self, dataset: InstrumentalVariableDataset) -> None:
@@ -190,7 +196,9 @@ class SAGDIV(BaseEstimator):
         self.fit_density_ratio_model(X, Z)
         # density_ratios = self.compute_density_ratios(X, Z_loop)
 
-        self.fit_conditional_mean_models(X, Z, Y, Z_loop)
+        self.fit_conditional_mean_xz(Z, Z_loop, X)
+
+        self.mean_regressor_yz.fit(Z, Z_loop, Y)
 
         # Create array for storing \partial_{2} \ell values for later
         # calls to `predict`
@@ -214,7 +222,11 @@ class SAGDIV(BaseEstimator):
             projected_current_estimate = \
                     self.conditional_mean_model_xz.loop_predict(estimates[i], i)
             # Project Y on current Z
-            projected_y = self.conditional_mean_model_yz.loop_predict(Y, i)
+            # This looks weird, but it is necessary to pass those three arguments because there are two possible
+            # options for the E[Y|Z] regressor. The logistic regression one only needs Z_loop[i], but the operator
+            # regression one only needs Y, i and the for_loop boolean.
+            # So we pass all of them and each one uses what it needs.
+            projected_y = self.mean_regressor_yz.predict(Z_loop[i], Y, i, for_loop=True)
             end = time()
             execution_times["computing conditional expectations"].append(end-start)
 

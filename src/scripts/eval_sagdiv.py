@@ -18,6 +18,7 @@ from src.data.synthetic import (
 from src.models import SAGDIV
 from src.scripts.utils import experiment, setup_logger
 
+
 logger = logging.getLogger("src.experiment")
 
 
@@ -92,12 +93,12 @@ def plot_estimate(
 
 
 # @experiment("new_version/sandbox")
-@experiment("refactoring/testing")
+@experiment("debugging")
 def main():
     response = "sin"
     dataset = make_deep_gmm_dataset(
-        n_samples=500,
-        n_samples_only_z=1500,
+        n_samples=600,
+        n_samples_only_z=2000,
         response=response,
     )
     # response = "case_2"
