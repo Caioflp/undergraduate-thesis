@@ -39,13 +39,15 @@ class SAGDIV(BaseEstimator):
         lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
         loss: Loss = QuadraticLoss(),
         mean_regressor_yz: MeanRegressionYZ = OperatorRegressionYZ(),
-        warm_up_duration: int = 50,
+        initial_value: float = 0,
+        warm_up_duration: int = 100,
         bound: float = 10,
         update_scheme: Literal["sgd", "nesterov"] = "sgd",
     ):
         self.lr = lr
         self.loss = loss
         self.mean_regressor_yz = mean_regressor_yz
+        self.initial_value = initial_value
         self.warm_up_duration = warm_up_duration
         self.bound = bound
         self.update_scheme = update_scheme
@@ -196,6 +198,7 @@ class SAGDIV(BaseEstimator):
         # Create array which will store the gradient descent path of estimates
         # `n_iter+1` is due to the first estimate, which is the null function
         estimates = np.zeros((n_iter+1, n_samples), dtype=float)
+        estimates[0] = self.initial_value
 
         self.fit_density_ratio_model(X, Z)
         # density_ratios = self.compute_density_ratios(X, Z_loop)
@@ -284,7 +287,6 @@ class SAGDIV(BaseEstimator):
             logger.debug(f"Average time spent {action}: {mean:1.2e}s±{std:1.2e}s")
 
         # Save Z_loop values for predict method
-        self.loss_derivative_array = self.loss_derivative_array
         self.Z_loop = Z_loop
         self.is_fitted = True
         logger.debug(f"Z_loop shape: {Z_loop.shape}")
@@ -304,6 +306,7 @@ class SAGDIV(BaseEstimator):
         # stochastic_approximate_gradients = \
         #         density_ratios * self.loss_derivative_array.reshape(-1, 1)
         estimates = np.zeros((n_iter+1, X.shape[0]), dtype=np.float64)
+        estimates[0] = self.initial_value
         if self.update_scheme == "nesterov":
             momentum = 1/n_iter
             phi_current = estimates[0]

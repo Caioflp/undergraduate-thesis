@@ -95,11 +95,11 @@ def plot_estimate(
 # @experiment("new_version/sandbox")
 @experiment("debugging")
 def main():
-    response = "abs"
+    response = "linear"
     n_samples = 600
     n_samples_only_z = 1200
     lr = "inv_n_samples"
-    warm_up_duration = 100
+    warm_up_duration = 500
     bound = 10
     message = f"""
                             Experiment data:

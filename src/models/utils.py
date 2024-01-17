@@ -179,7 +179,7 @@ class BCELogisticLoss(Loss):
         y_prime: np.ndarray,
     ) -> np.ndarray:
         assert y.shape == y_prime.shape
-        return y - self.logistic(y_prime)
+        return self.logistic(y_prime) - y
 
 
 def create_covering_grid(
@@ -244,10 +244,11 @@ def ensure_two_dimensional(arr: np.ndarray):
     Parameters
     ----------
     arr : np.ndarray
+        array of shape (n_samples,) or (n_samples, n_features)
 
     Returns
     -------
-    np.ndarray
+    np.ndarray of shape (n_samples, n_features)
 
     Raises
     ------

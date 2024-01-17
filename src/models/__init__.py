@@ -1,5 +1,9 @@
 from .conditional_mean_operator import ConditionalMeanOperator
-from .mean_regression_yz import MeanRegressionYZ, OperatorRegressionYZ
+from .mean_regression_yz import (
+    MeanRegressionYZ,
+    OperatorRegressionYZ,
+    LogisticRegressionYZ,
+)
 from .density_ratio import DensityRatio
 from .sagdiv import SAGDIV
 from .kiv import KIV

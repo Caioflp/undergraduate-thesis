@@ -12,8 +12,9 @@ import seaborn as sns
 
 from src.data import InstrumentalVariableDataset
 from src.data.synthetic import make_binary_response_dataset
+from src.models import LogisticRegressionYZ
 from src.models import SAGDIV
-from src.models.utils import BCELogisticLoss
+from src.models.utils import BCELogisticLoss, QuadraticLoss
 from src.scripts.utils import experiment, setup_logger
 
 
@@ -94,19 +95,38 @@ def plot_estimate(
 @experiment("binary_response")
 def main():
     response = "sin"
+    n_samples = 600
+    n_samples_only_z = 1200
+    lr = "inv_n_samples"
+    initial_value = .5
+    warm_up_duration = 100
+    bound = 10
+    message = f"""
+                            Experiment data:
+    response = {response}
+    n_samples = {n_samples}
+    n_samples_only_z = {n_samples_only_z}
+    lr = {lr}
+    initial_value = {initial_value}
+    warm_up_duration = {warm_up_duration}
+    bound = {bound}
+    """
+    logger.info(message)
     dataset = make_binary_response_dataset(
-        n_samples=500,
-        n_samples_only_z=1500,
+        n_samples=n_samples,
+        n_samples_only_z=n_samples_only_z,
         response=response,
     )
     # response = "case_2"
     # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
     #                               response=response)
     model = SAGDIV(
-        lr="inv_n_samples",
+        lr=lr,
         loss=BCELogisticLoss(),
-        warm_up_duration=100,
-        bound=10,
+        mean_regressor_yz=LogisticRegressionYZ(),
+        initial_value=initial_value,
+        warm_up_duration=warm_up_duration,
+        bound=bound,
     )
     model.fit(dataset)
     

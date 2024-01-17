@@ -4,8 +4,10 @@ import abc
 import logging
 
 import numpy as np
+from sklearn.linear_model import LogisticRegressionCV
 
 from src.models import ConditionalMeanOperator
+from src.models.utils import ensure_two_dimensional
 
 
 logger = logging.getLogger("src.models.mean_regression_yz")
@@ -72,4 +74,26 @@ class OperatorRegressionYZ(MeanRegressionYZ):
 
 class LogisticRegressionYZ(MeanRegressionYZ):
     def __init__(self):
-        pass
+        self.regressor = LogisticRegressionCV(Cs=1, cv=5, )
+
+    def fit(
+        self,
+        Z: np.ndarray,
+        Z_loop: np.ndarray,
+        Y: np.ndarray,
+    ) -> None:
+        self.regressor.fit(Z, Y)
+        logger.info("Conditional Mean Regressor of Y|Z fitted.")
+
+    def predict(
+        self,
+        z: np.ndarray,
+        Y: np.ndarray,
+        i: int,
+        for_loop: bool = False,
+    ) -> np.ndarray:
+        if z.ndim == 1:
+            z = z.reshape(1, -1)
+            return self.regressor.predict_proba(z)[0, 0]
+        else:
+            return self.regressor.predict_proba(z)[:, 0]
