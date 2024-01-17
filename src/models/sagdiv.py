@@ -46,7 +46,7 @@ class SAGDIV(BaseEstimator):
         self.lr = lr
         self.loss = loss
         self.mean_regressor_yz = mean_regressor_yz
-        self.warm_up_duration = 50
+        self.warm_up_duration = warm_up_duration
         self.bound = bound
         self.update_scheme = update_scheme
         self.is_fitted = False
@@ -284,12 +284,11 @@ class SAGDIV(BaseEstimator):
             logger.debug(f"Average time spent {action}: {mean:1.2e}s±{std:1.2e}s")
 
         # Save Z_loop values for predict method
-        if self.warm_up_duration < n_samples:
-            self.Z_loop = Z_loop[self.warm_up_duration:]
-            self.loss_derivative_array = self.loss_derivative_array[self.warm_up_duration:]
-        else:
-            self.Z_loop = Z_loop
+        self.loss_derivative_array = self.loss_derivative_array
+        self.Z_loop = Z_loop
         self.is_fitted = True
+        logger.debug(f"Z_loop shape: {Z_loop.shape}")
+        logger.debug(f"self.Z_loop shape: {self.Z_loop.shape}")
 
         fit_end = time()
         logger.debug(f"Time spent fitting SAGD-IV model: {fit_end-fit_start:1.2e}s")
@@ -298,17 +297,27 @@ class SAGDIV(BaseEstimator):
         assert self.is_fitted
         # Compute all necessary density ratios
         X = ensure_two_dimensional(X)
+        n_samples = X.shape[0]
         n_iter = self.Z_loop.shape[0]
-        density_ratios = self.compute_density_ratios(X, self.Z_loop)
-        stochastic_approximate_gradients = \
-                density_ratios * self.loss_derivative_array.reshape(-1, 1)
+        dim_z = self.Z_loop.shape[1]
+        # density_ratios = self.compute_density_ratios(X, self.Z_loop)
+        # stochastic_approximate_gradients = \
+        #         density_ratios * self.loss_derivative_array.reshape(-1, 1)
         estimates = np.zeros((n_iter+1, X.shape[0]), dtype=np.float64)
         if self.update_scheme == "nesterov":
             momentum = 1/n_iter
             phi_current = estimates[0]
-        for i, grad in enumerate(stochastic_approximate_gradients):
-            sagd_update = \
-                    estimates[i] - self.lr_func(i+self.warm_up_duration+1)*grad
+        for i in tqdm(range(n_iter)):
+            joint_x_and_z_i = np.concatenate(
+                [X, np.full((n_samples, dim_z), self.Z_loop[i])],
+                axis=1
+            )
+            density_ratio = self.density_ratio_model.predict(joint_x_and_z_i)
+            stochastic_approximate_gradient = self.loss_derivative_array[i] * density_ratio
+            sagd_update = (
+                    estimates[i]
+                    - self.lr_func(i+1)*stochastic_approximate_gradient
+            )
             # sagd_update = \
             #         estimates[i] - self.lr_func(i+1)*grad
             if self.update_scheme == "nesterov":
@@ -320,7 +329,7 @@ class SAGDIV(BaseEstimator):
                 phi_current = phi_next
             else:
                 estimates[i+1] = truncate(sagd_update, self.bound)
-        return np.mean(estimates, axis=0)
+        return np.mean(estimates[self.warm_up_duration:], axis=0)
 
     def __call__(self, X: np.ndarray) -> np.ndarray:
         return self.predict(X)
