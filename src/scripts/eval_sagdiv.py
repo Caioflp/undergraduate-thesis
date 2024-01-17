@@ -95,7 +95,7 @@ def plot_estimate(
 # @experiment("new_version/sandbox")
 @experiment("debugging")
 def main():
-    response = "abs"
+    response = "sin"
     dataset = make_deep_gmm_dataset(
         n_samples=600,
         n_samples_only_z=2000,
@@ -104,7 +104,7 @@ def main():
     # response = "case_2"
     # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
     #                               response=response)
-    model = SAGDIV(lr="inv_n_samples", warm_up_duration=100, bound=7)
+    model = SAGDIV(lr="inv_n_samples", warm_up_duration=100, bound=10)
     model.fit(dataset)
     
     # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))

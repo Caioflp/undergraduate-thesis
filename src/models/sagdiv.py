@@ -82,7 +82,11 @@ class SAGDIV(BaseEstimator):
             f"Best density ratio loss: {best_loss_density_ratio}, " +
             f"with weight {best_weight_density_ratio}"
         )
-        self.density_ratio_model.fit(joint_samples, independent_samples)
+        self.density_ratio_model.fit(
+            joint_samples,
+            independent_samples,
+            max_support_points=1000,
+            )
         end = time()
         logger.info("Density ratio model fitted.")
         logger.debug(f"Time to fit density ratio model: {end-start:1.2e}s")
