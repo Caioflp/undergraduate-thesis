@@ -161,7 +161,7 @@ class BCELogisticLoss(Loss):
     def BCE(
         self,
         p: np.ndarray,
-        q_prime: np.ndarray,
+        q: np.ndarray,
     ) -> np.ndarray:
         return - ( p * np.log(q) + (1 - p) * np.log(q) )
     

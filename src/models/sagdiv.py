@@ -50,8 +50,6 @@ class SAGDIV(BaseEstimator):
         self.conditional_mean_model_yz = None
         self.loss_derivative_array = None
         self.sequence_of_estimates = None
-        self.estimate = None
-        self.domain = None
         self.Z_loop = None
 
     def fit_density_ratio_model(
@@ -200,7 +198,7 @@ class SAGDIV(BaseEstimator):
 
         if self.update_scheme == "nesterov":
             momentum = 1/n_samples
-            phi_current = estimates.on_all_points[0]
+            phi_current = estimates[0]
 
         execution_times = {
             "computing conditional expectations": [],
@@ -290,15 +288,15 @@ class SAGDIV(BaseEstimator):
                 density_ratios * self.loss_derivative_array.reshape(-1, 1)
         estimates = np.zeros((n_iter+1, X.shape[0]), dtype=np.float64)
         if self.update_scheme == "nesterov":
-            momentum = 1/n_samples
-            phi_current = result
+            momentum = 1/n_iter
+            phi_current = estimates[0]
         for i, grad in enumerate(stochastic_approximate_gradients):
             sagd_update = \
                     estimates[i] - self.lr_func(i+self.warm_up_duration+1)*grad
             # sagd_update = \
             #         estimates[i] - self.lr_func(i+1)*grad
             if self.update_scheme == "nesterov":
-                phi_next = gd_update
+                phi_next = sagd_update
                 estimates[i+1] = truncate(
                     phi_next + momentum*(phi_next - phi_current),
                     self.bound
