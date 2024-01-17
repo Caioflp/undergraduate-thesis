@@ -11,8 +11,6 @@ from scipy.spatial import distance_matrix
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import KFold
 
-# from src.models.utils import distance_squared_matrix
-
 
 class DensityRatio(BaseEstimator):
     def __init__(

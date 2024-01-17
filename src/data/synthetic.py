@@ -46,7 +46,7 @@ def make_dummy_dataset(
         the denoised versions of Y.
 
     """
-    LOGGER.info("Generating poster dataset.")
+    logger.info("Generating poster dataset.")
 
     rng = np.random.default_rng(seed)
     norm_cdf = scipy.stats.norm.cdf
@@ -108,7 +108,7 @@ def make_poster_dataset(
         the denoised versions of Y.
 
     """
-    LOGGER.info("Generating poster dataset.")
+    logger.info("Generating poster dataset.")
 
     rng = np.random.default_rng(seed)
     norm_cdf = scipy.stats.norm.cdf
@@ -197,6 +197,7 @@ def make_deep_gmm_dataset(
     sagdiv_dataset = InstrumentalVariableDataset(
             X, Z, Z_loop, Y, Y_denoised, "deep gmm dataset"
         )
+    logger.info("Deep GMM dataset generated.")
     if not return_kiv_dataset:
         return sagdiv_dataset
     else: 
@@ -215,7 +216,6 @@ def make_deep_gmm_dataset(
         # each method is the same.
         return sagdiv_dataset, kiv_dataset
 
-    logger.info("Deep GMM dataset generated.")
 
 
 def make_binary_response_dataset(
@@ -273,9 +273,9 @@ def make_binary_response_dataset(
     sagdiv_dataset = InstrumentalVariableDataset(
             X, Z, Z_loop, Y, Y_denoised, "Binary response dataset"
         )
+    logger.info("Binary response dataset generated.")
     return sagdiv_dataset
 
-    logger.info("Binary response dataset generated.")
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
