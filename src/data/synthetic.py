@@ -222,6 +222,7 @@ def make_binary_response_dataset(
     n_samples: int = 500, 
     n_samples_only_z: int = 500,
     response: Literal["sin", "linear"] = "sin",
+    scale: float = 1, 
     seed: int = None,
 ) -> InstrumentalVariableDataset:
     """Creates a dataset in which the response is binary
@@ -233,6 +234,8 @@ def make_binary_response_dataset(
         observation of X, Z and Y.
     response: str
         Specifies the response function for the data generation process.
+    scale: float
+        Scale parameter for logistic distribution.
     seed: int
         Seed for RNG.
 
@@ -252,7 +255,7 @@ def make_binary_response_dataset(
     }
     # Computes the conditional expectation of response_func(X) given Z = z
     conditional_mean_dict = {
-        "sin": lambda Z: np.sin(Z[:, 0])*np.pi*np.exp(-(0.1**2)/2)/np.sinh(np.pi),
+        "sin": lambda Z: np.sin(Z[:, 0])*np.pi*scale*np.exp(-(0.1)/2)/np.sinh(np.pi*scale),
         "linear": lambda Z: Z[:, 0]
     }
     assert response in ["sin", "linear"]
@@ -262,8 +265,8 @@ def make_binary_response_dataset(
     rng = np.random.default_rng(seed)
 
     Z = rng.uniform(low=-3, high=3, size=(n_samples, 2))
-    eta = rng.logistic(loc=0, scale=1, size=n_samples)
-    gamma = rng.normal(loc=0, scale=0.1, size=n_samples)
+    eta = rng.logistic(loc=0, scale=scale, size=n_samples)
+    gamma = rng.normal(loc=0, scale=np.sqrt(0.1), size=n_samples)
     X = Z[:, 0] + eta + gamma
     Y_denoised = response_func(X)
     Y = (conditional_mean_given(Z) + eta > 0).astype(float)

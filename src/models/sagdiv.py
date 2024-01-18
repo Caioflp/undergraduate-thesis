@@ -5,7 +5,7 @@ Author: @Caioflp
 """
 import logging
 from time import time
-from typing import Literal, Tuple
+from typing import Literal, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,7 +36,7 @@ class SAGDIV(BaseEstimator):
     """
     def __init__(
         self,
-        lr: Literal["inv_sqrt", "inv_n_samples"] = "inv_n_samples",
+        lr: Union[Literal["inv_sqrt", "inv_n_samples"], float] = "inv_n_samples",
         loss: Loss = QuadraticLoss(),
         mean_regressor_yz: MeanRegressionYZ = OperatorRegressionYZ(),
         initial_value: float = 0,
@@ -189,11 +189,14 @@ class SAGDIV(BaseEstimator):
         dim_x = X.shape[1]
         dim_z = Z.shape[1]
 
-        lr_dict = {
-            "inv_n_samples": lambda i: 1/np.sqrt(n_samples),
-            "inv_sqrt": lambda i: 1/np.sqrt(i)
-        }
-        self.lr_func = lr_dict[self.lr]
+        if isinstance(self.lr, str):
+            lr_dict = {
+                "inv_n_samples": lambda i: 1/np.sqrt(n_samples),
+                "inv_sqrt": lambda i: 1/np.sqrt(i)
+            }
+            self.lr_func = lr_dict[self.lr]
+        elif isinstance(self.lr, float):
+            self.lr_func = lambda i: self.lr
 
         # Create array which will store the gradient descent path of estimates
         # `n_iter+1` is due to the first estimate, which is the null function

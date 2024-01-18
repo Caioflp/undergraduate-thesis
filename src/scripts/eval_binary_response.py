@@ -94,16 +94,18 @@ def plot_estimate(
 # @experiment("new_version/sandbox")
 @experiment("binary_response")
 def main():
-    response = "sin"
+    response = "linear"
+    scale = np.sqrt(0.1)
     n_samples = 600
     n_samples_only_z = 1200
-    lr = "inv_n_samples"
-    initial_value = .5
+    lr = 0.1
+    initial_value = 0
     warm_up_duration = 100
     bound = 10
     message = f"""
                             Experiment data:
     response = {response}
+    scale = {scale}
     n_samples = {n_samples}
     n_samples_only_z = {n_samples_only_z}
     lr = {lr}
@@ -116,13 +118,14 @@ def main():
         n_samples=n_samples,
         n_samples_only_z=n_samples_only_z,
         response=response,
+        scale=scale,
     )
     # response = "case_2"
     # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
     #                               response=response)
     model = SAGDIV(
         lr=lr,
-        loss=BCELogisticLoss(),
+        loss=BCELogisticLoss(scale=scale),
         mean_regressor_yz=LogisticRegressionYZ(),
         initial_value=initial_value,
         warm_up_duration=warm_up_duration,

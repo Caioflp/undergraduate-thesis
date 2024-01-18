@@ -152,11 +152,12 @@ class BCELogisticLoss(Loss):
     .. math::
         \ell (y, y') = BCE(y, 1 - logistic(-y'))
     """
-    def __init__(self):
+    def __init__(self, scale: float = 1):
         super().__init__()
+        self.scale = scale
 
     def logistic(self, x: np.ndarray) -> np.ndarray:
-        return 1 / (1 + np.exp(-x))
+        return 1 / (1 + np.exp(-x/self.scale))
 
     def BCE(
         self,
@@ -171,7 +172,7 @@ class BCELogisticLoss(Loss):
         y_prime: np.ndarray,
     ) -> np.ndarray:
         assert y.shape == y_prime.shape
-        return self.BCE(y, 1 - self.logistic(-y_prime))
+        return self.BCE(y, self.logistic(y_prime))
 
     def derivative_second_argument(
         self,
@@ -179,7 +180,7 @@ class BCELogisticLoss(Loss):
         y_prime: np.ndarray,
     ) -> np.ndarray:
         assert y.shape == y_prime.shape
-        return self.logistic(y_prime) - y
+        return 1/self.scale * (self.logistic(y_prime) - y)
 
 
 def create_covering_grid(
