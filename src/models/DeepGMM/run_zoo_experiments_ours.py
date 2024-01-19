@@ -17,11 +17,14 @@ def run_experiment(scenario_name):
     scenario = AbstractScenario(filename="data/zoo/" + scenario_name + ".npz")
     scenario.info()
     scenario.to_tensor()
-    scenario.to_cuda()
+    # scenario.to_cuda()
 
     train = scenario.get_dataset("train")
     dev = scenario.get_dataset("dev")
     test = scenario.get_dataset("test")
+
+    # train.to_numpy()
+    # print(train.y.mean(), train.y.std())
 
     for rep in range(num_reps):
 

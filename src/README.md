@@ -3,6 +3,15 @@
 
 ## To do
 
+* Running DeepGmm:
+    * Understand what is `dev` data
+    * Put same seed in all methods
+    * Denormalize response
+* Changes made to DeepGMM:
+    * number of data points: 500 train, 500 val, 500 test
+    * batch_size : 1024 -> 256 (approx half of data points)
+    * removed normalization
+
 * Test neural networks as density estimator
 * Talk about r(Z) vs Y in section about risk measure
 * Start working on choice models

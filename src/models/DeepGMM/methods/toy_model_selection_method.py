@@ -65,7 +65,7 @@ class ToyModelSelectionMethod(AbstractMethod):
         g_simple_model_eval = SGDSimpleModelEval()
         f_simple_model_eval = SGDSimpleModelEval()
         learning_eval = FHistoryLearningEvalSGDNoStop(
-            num_epochs=3000, eval_freq=20, print_freq=100, batch_size=1024)
+            num_epochs=3000, eval_freq=20, print_freq=100, batch_size=256)
         self.model_selection = FHistoryModelSelectionV3(
             g_model_list=g_models,
             f_model_list=f_models,
@@ -96,7 +96,7 @@ class ToyModelSelectionMethod(AbstractMethod):
             dev_f_collection=dev_f_collection, e_dev_tilde=e_dev_tilde,
             final_g_optimizer_factory=self.default_g_opt_factory,
             video_plotter=video_plotter, do_averaging=False,
-            max_num_epochs=6000, eval_freq=20, batch_size=1024,
+            max_num_epochs=6000, eval_freq=20, batch_size=256,
             print_freq_mul=5, burn_in=1000, max_no_progress=20)
         learner.fit_from_tensors(x_train, y_train, z_train,
                                  x_dev, z_dev, y_dev, w_train=x_train,

@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 
 from scenarios.abstract_scenario import AbstractScenario
@@ -16,8 +18,8 @@ class Standardizer(AbstractScenario):
             self._mean = y.mean()
             self._std = y.std()
 
-        y = self.normalize(y)
-        g = self.normalize(g)
+        # y = self.normalize(y)
+        # g = self.normalize(g)
 
         return x, z, y, g, w
 
@@ -26,6 +28,22 @@ class Standardizer(AbstractScenario):
 
     def denormalize(self, y):
         return y*self._std + self._mean
+
+    def to_file(self, filename):
+        all_splits = {"splits": list()}
+        for split, dataset in self.splits.items():
+            if dataset is not None:
+                all_splits.update(dataset.as_dict(split + "_"))
+                all_splits["splits"].append(split)
+        
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        np.savez(filename, **all_splits)
+        
+    def from_file(self, filename):
+        data = np.load(filename)
+        for split in data["splits"].tolist():
+            self.splits[split] = Dataset(*(data[split + "_" + var] for var in ["x", "z", "y", "g", "w"]))
+        self.initialized = True     
 
 class HingeLinearScenario(AbstractScenario):
     def __init__(self, slope_1=3.0, slope_2=0.15,

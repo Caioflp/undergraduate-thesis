@@ -9,7 +9,7 @@ import pandas
 from game_objectives.approximate_psi_objective import approx_psi_eval
 
 from learning.abstract_learning import AbstractLearning
-from plotting import PlotElement
+# from plotting import PlotElement
 from scenarios.abstract_scenario import AbstractScenario
 
 

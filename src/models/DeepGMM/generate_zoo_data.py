@@ -9,9 +9,12 @@ def create_dataset(function_name='step', dir="data/zoo/"):
     np.random.seed(seed)
 
     # set up model classes, objective, and data scenario
-    num_train = 2000
-    num_dev = 2000
-    num_test = 2000
+    # num_train = 2000
+    # num_dev = 2000
+    # num_test = 2000
+    num_train = 500
+    num_dev = 500
+    num_test = 500
 
     scenario = Standardizer(
         AGMMZoo(function_name, two_gps=False, n_instruments=2))
