@@ -11,7 +11,7 @@ import matplotlib.colors as mcolors
 import numpy as np
 
 from src.models.utils import ensure_two_dimensional
-from src.data import InstrumentalVariableDataset
+from src.data import SAGDIVDataset
 from src.data.synthetic import (
     make_dummy_dataset,
 )

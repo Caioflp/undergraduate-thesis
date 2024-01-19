@@ -36,7 +36,7 @@ def setup_logger() -> None:
 
 # Decorator with arguments syntax is weird
 # https://stackoverflow.com/questions/5929107/decorators-with-parameters
-def experiment(path: str = None) -> Callable:
+def experiment(path: str = None, benchmark=False) -> Callable:
     """Marks a function as the main function of an experiment.
 
     Creates a separate directory for it to be run.
@@ -49,8 +49,11 @@ def experiment(path: str = None) -> Callable:
     else:
         inner_output_dir = output_dir / path.lower().replace(" ", "_")
     inner_output_dir.mkdir(parents=True, exist_ok=True)
-    run_dir = inner_output_dir / ("run_" + str(len(os.listdir(inner_output_dir))))
-    run_dir.mkdir(parents=True, exist_ok=False)
+    if benchmark:
+        run_dir = inner_output_dir
+    else:
+        run_dir = inner_output_dir / ("run_" + str(len(os.listdir(inner_output_dir))))
+        run_dir.mkdir(parents=True, exist_ok=False)
 
     def decorator(func: Callable) -> Callable:
         @wraps(func)

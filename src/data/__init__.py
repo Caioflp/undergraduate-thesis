@@ -1,1 +1,1 @@
-from .utils import InstrumentalVariableDataset
+from .utils import SAGDIVDataset

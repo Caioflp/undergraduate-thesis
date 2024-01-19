@@ -12,7 +12,7 @@ import numpy as np
 from sklearn.base import BaseEstimator
 from tqdm import tqdm
 
-from src.data.utils import InstrumentalVariableDataset
+from src.data.utils import SAGDIVDataset
 from src.models import (
     DensityRatio,
     ConditionalMeanOperator,
@@ -166,12 +166,12 @@ class SAGDIV(BaseEstimator):
         # logger.info("Conditional Mean Operator of Y|Z fitted.")
 
 
-    def fit(self, dataset: InstrumentalVariableDataset) -> None:
+    def fit(self, dataset: SAGDIVDataset) -> None:
         """Fits model to dataset.
 
         Parameters
         ----------
-        dataset: InstrumentalVariableDataset
+        dataset: SAGDIVDataset
             Dataset containing X, Z and Y.
 
         """

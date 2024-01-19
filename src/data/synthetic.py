@@ -6,7 +6,7 @@ Author: @Caioflp
 from dataclasses import dataclass
 import logging
 from typing import Literal
-from src.data.utils import InstrumentalVariableDataset, KIVDataset
+from src.data.utils import SAGDIVDataset, KIVDataset
 
 import numpy as np
 import scipy
@@ -23,7 +23,7 @@ def make_dummy_dataset(
     rho: float = 0.7,
     eta: float = 0.4,
     seed: int = None,
-) -> InstrumentalVariableDataset:
+) -> SAGDIVDataset:
     """Creates a dataset in which the instrument is uniformly distributed.
 
     Problem was taken from a research poster by Yuri Saporito, Yuri Rezende and
@@ -41,7 +41,7 @@ def make_dummy_dataset(
 
     Returns
     -------
-    InstrumentalVariableDataset
+    SAGDIVDataset
         Object containing the joint observations of X, Z and Y, as well as
         the denoised versions of Y.
 
@@ -72,7 +72,7 @@ def make_dummy_dataset(
 
     Z_loop = norm_cdf(rng.normal(loc=0, scale=1, size=n_samples_only_z))
 
-    return InstrumentalVariableDataset(
+    return SAGDIVDataset(
         X, Z, Z_loop, Y, Y_denoised, "poster dataset"
     )
 
@@ -85,7 +85,7 @@ def make_poster_dataset(
     rho: float = 0.7,
     eta: float = 0.4,
     seed: int = None,
-) -> InstrumentalVariableDataset:
+) -> SAGDIVDataset:
     """Creates a dataset in which the instrument is uniformly distributed.
 
     Problem was taken from a research poster by Yuri Saporito, Yuri Rezende and
@@ -103,7 +103,7 @@ def make_poster_dataset(
 
     Returns
     -------
-    InstrumentalVariableDataset
+    SAGDIVDataset
         Object containing the joint observations of X, Z and Y, as well as
         the denoised versions of Y.
 
@@ -133,7 +133,7 @@ def make_poster_dataset(
 
     Z_loop = norm_cdf(rng.normal(loc=0, scale=1, size=n_samples_only_z))
 
-    return InstrumentalVariableDataset(
+    return SAGDIVDataset(
         X, Z, Z_loop, Y, Y_denoised, "poster dataset"
     )
     
@@ -144,7 +144,7 @@ def make_deep_gmm_dataset(
     response: Literal["sin", "step", "abs", "linear"] = "sin",
     seed: int = None,
     return_kiv_dataset: bool = False,
-) -> InstrumentalVariableDataset:
+) -> SAGDIVDataset:
     """Creates a dataset in which the instrument is uniformly distributed.
 
     Problem was taken from arXiv:1905.12495v2.
@@ -161,7 +161,7 @@ def make_deep_gmm_dataset(
 
     Returns
     -------
-    InstrumentalVariableDataset
+    SAGDIVDataset
         Object containing the joint observations of X, Z and Y, as well as
         the denoised versions of Y.
 
@@ -194,7 +194,7 @@ def make_deep_gmm_dataset(
     X_loop = Z_loop[:, 0] + eps_loop + gamma_loop
     Y_loop = response_func(X_loop) + eps_loop + delta_loop
 
-    sagdiv_dataset = InstrumentalVariableDataset(
+    sagdiv_dataset = SAGDIVDataset(
             X, Z, Z_loop, Y, Y_denoised, "deep gmm dataset"
         )
     logger.info("Deep GMM dataset generated.")
@@ -217,6 +217,45 @@ def make_deep_gmm_dataset(
         return sagdiv_dataset, kiv_dataset
 
 
+def make_benchmark_dataset(
+    n_fit_samples: int = 500, 
+    n_test_samples: int = 500,
+    scenario: Literal["sin", "step", "abs", "linear"] = "sin",
+    seed: int = 42,
+):
+    scenario_h_star_dict = {
+        "sin": np.sin,
+        "step": lambda x: x >= 0,
+        "abs": np.abs,
+        "linear": lambda x: x,
+    }
+    assert scenario in ["sin", "step", "abs", "linear"]
+    h_star = scenario_h_star_dict[scenario]
+
+    rng = np.random.default_rng(seed)
+
+    Z_fit = rng.uniform(low=-3, high=3, size=(n_fit_samples, 2))
+    eps = rng.normal(loc=0, scale=1, size=n_fit_samples)
+    gamma = rng.normal(loc=0, scale=np.sqrt(0.1), size=n_fit_samples)
+    delta = rng.normal(loc=0, scale=np.sqrt(0.1), size=n_fit_samples)
+    X_fit = Z_fit[:, 0] + eps + gamma
+    h_star_fit = h_star(X_fit)
+    Y_fit = h_star + eps + delta
+
+    X_test = (
+        rng.uniform(low=-3, high=3, size=n_test_samples)
+        + rng.normal(loc=0, scale=1, size=n_test_samples)
+        + rng.normal(loc=0, scale=np.sqrt(0.1), size=n_test_samples)
+    )
+    h_star_test = h_star(X_test)
+
+    dataset = {
+        "X_fit": X_fit, "Z_fit": Z_fit, "Y_fit": Y_fit,
+        "h_star_fit": h_star_fit, "X_test": X_test,
+        "h_star_test": h_star_test
+    }
+    return dataset
+
 
 def make_binary_response_dataset(
     n_samples: int = 500, 
@@ -224,7 +263,7 @@ def make_binary_response_dataset(
     response: Literal["sin", "linear"] = "sin",
     scale: float = 1, 
     seed: int = None,
-) -> InstrumentalVariableDataset:
+) -> SAGDIVDataset:
     """Creates a dataset in which the response is binary
 
     Parameters
@@ -241,7 +280,7 @@ def make_binary_response_dataset(
 
     Returns
     -------
-    InstrumentalVariableDataset
+    SAGDIVDataset
         Object containing the joint observations of X, Z and Y, as well as
         the denoised versions of Y.
 
@@ -273,7 +312,7 @@ def make_binary_response_dataset(
 
     
     Z_loop = rng.uniform(low=-3, high=3, size=(n_samples_only_z, 2))
-    sagdiv_dataset = InstrumentalVariableDataset(
+    sagdiv_dataset = SAGDIVDataset(
             X, Z, Z_loop, Y, Y_denoised, "Binary response dataset"
         )
     logger.info("Binary response dataset generated.")

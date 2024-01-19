@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-from src.data import InstrumentalVariableDataset
+from src.data import SAGDIVDataset
 from src.data.synthetic import make_binary_response_dataset
 from src.models import LogisticRegressionYZ
 from src.models import SAGDIV
@@ -22,7 +22,7 @@ logger = logging.getLogger("src.experiment")
 
 
 def plot_data(
-    dataset: InstrumentalVariableDataset,
+    dataset: SAGDIVDataset,
     figsize: Tuple[int, int] = (7, 5),
     title : str = "Data"
 ) -> None:
@@ -52,7 +52,7 @@ def plot_data(
     
 def plot_estimate(
     model: SAGDIV,
-    dataset: InstrumentalVariableDataset,
+    dataset: SAGDIVDataset,
     figsize: Tuple[int] = (7, 5),
     with_data = True,
     title: str = "Estimate",

@@ -9,7 +9,7 @@ import numpy as np
 
 
 @dataclass
-class InstrumentalVariableDataset:
+class SAGDIVDataset:
     """Dataset for instrumental variable regression.
 
     """

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-from src.data import InstrumentalVariableDataset
+from src.data import SAGDIVDataset
 from src.data.synthetic import (
     make_poster_dataset,
     make_deep_gmm_dataset,
@@ -30,7 +30,7 @@ background = "#FFFFFF"
 orange = "#DA511F"
 
 def plot_data(
-    dataset: InstrumentalVariableDataset,
+    dataset: SAGDIVDataset,
     figsize: Tuple[int, int] = (7, 5),
     title : str = "Data"
 ) -> None:
@@ -61,7 +61,7 @@ def plot_data(
 def plot_estimate(
     model_sagdiv,
     model_kiv,
-    dataset: InstrumentalVariableDataset,
+    dataset: SAGDIVDataset,
     figsize: Tuple[int] = (7, 5),
     with_data = True,
     title: str = "SAGD-IV and KIV",
