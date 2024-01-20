@@ -2,7 +2,7 @@ import os
 
 import numpy as np
 
-from scenarios.abstract_scenario import AbstractScenario
+from DeepGMM.scenarios.abstract_scenario import AbstractScenario, Dataset
 
 class Standardizer(AbstractScenario):
     def __init__(self, scenario):

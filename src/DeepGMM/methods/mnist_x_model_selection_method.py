@@ -1,24 +1,26 @@
 import torch
 import torch.nn as nn
 from torch.optim import Adam
-from game_objectives.simple_moment_objective import OptimalMomentObjective
+from DeepGMM.game_objectives.simple_moment_objective import OptimalMomentObjective
 from learning.learning_dev_f import GradientDescentLearningDevF, SGDLearningDevF
 
-from methods.abstract_method import AbstractMethod
-from model_selection.f_history_model_selection_v3 import \
+from DeepGMM.methods.abstract_method import AbstractMethod
+from DeepGMM.model_selection.f_history_model_selection_v2 import \
+    FHistoryModelSelectionV2
+from DeepGMM.model_selection.f_history_model_selection_v3 import \
     FHistoryModelSelectionV3
-from model_selection.learning_eval import FHistoryLearningEvalGradientDecent, \
+from DeepGMM.model_selection.learning_eval import FHistoryLearningEvalGradientDecent, \
     FHistoryLearningEvalSGD
-from model_selection.learning_eval_nostop import FHistoryLearningEvalSGDNoStop
-from model_selection.simple_model_eval import GradientDecentSimpleModelEval, \
+from DeepGMM.model_selection.learning_eval_nostop import FHistoryLearningEvalSGDNoStop
+from DeepGMM.model_selection.simple_model_eval import GradientDecentSimpleModelEval, \
     SGDSimpleModelEval
-from models.cnn_models import LeakySoftmaxCNN, DefaultCNN
-from models.mlp_model import MLPModel
-from optimizers.oadam import OAdam
-from optimizers.optimizer_factory import OptimizerFactory
+from DeepGMM.models.cnn_models import LeakySoftmaxCNN, DefaultCNN
+from DeepGMM.models.mlp_model import MLPModel
+from DeepGMM.optimizers.oadam import OAdam
+from DeepGMM.optimizers.optimizer_factory import OptimizerFactory
 
 
-class MNISTZModelSelectionMethod(AbstractMethod):
+class MNISTXModelSelectionMethod(AbstractMethod):
     def __init__(self, enable_cuda=False):
         AbstractMethod.__init__(self)
         self.g = None
@@ -26,17 +28,17 @@ class MNISTZModelSelectionMethod(AbstractMethod):
         self.dev_f_collection = None
 
         g_models = [
-            MLPModel(input_dim=1, layer_widths=[200, 200],
-                     activation=nn.LeakyReLU).double(),
-        ]
-        f_models = [
             DefaultCNN(cuda=enable_cuda),
         ]
+        f_models = [
+            MLPModel(input_dim=1, layer_widths=[20],
+                     activation=nn.LeakyReLU).double(),
+        ]
         if enable_cuda:
-            for g in g_models:
-                g.cuda()
+            for f in f_models:
+                f.cuda()
 
-        g_learning_rates = [0.00010, 0.000050, 0.000020]
+        g_learning_rates = [0.000005, 0.000002, 0.000001]
         # g_learning_rates = [0.00001]
         game_objective = OptimalMomentObjective()
         # g_learning_rates = [0.0005]
@@ -47,19 +49,19 @@ class MNISTZModelSelectionMethod(AbstractMethod):
                 "g_optimizer_factory": OptimizerFactory(
                     OAdam, lr=g_lr, betas=(0.5, 0.9)),
                 "f_optimizer_factory": OptimizerFactory(
-                    OAdam, lr=5.0*g_lr, betas=(0.5, 0.9)),
+                    OAdam, lr=1000*g_lr, betas=(0.5, 0.9)),
                 "game_objective": game_objective
             }
             learning_setups.append(learning_setup)
 
         default_g_opt_factory = OptimizerFactory(
-            Adam, lr=0.001, betas=(0.5, 0.9))
-        default_f_opt_factory = OptimizerFactory(
             Adam, lr=0.0001, betas=(0.5, 0.9))
-        g_simple_model_eval = GradientDecentSimpleModelEval(
-            max_num_iter=4000, max_no_progress=10, eval_freq=100)
+        default_f_opt_factory = OptimizerFactory(
+            Adam, lr=0.001, betas=(0.5, 0.9))
+        g_simple_model_eval = SGDSimpleModelEval(
+            max_num_epoch=100, max_no_progress=10, batch_size=1024, eval_freq=1)
         f_simple_model_eval = SGDSimpleModelEval(
-            max_num_epoch=50, max_no_progress=10, batch_size=512, eval_freq=1)
+            max_num_epoch=100, max_no_progress=10, batch_size=1024, eval_freq=1)
         learning_eval = FHistoryLearningEvalSGDNoStop(
             num_epochs=60, eval_freq=1, batch_size=1024)
         self.model_selection = FHistoryModelSelectionV3(

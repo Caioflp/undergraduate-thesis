@@ -240,7 +240,7 @@ def make_benchmark_dataset(
     delta = rng.normal(loc=0, scale=np.sqrt(0.1), size=n_fit_samples)
     X_fit = Z_fit[:, 0] + eps + gamma
     h_star_fit = h_star(X_fit)
-    Y_fit = h_star + eps + delta
+    Y_fit = h_star_fit + eps + delta
 
     X_test = (
         rng.uniform(low=-3, high=3, size=n_test_samples)

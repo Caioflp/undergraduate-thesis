@@ -1,8 +1,8 @@
 import itertools
 import torch
 import torch.nn as nn
-from game_objectives.approximate_psi_objective import max_approx_psi_eval
-from model_selection.learning_eval import f_history_g_eval
+from DeepGMM.game_objectives.approximate_psi_objective import max_approx_psi_eval
+from DeepGMM.model_selection.learning_eval import f_history_g_eval
 
 
 class FHistoryModelSelectionV3(object):

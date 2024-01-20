@@ -3,7 +3,7 @@ import math
 import random
 import itertools
 import torch
-from model_selection.abstract_learning_eval import AbstractLearningEval
+from DeepGMM.model_selection.abstract_learning_eval import AbstractLearningEval
 
 
 def f_history_g_eval(epsilon_dev, f_of_z_dev_history):

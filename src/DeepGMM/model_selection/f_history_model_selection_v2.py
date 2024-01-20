@@ -1,7 +1,7 @@
 import itertools
 import torch
 import torch.nn as nn
-from model_selection.learning_eval import f_history_g_eval
+from DeepGMM.model_selection.learning_eval import f_history_g_eval
 
 
 class FHistoryModelSelectionV2(object):

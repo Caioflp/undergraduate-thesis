@@ -4,8 +4,8 @@ import numpy as np
 import torch
 from torchvision import datasets, transforms
 
-from scenarios.abstract_scenario import AbstractScenario
-from scenarios.toy_scenarios import AGMMZoo
+from DeepGMM.scenarios.abstract_scenario import AbstractScenario
+from DeepGMM.scenarios.toy_scenarios import AGMMZoo
 
 
 class AbstractMNISTScenario(AbstractScenario):

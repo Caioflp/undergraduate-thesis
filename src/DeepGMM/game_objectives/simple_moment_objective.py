@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 
-from game_objectives.abstract_objective import AbstractObjective
+from DeepGMM.game_objectives.abstract_objective import AbstractObjective
 
 
 class SimpleMomentObjective(AbstractObjective):

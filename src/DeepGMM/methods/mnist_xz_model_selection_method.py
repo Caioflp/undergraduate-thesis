@@ -1,23 +1,23 @@
 import torch
 import torch.nn as nn
 from torch.optim import Adam
-from game_objectives.simple_moment_objective import OptimalMomentObjective
-from learning.learning_dev_f import GradientDescentLearningDevF, SGDLearningDevF
+from DeepGMM.game_objectives.simple_moment_objective import OptimalMomentObjective
+from DeepGMM.learning.learning_dev_f import GradientDescentLearningDevF, SGDLearningDevF
 
-from methods.abstract_method import AbstractMethod
-from model_selection.f_history_model_selection_v2 import \
+from DeepGMM.methods.abstract_method import AbstractMethod
+from DeepGMM.model_selection.f_history_model_selection_v2 import \
     FHistoryModelSelectionV2
-from model_selection.f_history_model_selection_v3 import \
+from DeepGMM.model_selection.f_history_model_selection_v3 import \
     FHistoryModelSelectionV3
-from model_selection.learning_eval import FHistoryLearningEvalGradientDecent, \
+from DeepGMM.model_selection.learning_eval import FHistoryLearningEvalGradientDecent, \
     FHistoryLearningEvalSGD
-from model_selection.learning_eval_nostop import FHistoryLearningEvalSGDNoStop
-from model_selection.simple_model_eval import GradientDecentSimpleModelEval, \
+from DeepGMM.model_selection.learning_eval_nostop import FHistoryLearningEvalSGDNoStop
+from DeepGMM.model_selection.simple_model_eval import GradientDecentSimpleModelEval, \
     SGDSimpleModelEval
-from models.cnn_models import LeakySoftmaxCNN, DefaultCNN
-from models.mlp_model import MLPModel
-from optimizers.oadam import OAdam
-from optimizers.optimizer_factory import OptimizerFactory
+from DeepGMM.models.cnn_models import LeakySoftmaxCNN, DefaultCNN
+from DeepGMM.models.mlp_model import MLPModel
+from DeepGMM.optimizers.oadam import OAdam
+from DeepGMM.optimizers.optimizer_factory import OptimizerFactory
 
 
 class MNISTXZModelSelectionMethod(AbstractMethod):

@@ -15,8 +15,8 @@ import torch
 from src.data.synthetic import make_benchmark_dataset
 from src.models import SAGDIV, KIV
 from src.scripts.utils import experiment
-from src.models.DeepGMM.scenarios.abstract_scenario import AbstractScenario
-from src.models.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod as DeepGMM
+from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
+from src.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod as DeepGMM
 
 
 logger = logging.getLogger("src.scripts.benchmarks")
@@ -41,15 +41,15 @@ def train_eval_store_deep_gmm(
     enable_cuda = torch.cuda.is_available()
     n_samples = n_rv_samples//3//2
 
-    train_x = torch.as_tensor(data.X_fit[:n_samples]).double()
-    train_z = torch.as_tensor(data.Z_fit[:n_samples]).double()
-    train_y = torch.as_tensor(data.Y_fit[:n_samples]).double()
+    train_x = torch.as_tensor(data["X_fit"][:n_samples]).double()
+    train_z = torch.as_tensor(data["Z_fit"][:n_samples]).double()
+    train_y = torch.as_tensor(data["Y_fit"][:n_samples]).double()
 
-    test_x = torch.as_tensor(data.X_test).double()
+    test_x = torch.as_tensor(data["X_test"]).double()
 
-    val_x = torch.as_tensor(data.X_fit[n_samples:2*n_samples]).double()
-    val_z = torch.as_tensor(data.Z_fit[n_samples:2*n_samples]).double()
-    val_y = torch.as_tensor(data.Y_fit[n_samples:2*n_samples]).double()
+    val_x = torch.as_tensor(data["X_fit"][n_samples:2*n_samples]).double()
+    val_z = torch.as_tensor(data["Z_fit"][n_samples:2*n_samples]).double()
+    val_y = torch.as_tensor(data["Y_fit"][n_samples:2*n_samples]).double()
 
     if enable_cuda:
         trian_x = train_x.cuda()
@@ -59,10 +59,11 @@ def train_eval_store_deep_gmm(
         val_z = val_z.cuda()
         val_y = val_y.cuda()
 
-
     method = DeepGMM(enable_cuda=enable_cuda)
     method.fit(train_x, train_z, train_y, val_x, val_z, val_y, verbose=True)
-    h_hat_test = method.predict(test_x)
+    h_hat_test = method.predict(test_x).detach().numpy()
+    np.savez(model_file, h_hat_test=h_hat_test)
+    return h_hat_test
 
 
 def train_eval_store_sagd_iv(
@@ -135,15 +136,15 @@ def eval_models_accross_scenarios(
 
     for each scenario:
         for each run:
-            generate new data
+            generate and save new data
             for each method:
                 train method
-                store x_test and predictions on x_test
+                store predictions on x_test
                 compute test mse
         store test mse data accross runs for each model
 
     """
-    model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"]
+    model_name_list = ["DeepGMM"]#, "KIV", "DeepIV", "SAGD-IV"]
     model_mse_dict = {name: np.empty(n_runs, dtype=float) for name in model_name_list}
     for scenario in scenarios:
         scenario_dir = Path(scenario)
@@ -151,7 +152,7 @@ def eval_models_accross_scenarios(
         logger.info(f"Entering scenario: {scenario.upper()}")
         for run_number in range(n_runs):
             logger.info(f"Starting run number {run_number}")
-            run_dir = scenario_dir / ("run_" + run_number)
+            run_dir = scenario_dir / ("run_" + str(run_number))
             run_dir.mkdir(exist_ok=True)
             data = make_benchmark_dataset(
                 n_triplet_samples,
@@ -159,10 +160,11 @@ def eval_models_accross_scenarios(
                 scenario,
             )
             logger.info(f"Generated {scenario.upper()} scenario benchmark data.")
+            np.savez(run_dir / "data.npz", **data)
             for model_name in model_name_list:
-                model_file = run_dir / model_name.lower()
+                model_file = run_dir / (model_name.lower() + ".npz")
                 h_hat = train_eval_store(model_name, data, n_rv_samples_for_fit, model_file)
-                mse = np.mean(np.square(data.h_star_test - h_hat))
+                mse = np.mean(np.square(data["h_star_test"] - h_hat))
                 model_mse_dict[model_name][run_number] = mse
             logger.info("Evaluated all models")
         report = f"MSE results for scenario {scenario.upper()}:\n"
@@ -173,6 +175,7 @@ def eval_models_accross_scenarios(
         logger.info(report)
         np.savez(scenario_dir / "mse_arrays.npz", **model_mse_dict)
 
+
 def plot_MSEs():
     pass
 
@@ -182,7 +185,7 @@ def plot_graphs():
 
 @experiment("benchmarks/", benchmark=True)
 def main():
-    pass
+    eval_models_accross_scenarios()
 
 
 if __name__ == "__main__":

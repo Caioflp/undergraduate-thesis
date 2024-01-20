@@ -1,4 +1,4 @@
-from game_objectives.abstract_objective import AbstractObjective
+from DeepGMM.game_objectives.abstract_objective import AbstractObjective
 
 
 class AbstractLearning(object):

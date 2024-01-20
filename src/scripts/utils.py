@@ -21,7 +21,7 @@ def setup_logger() -> None:
     # )
     logging.getLogger("src").setLevel(logging.DEBUG)
 
-    file = logging.FileHandler(filename="run.log")
+    file = logging.FileHandler(filename="run.log", mode="w")
     file.setLevel(logging.DEBUG)
     file_formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
     file.setFormatter(file_formatter)

@@ -1,20 +1,8 @@
 import torch
 import numpy as np
 import os
-from methods.mnist_x_model_selection_method import MNISTXModelSelectionMethod
-from methods.mnist_xz_model_selection_method import MNISTXZModelSelectionMethod
-from methods.mnist_z_model_selection_method import MNISTZModelSelectionMethod
-from scenarios.abstract_scenario import AbstractScenario
-
-
-SCENARIOS_NAMES = ["mnist_x", "mnist_z", "mnist_xz"]
-SCENARIO_METHOD_CLASSES = {
-    "mnist_x": MNISTXModelSelectionMethod,
-    "mnist_z": MNISTZModelSelectionMethod,
-    "mnist_xz": MNISTXZModelSelectionMethod,
-}
-
-RESULTS_FOLDER = "results/mnist/"
+from DeepGMM.scenarios.abstract_scenario import AbstractScenario
+from DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod
 
 
 def run_experiment(scenario_name):
@@ -26,20 +14,21 @@ def run_experiment(scenario_name):
     num_reps = 10
 
     print("\nLoading " + scenario_name + "...")
-    scenario = AbstractScenario(filename="data/" + scenario_name + "/main.npz")
+    scenario = AbstractScenario(filename="data/zoo/" + scenario_name + ".npz")
     scenario.info()
     scenario.to_tensor()
-    scenario.to_cuda()
+    # scenario.to_cuda()
 
     train = scenario.get_dataset("train")
     dev = scenario.get_dataset("dev")
     test = scenario.get_dataset("test")
 
+    # train.to_numpy()
+    # print(train.y.mean(), train.y.std())
+
     for rep in range(num_reps):
 
-        method_class = SCENARIO_METHOD_CLASSES[scenario_name]
-        method = method_class(enable_cuda=torch.cuda.is_available())
-
+        method = ToyModelSelectionMethod(enable_cuda=torch.cuda.is_available())
         method.fit(train.x, train.z, train.y, dev.x, dev.z, dev.y,
                    g_dev=dev.g, verbose=True)
         g_pred_test = method.predict(test.x)
@@ -50,7 +39,7 @@ def run_experiment(scenario_name):
         print("MSE on test:", mse)
         print("")
         print("saving results...")
-        folder = "results/mnist/" + scenario_name + "/"
+        folder = "results/zoo/" + scenario_name + "/"
         file_name = "Ours_%d.npz" % rep
         save_path = os.path.join(folder, file_name)
         os.makedirs(folder, exist_ok=True)
@@ -59,8 +48,9 @@ def run_experiment(scenario_name):
 
 
 def main():
-    for scenario in SCENARIOS_NAMES:
+    for scenario in ["step", "sin", "abs", "linear"]:
         run_experiment(scenario)
+    # run_experiment("linear")
 
 
 if __name__ == "__main__":
