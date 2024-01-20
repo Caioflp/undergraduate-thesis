@@ -62,13 +62,13 @@ def train_eval_store_kiv(
 
 
 def train_eval_store(model_name: str, *args):
-    model_name_dict = {
+    model_eval_function_dict = {
         "DeepGMM": train_eval_store_deep_gmm,
         "SAGD-IV": train_eval_store_sagd_iv,
         "KIV": train_eval_store_kiv,
         "DeepIV": train_eval_store_deep_iv,
     }
-    model_name_dict[model_name](*args)
+    return model_eval_function_dict[model_name](*args)
 
 
 def eval_models_accross_scenarios(
@@ -106,11 +106,13 @@ def eval_models_accross_scenarios(
             generate new data
             for each method:
                 train method
+                store x_test and predictions on x_test
                 compute test mse
-                store predictions on x_test
-            store test data
+        store test mse data accross runs for each model
 
     """
+    model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"]
+    model_mse_dict = {name: np.empty(n_runs, dtype=float) for name in model_name_list}
     for scenario in scenarios:
         scenario_dir = Path(scenario)
         scenario_dir.mkdir(exist_ok=True)
@@ -125,11 +127,19 @@ def eval_models_accross_scenarios(
                 scenario,
             )
             logger.info(f"Generated {scenario.upper()} scenario benchmark data.")
-            for model_name in ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"]:
-                logger.info(f"Evaluating {model_name}.")
+            for model_name in model_name_list:
                 model_file = run_dir / model_name.lower()
-                train_eval_store(model_name, data, n_rv_samples_for_fit, model_file)
-
+                h_hat = train_eval_store(model_name, data, n_rv_samples_for_fit, model_file)
+                mse = np.mean(np.square(data.h_star_test - h_hat))
+                model_mse_dict[model_name][run_number] = mse
+            logger.info("Evaluated all models")
+        report = f"MSE results for scenario {scenario.upper()}:\n"
+        for model_name in model_name_list:
+            mse_array = model_mse_dict[model_name]
+            mean, std = np.mean(mse_array), np.std(mse_array)
+            report += f"{model_name}: {mean:1.2e} ± {std:1.2e}\n" 
+        logger.info(report)
+        np.savez(scenario_dir / "mse_arrays.npz", **model_mse_dict)
 
 def plot_MSEs():
     pass
