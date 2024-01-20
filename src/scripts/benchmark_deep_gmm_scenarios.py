@@ -10,7 +10,9 @@ from typing import Tuple, Dict
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+import tensorflow as tf
 import torch
+from econml.iv.nnet import DeepIV
 
 from src.data.synthetic import make_benchmark_dataset
 from src.models import SAGDIV, KIV
@@ -39,7 +41,7 @@ def train_eval_store_deep_gmm(
         We adopt a 50/50% train/validation split, as in the original article.
     """
     enable_cuda = torch.cuda.is_available()
-    n_samples = n_rv_samples//3//2
+    n_samples = n_rv_samples // 3 // 2
 
     train_x = torch.as_tensor(data["X_fit"][:n_samples]).double()
     train_z = torch.as_tensor(data["Z_fit"][:n_samples]).double()
@@ -79,7 +81,20 @@ def train_eval_store_deep_iv(
         n_rv_samples: int,
         model_file: Path,
 ):
-    pass
+    """ DeepIV evaluation function.
+
+        The EconML package does not specify how to split the data, so we pass all
+        samples to the fit method.
+
+        `context` here means DeepIV's X variable, while our X variable is DeepIV's p variable
+    """
+    n_samples = n_rv_samples // 3
+
+    train_x = data["X_fit"][:n_samples] 
+    train_z = data["Z_fit"][:n_samples] 
+    train_y = data["Y_fit"][:n_samples] 
+
+    test_x = data["X_test"]
 
 
 def train_eval_store_kiv(
