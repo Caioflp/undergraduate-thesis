@@ -19,7 +19,7 @@ from src.models.DeepGMM.scenarios.abstract_scenario import AbstractScenario
 from src.models.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod as DeepGMM
 
 
-logger = logging.getLogger("src.scripts")
+logger = logging.getLogger("src.scripts.benchmarks")
 
 
 plt.rcParams.update({
@@ -34,7 +34,35 @@ def train_eval_store_deep_gmm(
         n_rv_samples: int,
         model_file: Path,
 ):
-    pass
+    """ DeepGMM evaluation function.
+
+        We adopt a 50/50% train/validation split, as in the original article.
+    """
+    enable_cuda = torch.cuda.is_available()
+    n_samples = n_rv_samples//3//2
+
+    train_x = torch.as_tensor(data.X_fit[:n_samples]).double()
+    train_z = torch.as_tensor(data.Z_fit[:n_samples]).double()
+    train_y = torch.as_tensor(data.Y_fit[:n_samples]).double()
+
+    test_x = torch.as_tensor(data.X_test).double()
+
+    val_x = torch.as_tensor(data.X_fit[n_samples:2*n_samples]).double()
+    val_z = torch.as_tensor(data.Z_fit[n_samples:2*n_samples]).double()
+    val_y = torch.as_tensor(data.Y_fit[n_samples:2*n_samples]).double()
+
+    if enable_cuda:
+        trian_x = train_x.cuda()
+        trian_z = train_z.cuda()
+        trian_y = train_y.cuda()
+        val_x = val_x.cuda()
+        val_z = val_z.cuda()
+        val_y = val_y.cuda()
+
+
+    method = DeepGMM(enable_cuda=enable_cuda)
+    method.fit(train_x, train_z, train_y, val_x, val_z, val_y, verbose=True)
+    h_hat_test = method.predict(test_x)
 
 
 def train_eval_store_sagd_iv(
@@ -82,7 +110,7 @@ def eval_models_accross_scenarios(
 
     Since different algorithms require different proportions of X, Z and Y samples,
     our experiment assumes that each model has access to the same total amount of random
-    variable samples.
+    variable samples, but those might be distributed differently accross models.
     For example, if all models should be fitted using 3000 r.v. variables, then DeepGMM
     may use 800 (X, Y, Z) samples for training and another 200 (X, Y, Z) samples for validation,
     while SAGD-IV might use 600 (X, Y, Z) samples for fitting the preliminary r, P and Phi
@@ -90,6 +118,10 @@ def eval_models_accross_scenarios(
 
     Parameters
     ----------
+    scenarios: list
+        All scenarios which should be evaluated.
+    n_runs: int
+        Number times to evaluate each model in each scenario.
     n_triplet_samples: int
         Amount of (X, Y, Z) triplet samples to draw. It might be the case that not all of them
         will be actually used. We just want to make sure every algorithm gets what it needs.

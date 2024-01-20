@@ -249,6 +249,9 @@ def make_benchmark_dataset(
     )
     h_star_test = h_star(X_test)
 
+    X_fit = X_fit.reshape(-1, 1)
+    X_test = X_test.reshape(-1, 1)
+
     dataset = {
         "X_fit": X_fit, "Z_fit": Z_fit, "Y_fit": Y_fit,
         "h_star_fit": h_star_fit, "X_test": X_test,
