@@ -25,12 +25,20 @@ from src.scripts.utils import experiment
 
 
 logger = logging.getLogger("src.scripts.benchmarks")
+COLOR_PER_MODEL = {
+    "DeepGMM": "pink",
+    "KIV": "orange",
+    "DeepIV": "violet",
+    "SAGD-IV": "lightblue",
+}
 
 
+cm = 1/2.54
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
     "font.size": 10,
+    "figure.figsize": (20*cm, 10*cm)
 })
 
 
@@ -87,12 +95,12 @@ def train_eval_store_sagd_iv(
     """
 
     n_samples = n_rv_samples // 5
-    train_x = data["x_fit"][:n_samples] 
-    train_z = data["z_fit"][:n_samples] 
-    train_y = data["y_fit"][:n_samples] 
-    test_x = data["x_test"]
+    train_x = data["X_fit"][:n_samples] 
+    train_z = data["Z_fit"][:n_samples] 
+    train_y = data["Y_fit"][:n_samples] 
+    test_x = data["X_test"]
 
-    train_loop_z = data["z_fit"][n_samples:n_samples + 2*n_samples]
+    train_loop_z = data["Z_fit"][n_samples:n_samples + 2*n_samples]
 
     model = SAGDIV(lr="inv_n_samples", warm_up_duration=100, bound=10)
     model.fit(SAGDIVDataset(train_x, train_z, train_loop_z, train_y))
@@ -165,8 +173,9 @@ def train_eval_store_deep_iv(
         second_stage_options=keras_fit_options,
     )
     
-    # Monkey patching. This function on the econml.iv.nnet._deepiv module needs to be rewritten because
-    # it calls keras.backend.logsumexp, which no longer exists.
+    # Monkey patching.
+    # As of writing this code, this function on the econml.iv.nnet._deepiv module
+    # needs to be updated because, as it calls keras.backend.logsumexp, which no longer exists.
     def fixed_mog_loss_model(n_components, d_t):
         pi = keras.layers.Input((n_components,))
         mu = keras.layers.Input((n_components, d_t))
@@ -241,6 +250,7 @@ def train_eval_store(model_name: str, *args):
 
 def eval_models_accross_scenarios(
     scenarios: list = ["step", "sin", "abs", "linear"],
+    model_name_list: list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"],
     n_runs: int = 20,
     n_triplet_samples: int = 5000,
     n_rv_samples_for_fit: int = 3000,
@@ -283,8 +293,6 @@ def eval_models_accross_scenarios(
         store test mse data accross runs for each model
 
     """
-    # model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"]
-    model_name_list = ["KIV"]
     model_mse_dict = {name: np.empty(n_runs, dtype=float) for name in model_name_list}
     for scenario in scenarios:
         scenario_dir = Path(scenario)
@@ -316,16 +324,102 @@ def eval_models_accross_scenarios(
         np.savez(scenario_dir / "mse_arrays.npz", **model_mse_dict)
 
 
-def plot_MSEs():
-    pass
+def plot_MSEs(
+    scenarios: list = ["step", "sin", "abs", "linear"],
+    model_name_list: list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"],
+):
+    n_scenarios = len(scenarios)
+    fig, axs = plt.subplots(1, n_scenarios, sharey=True)
+    for i, scenario in enumerate(scenarios):
+        scenario_dir = Path(scenario)
+        mse_arrays = np.load(scenario_dir / "mse_arrays.npz")
+        mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays}
+        plot = axs[i].boxplot(mse_arrays.values(), labels=mse_arrays.keys(), patch_artist=True)
+        for patch, model_name in zip(plot['boxes'], model_name_list):
+            patch.set(facecolor=COLOR_PER_MODEL[model_name])
+        for line, model_name in zip(plot['medians'], model_name_list):
+            line.set(color="black")
+        axs[i].set_title(scenario.title())
+    # fig.tight_layout()
+    fig.text(0.5, 0.02, "Model", ha="center")
+    fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
+    fig.autofmt_xdate()
+    fig.savefig("mse.pdf")
 
 
-def plot_graphs():
-    pass
+def plot_graphs(
+    n_runs: int = 20,
+    scenarios: list = ["step", "sin", "abs", "linear"],
+    model_name_list: list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"],
+):
+    n_scenarios = len(scenarios)
+    n_models = len(model_name_list)
+    # Choose a random run
+    random_run = np.random.choice(n_runs)
+
+    fig, axs = plt.subplots(
+        n_scenarios,
+        n_models+1,
+        sharey="row",
+        sharex=True,
+        figsize=(20*cm, 13*cm)
+        )
+    # fig.tight_layout()
+    for i, scenario in enumerate(scenarios):
+        run_dir = Path(scenario + "/" + f"run_{random_run}")
+        data_file = run_dir / "data.npz"
+        data = np.load(data_file)
+        X = data["X_fit"].flatten()
+        Y = data["Y_fit"]
+        # Plot the data
+        axs[i, 0].scatter(
+            X, Y, c="green", s=1.5, alpha=0.8,
+        )
+        # Sorting is necessary to make line plots
+        sort_idx = np.argsort(X)
+        sorted_x = X[sort_idx]
+        sorted_h_star = data["h_star_fit"][sort_idx]
+        axs[i, 0].plot(
+            sorted_x,
+            sorted_h_star,
+            c="k",
+        )
+        for j, model_name in enumerate(model_name_list, start=1):
+            # Plot model estimates
+            axs[i, j].plot(
+                sorted_x,
+                sorted_h_star,
+                c="k",
+            )
+            X_test = data["X_test"].flatten()
+            sorted_idx = np.argsort(X_test)
+            sorted_x_test = X_test[sorted_idx]
+            model_file = run_dir / (model_name.lower() + ".npz")
+            h_hat_test = np.load(model_file)["h_hat_test"]
+            sorted_h_hat = h_hat_test[sorted_idx]
+            axs[i, j].plot(
+                sorted_x_test,
+                sorted_h_hat,
+                c="b",
+            )
+    cols = ["Data"] + model_name_list
+    rows = [scenario.title() for scenario in scenarios]
+    for ax, col in zip(axs[0], cols):
+        ax.set_title(col)
+    for ax, row in zip(axs[:,0], rows):
+        ax.set_ylabel(row)#, rotation=0)#, size='large')
+    fig.savefig("graph_plots.pdf")
 
 @experiment("benchmarks/", benchmark=True)
 def main():
-    eval_models_accross_scenarios()
+    # eval_models_accross_scenarios(
+    #     n_runs=2,
+    #     n_triplet_samples=500,
+    #     n_rv_samples_for_fit=300,
+    #     n_test_samples=100,
+    # )
+    plot_MSEs()
+    plot_graphs(n_runs=2)
 
 
 if __name__ == "__main__":
