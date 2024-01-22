@@ -75,7 +75,10 @@ def train_eval_store_deep_gmm(
 
     method = DeepGMM(enable_cuda=enable_cuda)
     method.fit(train_x, train_z, train_y, val_x, val_z, val_y, verbose=True)
-    h_hat_test = method.predict(test_x).detach().numpy()
+    if enable_cuda:
+        h_hat_test = method.predict(test_x).cpu().detach().numpy()
+    else:
+        h_hat_test = method.predict(test_x).detach().numpy()
     np.savez(model_file, h_hat_test=h_hat_test)
     return h_hat_test
 
