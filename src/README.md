@@ -4,13 +4,19 @@
 ## To do
 
 * Running DeepGmm:
-    * Understand what is `dev` data
+    * Understand what is `dev` data -> validation
     * Put same seed in all methods
-    * Denormalize response
 * Changes made to DeepGMM:
     * number of data points: 500 train, 500 val, 500 test
     * batch_size : 1024 -> 256 (approx half of data points)
     * removed normalization
+
+* Changes made to DeepIV:
+    * Used a context variable which is constant and equal to 0
+    * Changed the network architecture to be more simple, since we have
+      fewer samples.
+
+
 
 * Test neural networks as density estimator
 * Talk about r(Z) vs Y in section about risk measure

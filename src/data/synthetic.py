@@ -205,7 +205,7 @@ def make_deep_gmm_dataset(
         Z_tilde = Z_loop[:n_samples_tilde]
         Y_tilde = Y_loop[:n_samples_tilde]
         kiv_dataset = KIVDataset(X, Z, Y, Z_tilde, Y_tilde, "deep gmm dataset")
-        # KIV needs one dataset of (X, Y, Z) and one of (X, Z).
+        # KIV needs one dataset of (X, Y, Z) and one of (Z, Y).
         # We return the same (X, Y, Z) dataset that we use in SAGDIV
         # and return a dataset of (Z_tilde, Y_tilde) samples,
         # where the Z_tilde samples are the same we use in the SAGDIV

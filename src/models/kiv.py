@@ -14,6 +14,9 @@ from src.data.utils import KIVDataset
 from src.models.utils import ensure_two_dimensional
 
 
+logger = logging.getLogger("src.models.kiv")
+
+
 class KIV(BaseEstimator):
     def __init__(self):
         self.lenghtscale_z = None
@@ -299,10 +302,10 @@ class KIV(BaseEstimator):
                 self.find_and_set_best_regularization_weights(
                     X, Z, Y, Z_tilde, Y_tilde,
                 )
-        print(f"Best lambda: {lambda_}")
-        print(f"With loss: {lambda_loss:1.2e}")
-        print(f"Best Xi: {xi}")
-        print(f"With loss: {xi_loss:1.2e}")
+        logger.debug(f"Best lambda: {lambda_}")
+        logger.debug(f"With loss: {lambda_loss:1.2e}")
+        logger.debug(f"Best Xi: {xi}")
+        logger.debug(f"With loss: {xi_loss:1.2e}")
 
         self.find_and_set_best_lengthscales(
             X, np.concatenate([Z, Z_tilde], axis=0)

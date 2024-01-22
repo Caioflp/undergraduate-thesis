@@ -17,7 +17,7 @@ class SAGDIVDataset:
     Z: np.ndarray
     Z_loop: np.ndarray
     Y: np.ndarray
-    Y_denoised: np.ndarray
+    Y_denoised: np.ndarray = None
     name: str = None
 
 @dataclass

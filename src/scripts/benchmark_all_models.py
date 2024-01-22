@@ -17,10 +17,11 @@ from econml.iv.nnet import DeepIV
 from tensorflow import keras
 
 from src.data.synthetic import make_benchmark_dataset
-from src.models import SAGDIV, KIV
-from src.scripts.utils import experiment
+from src.data.utils import SAGDIVDataset, KIVDataset
 from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
 from src.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod as DeepGMM
+from src.models import SAGDIV, KIV
+from src.scripts.utils import experiment
 
 
 logger = logging.getLogger("src.scripts.benchmarks")
@@ -75,7 +76,29 @@ def train_eval_store_sagd_iv(
         n_rv_samples: int,
         model_file: Path,
 ):
-    pass
+    """ SAGD-IV evaluation function.
+
+        Let N denote the number of triplets (X, Y, Z) that will be used to fit r, Phi and P.
+        We want the number of Z samples used in the loop to be 2*N.
+        Hence, we have
+            n_rv_samples = 3*N + 2*N = 5*N
+        and N = n_rv_samples // 5
+
+    """
+
+    n_samples = n_rv_samples // 5
+    train_x = data["x_fit"][:n_samples] 
+    train_z = data["z_fit"][:n_samples] 
+    train_y = data["y_fit"][:n_samples] 
+    test_x = data["x_test"]
+
+    train_loop_z = data["z_fit"][n_samples:n_samples + 2*n_samples]
+
+    model = SAGDIV(lr="inv_n_samples", warm_up_duration=100, bound=10)
+    model.fit(SAGDIVDataset(train_x, train_z, train_loop_z, train_y))
+    h_hat_test = model.predict(test_x)
+    np.savez(model_file, h_hat_test=h_hat_test)
+    return h_hat_test
 
 
 def train_eval_store_deep_iv(
@@ -107,20 +130,20 @@ def train_eval_store_deep_iv(
     dim_context = train_context.shape[1]
 
     treatment_model = keras.Sequential([
-            keras.layers.Dense(128, activation='tanh', input_shape=(dim_z+dim_context,)),
-            keras.layers.Dropout(0.17),
-            keras.layers.Dense(64, activation='tanh'),
-            keras.layers.Dropout(0.17),
+            # keras.layers.Dense(64, activation='tanh', input_shape=(dim_z+dim_context,)),
+            # keras.layers.Dropout(0.17),
             keras.layers.Dense(32, activation='tanh'),
+            keras.layers.Dropout(0.17),
+            keras.layers.Dense(16, activation='tanh'),
             keras.layers.Dropout(0.17)
     ])
 
     response_model = keras.Sequential([
-            keras.layers.Dense(128, activation='relu', input_shape=(dim_x+dim_context,)),
-            keras.layers.Dropout(0.17),
-            keras.layers.Dense(64, activation='relu'),
-            keras.layers.Dropout(0.17),
+            # keras.layers.Dense(64, activation='relu', input_shape=(dim_x+dim_context,)),
+            # keras.layers.Dropout(0.17),
             keras.layers.Dense(32, activation='relu'),
+            keras.layers.Dropout(0.17),
+            keras.layers.Dense(16, activation='relu'),
             keras.layers.Dropout(0.17),
             keras.layers.Dense(1),
     ])
@@ -166,7 +189,6 @@ def train_eval_store_deep_iv(
         return m
     econml.iv.nnet._deepiv.mog_loss_model = fixed_mog_loss_model
 
-
     model.fit(Y=train_y, T=train_x, X=train_context, Z=train_z)
     test_context = np.zeros((test_x.shape[0], 1), dtype=float)
     h_hat_test = model.predict(test_x, test_context)
@@ -174,13 +196,37 @@ def train_eval_store_deep_iv(
     return h_hat_test
 
 
-
 def train_eval_store_kiv(
         data: Dict,
         n_rv_samples: int,
         model_file: Path,
 ):
-    pass
+    """ KIV evaluation function.
+
+        KIV needs one dataset of (X, Y, Z) and one of (Z, Y).
+        We make each dataset have the same amount of tuple samples, that is,
+        letting N denote that number, one dataset is comprised of N samples from the triplet
+        (X, Y, Z) and the other is comprised of N samples from the pair (Z, Y).
+        
+        So we must have
+            n_rv_samples = 3*N + 2*N = 5*N
+        and N = n_rv_samples // 5
+
+    """
+    n_samples = n_rv_samples // 5
+    train_x = data["X_fit"][:n_samples] 
+    train_z = data["Z_fit"][:n_samples] 
+    train_y = data["Y_fit"][:n_samples] 
+    train_z_tilde = data["Z_fit"][n_samples:2*n_samples]
+    train_y_tilde = data["Y_fit"][n_samples:2*n_samples]
+
+    test_x = data["X_test"]
+
+    model = KIV()
+    model.fit(KIVDataset(train_x, train_z, train_y, train_z_tilde, train_y_tilde))
+    h_hat_test = model.predict(test_x)
+    np.savez(model_file, h_hat_test=h_hat_test)
+    return h_hat_test
 
 
 def train_eval_store(model_name: str, *args):
@@ -238,7 +284,7 @@ def eval_models_accross_scenarios(
 
     """
     # model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"]
-    model_name_list = ["DeepIV"]
+    model_name_list = ["KIV"]
     model_mse_dict = {name: np.empty(n_runs, dtype=float) for name in model_name_list}
     for scenario in scenarios:
         scenario_dir = Path(scenario)

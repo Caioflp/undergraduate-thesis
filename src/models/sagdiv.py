@@ -27,7 +27,7 @@ from src.models.utils import (
 )
 
 
-logger = logging.getLogger("src.model")
+logger = logging.getLogger("src.models.sagdiv")
 
 
 class SAGDIV(BaseEstimator):
