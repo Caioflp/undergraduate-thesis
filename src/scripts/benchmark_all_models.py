@@ -65,12 +65,13 @@ def train_eval_store_deep_gmm(
     val_y = torch.as_tensor(data["Y_fit"][n_samples:2*n_samples]).double()
 
     if enable_cuda:
-        trian_x = train_x.cuda()
-        trian_z = train_z.cuda()
-        trian_y = train_y.cuda()
+        train_x = train_x.cuda()
+        train_z = train_z.cuda()
+        train_y = train_y.cuda()
         val_x = val_x.cuda()
         val_z = val_z.cuda()
         val_y = val_y.cuda()
+        test_x = test_x.cuda()
 
     method = DeepGMM(enable_cuda=enable_cuda)
     method.fit(train_x, train_z, train_y, val_x, val_z, val_y, verbose=True)
