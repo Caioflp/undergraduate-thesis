@@ -1,6 +1,6 @@
 auto_mix_prep==0.2.0
 econml==0.14.1
-keras==3.0.4
+keras==2.15.0
 matplotlib==3.8.2
 numpy==1.25.2
 pandas==2.2.0
