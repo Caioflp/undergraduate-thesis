@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from DeepGMM.model_selection.learning_eval import f_history_g_eval
+from src.DeepGMM.model_selection.learning_eval import f_history_g_eval
 
 
 class FHistoryModelSelectionV1(object):

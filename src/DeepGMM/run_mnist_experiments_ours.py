@@ -1,10 +1,10 @@
 import torch
 import numpy as np
 import os
-from DeepGMM.methods.mnist_x_model_selection_method import MNISTXModelSelectionMethod
-from DeepGMM.methods.mnist_xz_model_selection_method import MNISTXZModelSelectionMethod
-from DeepGMM.methods.mnist_z_model_selection_method import MNISTZModelSelectionMethod
-from DeepGMM.scenarios.abstract_scenario import AbstractScenario
+from src.DeepGMM.methods.mnist_x_model_selection_method import MNISTXModelSelectionMethod
+from src.DeepGMM.methods.mnist_xz_model_selection_method import MNISTXZModelSelectionMethod
+from src.DeepGMM.methods.mnist_z_model_selection_method import MNISTZModelSelectionMethod
+from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
 
 
 SCENARIOS_NAMES = ["mnist_x", "mnist_z", "mnist_xz"]

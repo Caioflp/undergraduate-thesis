@@ -3,7 +3,7 @@ import math
 import random
 import itertools
 import torch
-from DeepGMM.model_selection.abstract_learning_eval import AbstractLearningEval
+from src.DeepGMM.model_selection.abstract_learning_eval import AbstractLearningEval
 
 
 class FHistoryLearningEvalNoStop(AbstractLearningEval):

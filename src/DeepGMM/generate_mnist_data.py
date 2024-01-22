@@ -1,9 +1,9 @@
 import numpy as np
 import torch
 
-from DeepGMM.scenarios.mnist_scenarios import MNISTScenarioZ, MNISTScenarioX, \
+from src.DeepGMM.scenarios.mnist_scenarios import MNISTScenarioZ, MNISTScenarioX, \
     MNISTScenarioXZ
-from DeepGMM.scenarios.toy_scenarios import Standardizer
+from src.DeepGMM.scenarios.toy_scenarios import Standardizer
 
 
 def create_dataset(scenario_class, dir):

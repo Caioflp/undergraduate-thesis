@@ -1,4 +1,4 @@
-from scenarios.toy_scenarios import HingeLinearScenario, HeaviSideScenario, Zoo, \
+from src.DeepGMM.scenarios.toy_scenarios import HingeLinearScenario, HeaviSideScenario, Zoo, \
     Standardizer, AGMMZoo
 import numpy as np
 

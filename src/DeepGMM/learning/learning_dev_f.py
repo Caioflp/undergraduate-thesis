@@ -6,11 +6,11 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas
-from DeepGMM.game_objectives.approximate_psi_objective import approx_psi_eval
+from src.DeepGMM.game_objectives.approximate_psi_objective import approx_psi_eval
 
-from DeepGMM.learning.abstract_learning import AbstractLearning
+from src.DeepGMM.learning.abstract_learning import AbstractLearning
 # from plotting import PlotElement
-from DeepGMM.scenarios.abstract_scenario import AbstractScenario
+from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
 
 
 class LearningTracker(object):

@@ -1,10 +1,10 @@
 import torch
 import numpy as np
-from DeepGMM.baselines import all_baselines
-from DeepGMM.baselines.all_baselines import Poly2SLS, Vanilla2SLS, DirectNN, \
+from src.DeepGMM.baselines import all_baselines
+from src.DeepGMM.baselines.all_baselines import Poly2SLS, Vanilla2SLS, DirectNN, \
     DirectMNIST, GMM
 import os
-from DeepGMM.scenarios.abstract_scenario import AbstractScenario
+from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
 import tensorflow
 
 

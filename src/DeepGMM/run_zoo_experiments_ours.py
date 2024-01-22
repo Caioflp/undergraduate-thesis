@@ -1,8 +1,8 @@
 import torch
 import numpy as np
 import os
-from DeepGMM.scenarios.abstract_scenario import AbstractScenario
-from DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod
+from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
+from src.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod
 
 
 def run_experiment(scenario_name):

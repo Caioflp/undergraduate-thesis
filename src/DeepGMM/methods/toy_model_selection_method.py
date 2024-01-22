@@ -2,21 +2,21 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.optim import Adam
-from DeepGMM.game_objectives.simple_moment_objective import OptimalMomentObjective
-from DeepGMM.learning.learning_dev_f import GradientDescentLearningDevF, SGDLearningDevF
+from src.DeepGMM.game_objectives.simple_moment_objective import OptimalMomentObjective
+from src.DeepGMM.learning.learning_dev_f import GradientDescentLearningDevF, SGDLearningDevF
 
-from DeepGMM.methods.abstract_method import AbstractMethod
-from DeepGMM.model_selection.f_history_model_selection_v3 import \
+from src.DeepGMM.methods.abstract_method import AbstractMethod
+from src.DeepGMM.model_selection.f_history_model_selection_v3 import \
     FHistoryModelSelectionV3
-from DeepGMM.model_selection.learning_eval import FHistoryLearningEvalGradientDecent
-from DeepGMM.model_selection.learning_eval_nostop import \
+from src.DeepGMM.model_selection.learning_eval import FHistoryLearningEvalGradientDecent
+from src.DeepGMM.model_selection.learning_eval_nostop import \
     FHistoryLearningEvalGradientDecentNoStop, FHistoryLearningEvalNoStop, \
     FHistoryLearningEvalSGDNoStop
-from DeepGMM.model_selection.simple_model_eval import GradientDecentSimpleModelEval, \
+from src.DeepGMM.model_selection.simple_model_eval import GradientDecentSimpleModelEval, \
     SGDSimpleModelEval
-from DeepGMM.models.mlp_model import MLPModel
-from DeepGMM.optimizers import OAdam
-from DeepGMM.optimizers.optimizer_factory import OptimizerFactory
+from src.DeepGMM.models.mlp_model import MLPModel
+from src.DeepGMM.optimizers import OAdam
+from src.DeepGMM.optimizers.optimizer_factory import OptimizerFactory
 
 class ToyModelSelectionMethod(AbstractMethod):
     def __init__(self, enable_cuda=False):
