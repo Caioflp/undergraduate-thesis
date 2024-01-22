@@ -412,14 +412,14 @@ def plot_graphs(
 
 @experiment("benchmarks/", benchmark=True)
 def main():
-    # eval_models_accross_scenarios(
-    #     n_runs=2,
-    #     n_triplet_samples=500,
-    #     n_rv_samples_for_fit=300,
-    #     n_test_samples=100,
-    # )
+    eval_models_accross_scenarios(
+        n_runs=20,
+        n_triplet_samples=5000,
+        n_rv_samples_for_fit=3000,
+        n_test_samples=1000,
+    )
     plot_MSEs()
-    plot_graphs(n_runs=2)
+    plot_graphs(n_runs=20)
 
 
 if __name__ == "__main__":
