@@ -417,6 +417,7 @@ def plot_graphs(
 @experiment("benchmarks/", benchmark=True)
 def main():
     eval_models_accross_scenarios(
+        scenarios=["abs", "linear"],
         n_runs=20,
         n_triplet_samples=5000,
         n_rv_samples_for_fit=3000,
