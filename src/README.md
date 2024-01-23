@@ -16,6 +16,8 @@
     * Changed the network architecture to be more simple, since we have
       fewer samples.
 
+* Talk about the sample splitting
+
 
 
 * Test neural networks as density estimator
