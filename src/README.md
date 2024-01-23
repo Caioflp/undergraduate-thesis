@@ -1,3 +1,12 @@
+## Running the experiments:
+
+From this folder, run
+```sh
+  pip install -r requirements.txt
+  PYTHONPATH="${PYTHONPATH}:../" python scripts/benchmark_all_models.py
+```
+Results will be stored under `src/outputs/benchmarks`.
+
 ## Paper outline
 
 
@@ -15,6 +24,7 @@
     * Used a context variable which is constant and equal to 0
     * Changed the network architecture to be more simple, since we have
       fewer samples.
+    * Changed all activation functions to be tanh
 
 
 

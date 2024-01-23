@@ -153,9 +153,9 @@ def train_eval_store_deep_iv(
     response_model = keras.Sequential([
             # keras.layers.Dense(64, activation='relu', input_shape=(dim_x+dim_context,)),
             # keras.layers.Dropout(0.17),
-            keras.layers.Dense(32, activation='relu'),
+            keras.layers.Dense(32, activation='tanh'),
             keras.layers.Dropout(0.17),
-            keras.layers.Dense(16, activation='relu'),
+            keras.layers.Dense(16, activation='tanh'),
             keras.layers.Dropout(0.17),
             keras.layers.Dense(1),
     ])
