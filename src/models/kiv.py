@@ -209,7 +209,7 @@ class KIV(BaseEstimator):
         W = (
             self.kernel_x(X_train, X_train)
             @ np.linalg.solve(
-                self.kernel_x(Z_train, Z_train) + n_samples_first_stage*np.eye(n_samples_first_stage),
+                self.kernel_x(Z_train, Z_train) + n_samples_first_stage*self.lambda_*np.eye(n_samples_first_stage),
                 self.kernel_z(Z_train, Z_tilde_train)
             )
         )
