@@ -221,7 +221,7 @@ def make_benchmark_dataset(
     n_fit_samples: int = 500, 
     n_test_samples: int = 500,
     scenario: Literal["sin", "step", "abs", "linear"] = "sin",
-    seed: int = 42,
+    # seed: int = 42,
 ):
     scenario_h_star_dict = {
         "sin": np.sin,
@@ -232,7 +232,7 @@ def make_benchmark_dataset(
     assert scenario in ["sin", "step", "abs", "linear"]
     h_star = scenario_h_star_dict[scenario]
 
-    rng = np.random.default_rng(seed)
+    rng = np.random.default_rng()
 
     Z_fit = rng.uniform(low=-3, high=3, size=(n_fit_samples, 2))
     eps = rng.normal(loc=0, scale=1, size=n_fit_samples)
