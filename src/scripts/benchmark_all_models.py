@@ -179,7 +179,7 @@ def train_eval_store_deep_iv(
     
     # Monkey patching.
     # As of writing this code, this function on the econml.iv.nnet._deepiv module
-    # needs to be updated because, as it calls keras.backend.logsumexp, which no longer exists.
+    # needs to be updated because it calls keras.backend.logsumexp, which no longer exists.
     def fixed_mog_loss_model(n_components, d_t):
         pi = keras.layers.Input((n_components,))
         mu = keras.layers.Input((n_components, d_t))
