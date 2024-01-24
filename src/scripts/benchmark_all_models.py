@@ -415,7 +415,7 @@ def plot_graphs(
         ax.set_ylabel(row)#, rotation=0)#, size='large')
     fig.savefig("graph_plots.pdf")
 
-@experiment("benchmarks-/", benchmark=True)
+@experiment("benchmarks/simpler-neural-nets-architectures", benchmark=True)
 def main():
     n_runs = 20
     eval_models_accross_scenarios(
