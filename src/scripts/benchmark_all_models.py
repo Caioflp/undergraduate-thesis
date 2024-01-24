@@ -125,7 +125,7 @@ def train_eval_store_deep_iv(
 
         `context` here means DeepIV's X variable, while our X variable is DeepIV's p variable.
         DeepIV requires a context variable, but this DGP does not have one.
-        Hence, our context variable will be constant and equal to 0.
+        Hence, we will set a context variable to be constant and equal to 0.
     """
     n_samples = n_rv_samples // 3
 
@@ -155,8 +155,8 @@ def train_eval_store_deep_iv(
             # keras.layers.Dropout(0.17),
             keras.layers.Dense(32, activation='tanh'),
             keras.layers.Dropout(0.17),
-            keras.layers.Dense(16, activation='tanh'),
-            keras.layers.Dropout(0.17),
+            # keras.layers.Dense(16, activation='tanh'),
+            # keras.layers.Dropout(0.17),
             keras.layers.Dense(1),
     ])
 
@@ -360,6 +360,7 @@ def plot_graphs(
     n_models = len(model_name_list)
     # Choose a random run
     random_run = np.random.choice(n_runs)
+    # random_run = 5
 
     fig, axs = plt.subplots(
         n_scenarios,
@@ -414,17 +415,18 @@ def plot_graphs(
         ax.set_ylabel(row)#, rotation=0)#, size='large')
     fig.savefig("graph_plots.pdf")
 
-@experiment("benchmarks/", benchmark=True)
+@experiment("benchmarks-/", benchmark=True)
 def main():
+    n_runs = 20
     eval_models_accross_scenarios(
-        scenarios=["abs", "linear", "sin"],
-        n_runs=20,
+        scenarios=["step", "abs", "linear", "sin"],
+        n_runs=n_runs,
         n_triplet_samples=5000,
         n_rv_samples_for_fit=3000,
         n_test_samples=1000,
     )
     plot_MSEs()
-    plot_graphs(n_runs=20)
+    plot_graphs(n_runs=n_runs)
 
 
 if __name__ == "__main__":
