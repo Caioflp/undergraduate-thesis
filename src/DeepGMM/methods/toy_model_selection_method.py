@@ -28,9 +28,13 @@ class ToyModelSelectionMethod(AbstractMethod):
         g_models = [
             MLPModel(input_dim=1, layer_widths=[20, 3],
                      activation=nn.LeakyReLU).double(),
+            MLPModel(input_dim=1, layer_widths=[20],
+                     activation=nn.LeakyReLU).double(),
         ]
         f_models = [
             MLPModel(input_dim=2, layer_widths=[20],
+                     activation=nn.LeakyReLU).double(),
+            MLPModel(input_dim=2, layer_widths=[10],
                      activation=nn.LeakyReLU).double(),
         ]
         if torch.cuda.is_available() and enable_cuda:
