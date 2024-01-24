@@ -19,6 +19,7 @@ Results will be stored under `src/outputs/benchmarks`.
     * number of data points: 500 train, 500 val, 500 test
     * batch_size : 1024 -> 256 (approx half of data points)
     * removed normalization
+    * Sample splitting: from 50/50 train/val to 80/20 train val
 
 * Changes made to DeepIV:
     * Used a context variable which is constant and equal to 0

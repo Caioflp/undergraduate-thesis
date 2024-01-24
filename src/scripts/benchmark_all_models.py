@@ -49,20 +49,20 @@ def train_eval_store_deep_gmm(
 ):
     """ DeepGMM evaluation function.
 
-        We adopt a 50/50% train/validation split, as in the original article.
+        We adopt a 80/20% train/validation split, as opposed to the 50/50% split used in the original article
     """
     enable_cuda = torch.cuda.is_available()
-    n_samples = n_rv_samples // 3 // 2
+    n_samples = n_rv_samples // 10 // 3
 
-    train_x = torch.as_tensor(data["X_fit"][:n_samples]).double()
-    train_z = torch.as_tensor(data["Z_fit"][:n_samples]).double()
-    train_y = torch.as_tensor(data["Y_fit"][:n_samples]).double()
+    train_x = torch.as_tensor(data["X_fit"][:8*n_samples]).double()
+    train_z = torch.as_tensor(data["Z_fit"][:8*n_samples]).double()
+    train_y = torch.as_tensor(data["Y_fit"][:8*n_samples]).double()
 
     test_x = torch.as_tensor(data["X_test"]).double()
 
-    val_x = torch.as_tensor(data["X_fit"][n_samples:2*n_samples]).double()
-    val_z = torch.as_tensor(data["Z_fit"][n_samples:2*n_samples]).double()
-    val_y = torch.as_tensor(data["Y_fit"][n_samples:2*n_samples]).double()
+    val_x = torch.as_tensor(data["X_fit"][8*n_samples:10*n_samples]).double()
+    val_z = torch.as_tensor(data["Z_fit"][8*n_samples:10*n_samples]).double()
+    val_y = torch.as_tensor(data["Y_fit"][8*n_samples:10*n_samples]).double()
 
     if enable_cuda:
         train_x = train_x.cuda()
@@ -161,8 +161,8 @@ def train_eval_store_deep_iv(
     ])
 
     keras_fit_options = {
-        "epochs": 30,
-        "validation_split": 0.1,
+        "epochs": 50,
+        "validation_split": 0.2,
         "callbacks": [keras.callbacks.EarlyStopping(patience=2, restore_best_weights=True)],
     }
     model = DeepIV(
@@ -415,7 +415,7 @@ def plot_graphs(
         ax.set_ylabel(row)#, rotation=0)#, size='large')
     fig.savefig("graph_plots.pdf")
 
-@experiment("benchmarks/simpler-neural-nets-architectures", benchmark=True)
+@experiment("benchmarks-helping-deep-methods", benchmark=True)
 def main():
     n_runs = 20
     eval_models_accross_scenarios(
