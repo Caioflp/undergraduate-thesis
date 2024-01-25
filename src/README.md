@@ -20,6 +20,10 @@ Results will be stored under `src/outputs/benchmarks`.
     * batch_size : 1024 -> 256 (approx half of data points)
     * removed normalization
     * Sample splitting: from 50/50 train/val to 80/20 train val
+    * The code of the original article uses noise with 0.01 variance,
+      as opposed to the reported 0.1 variance. It happens because they
+      passed 0.1 to the `scale` parameter of the distribution, instead of
+      sqrt(0.1).
 
 * Changes made to DeepIV:
     * Used a context variable which is constant and equal to 0

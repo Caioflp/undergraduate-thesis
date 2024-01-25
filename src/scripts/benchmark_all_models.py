@@ -142,30 +142,34 @@ def train_eval_store_deep_iv(
     dim_z = train_z.shape[1]
     dim_context = train_context.shape[1]
 
+    dropout_rate = min(1000/(1000+n_samples), 0.5)
+
+    keras_fit_options = {
+        "batch_size": 100,
+        "epochs": int(1.5E6/n_samples),
+        "validation_split": 0.2,
+        "callbacks": [keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True)],
+    }
+
     treatment_model = keras.Sequential([
-            # keras.layers.Dense(64, activation='tanh', input_shape=(dim_z+dim_context,)),
-            # keras.layers.Dropout(0.17),
-            keras.layers.Dense(32, activation='tanh'),
-            keras.layers.Dropout(0.17),
-            keras.layers.Dense(16, activation='tanh'),
-            keras.layers.Dropout(0.17)
+            keras.layers.Dense(128, activation='tanh', input_shape=(dim_z+dim_context,), kernel_regularizer=tf.keras.regularizers.L2(0.001)),
+            keras.layers.Dropout(dropout_rate),
+            keras.layers.Dense(64, activation='tanh', kernel_regularizer=tf.keras.regularizers.L2(0.001), ),
+            keras.layers.Dropout(dropout_rate),
+            keras.layers.Dense(32, activation='tanh', kernel_regularizer=tf.keras.regularizers.L2(0.001),),
+            keras.layers.Dropout(dropout_rate),
     ])
 
     response_model = keras.Sequential([
-            # keras.layers.Dense(64, activation='relu', input_shape=(dim_x+dim_context,)),
-            # keras.layers.Dropout(0.17),
-            keras.layers.Dense(32, activation='tanh'),
-            keras.layers.Dropout(0.17),
-            # keras.layers.Dense(16, activation='tanh'),
-            # keras.layers.Dropout(0.17),
-            keras.layers.Dense(1),
+            keras.layers.Dense(128, activation='relu', input_shape=(dim_x+dim_context,), kernel_regularizer=tf.keras.regularizers.L2(0.001)),
+            keras.layers.Dropout(dropout_rate),
+            keras.layers.Dense(64, activation='relu', kernel_regularizer=tf.keras.regularizers.L2(0.001)),
+            keras.layers.Dropout(dropout_rate),
+            keras.layers.Dense(32, activation='relu', kernel_regularizer=tf.keras.regularizers.L2(0.001)),
+            keras.layers.Dropout(dropout_rate),
+            keras.layers.Dense(1, kernel_regularizer=tf.keras.regularizers.L2(0.001)),
     ])
 
-    keras_fit_options = {
-        "epochs": 50,
-        "validation_split": 0.2,
-        "callbacks": [keras.callbacks.EarlyStopping(patience=2, restore_best_weights=True)],
-    }
     model = DeepIV(
         n_components=10,
         m=lambda z, context : treatment_model(keras.layers.concatenate([z, context])),
