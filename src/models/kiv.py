@@ -86,19 +86,18 @@ class KIV(BaseEstimator):
         X: np.ndarray,
         Z: np.ndarray,
         Y: np.ndarray,
+        X_tilde: np.ndarray,
         Z_tilde: np.ndarray,
         Y_tilde: np.ndarray,
         n_splits: int = 5,
         weights: list = [10**(-i) for i in range(-2, 3)],
     ):
         best_lambda, best_lambda_loss = self.find_and_set_best_lambda(
-            X, Z,
-            n_splits=n_splits,
+            X, Z, X_tilde, Z_tilde,
             weights=weights,
         )
         best_xi, best_xi_loss = self.find_and_set_best_xi(
-            X, Z, Y, Z_tilde, Y_tilde,
-            n_splits=n_splits,
+            X, Z, Y, X_tilde, Z_tilde, Y_tilde,
             weights=weights,
         )
         return best_lambda, best_lambda_loss, best_xi, best_xi_loss
@@ -128,40 +127,27 @@ class KIV(BaseEstimator):
 
     def find_and_set_best_lambda(
         self,
-        X: np.ndarray,
-        Z: np.ndarray,
-        n_splits: int = 5,
+        X_train: np.ndarray,
+        Z_train: np.ndarray,
+        X_test: np.ndarray,
+        Z_test: np.ndarray,
         weights: list = [10**(-i) for i in range(-2, 3)],
         base_offset = None,
         current_iter = 0,
         max_iter = 2,
     ):
-        """
-        Train on X[train_idx] and Z[train_idx]
-        evaluate on X[test_idx] and Z[test_idx]
-
-        """
-        assert X.shape[0] == Z.shape[0]
-        Kf = KFold(n_splits=n_splits)
-        fold_losses_by_weight = {weight: np.empty(n_splits) for weight in weights}
+        assert X_train.shape[0] == Z_train.shape[0]
+        assert X_test.shape[0] == Z_test.shape[0]
+        losses_by_weight = {weight: np.inf for weight in weights}
         for weight in weights:
-            for fold, (train_idx, test_idx) in enumerate(Kf.split(Z)):
-                Z_train = Z[train_idx]
-                X_train = X[train_idx]
-                Z_test = Z[test_idx]
-                X_test = X[test_idx]
-                self.lambda_ = weight
-                loss = self.compute_loss_lambda(
-                    X_train, Z_train, X_test, Z_test
-                )
-                fold_losses_by_weight[weight][fold] = loss
-        cv_loss_by_weight = {
-            weight: np.mean(losses)
-            for weight, losses in fold_losses_by_weight.items()
-        }
-        best_weight = min(cv_loss_by_weight, key=cv_loss_by_weight.get)
+            self.lambda_ = weight
+            loss = self.compute_loss_lambda(
+                X_train, Z_train, X_test, Z_test
+            )
+            losses_by_weight[weight] = loss
+        best_weight = min(losses_by_weight, key=losses_by_weight.get)
         if current_iter == max_iter:
-            best_weight_loss = cv_loss_by_weight[best_weight]
+            best_weight_loss = losses_by_weight[best_weight]
             self.lambda_ = best_weight
             return best_weight, best_weight_loss
         elif current_iter == 0:
@@ -171,9 +157,8 @@ class KIV(BaseEstimator):
             base_offset = np.power(10, np.floor(log_10(best_weight)) - 1)
             new_weights = [best_weight + k*base_offset for k in range(-5, 6)]
             return self.find_and_set_best_lambda(
-                X,
-                Z,
-                n_splits,
+                X_train, Z_train,
+                X_test, Z_test,
                 new_weights,
                 base_offset,
                 current_iter+1,
@@ -183,9 +168,8 @@ class KIV(BaseEstimator):
             new_base_offset = base_offset / 10
             new_weights = [best_weight + k*new_base_offset for k in range(-5, 6)]
             return self.find_and_set_best_lambda(
-                X,
-                Z,
-                n_splits,
+                X_train, Z_train,
+                X_test, Z_test,
                 new_weights,
                 new_base_offset,
                 current_iter+1,
@@ -227,17 +211,14 @@ class KIV(BaseEstimator):
         X: np.ndarray,
         Z: np.ndarray,
         Y: np.ndarray,
+        X_tilde: np.ndarray,
         Z_tilde: np.ndarray,
         Y_tilde: np.ndarray,
-        n_splits: int = 5,
         weights: list = [10**(-i) for i in range(-2, 3)],
         base_offset = None,
         current_iter = 0,
         max_iter = 2,
     ):
-        """ This regularization scheme is WRONG. it evaluates the 'out of
-        sample' loss using samples seen during training.
-        """
         losses_by_weight = {weight: np.inf for weight in weights}
         for weight in weights:
             self.xi = weight
@@ -260,9 +241,9 @@ class KIV(BaseEstimator):
                 X,
                 Z,
                 Y,
+                X_tilde,
                 Z_tilde,
                 Y_tilde,
-                n_splits,
                 new_weights,
                 base_offset,
                 current_iter+1,
@@ -275,9 +256,9 @@ class KIV(BaseEstimator):
                 X,
                 Z,
                 Y,
+                X_tilde,
                 Z_tilde,
                 Y_tilde,
-                n_splits,
                 new_weights,
                 new_base_offset,
                 current_iter+1,
@@ -285,22 +266,24 @@ class KIV(BaseEstimator):
             )
 
     def fit(self, dataset: KIVDataset) -> None:
-        X, Z, Y, Z_tilde, Y_tilde = (
+        X, Z, Y, X_tilde, Z_tilde, Y_tilde = (
             dataset.X, dataset.Z, dataset.Y,
-            dataset.Z_tilde, dataset.Y_tilde,
+            dataset.X_tilde, dataset.Z_tilde, dataset.Y_tilde,
         )
-        assert X.shape[0] == Z.shape[0]
-        assert Z_tilde.shape[0] == Y_tilde.shape[0]
-        assert Z.shape[1] == Z_tilde.shape[1]
-        n = X.shape[0]
-        m = Z_tilde.shape[0]
         X = ensure_two_dimensional(X)
+        X_tilde = ensure_two_dimensional(X_tilde)
         Z = ensure_two_dimensional(Z)
         Z_tilde = ensure_two_dimensional(Z_tilde)
+        assert X.shape[0] == Z.shape[0] == Y.shape[0]
+        assert Z_tilde.shape[0] == Y_tilde.shape[0] == X_tilde.shape[0]
+        assert Z.shape[1] == Z_tilde.shape[1] 
+        assert X.shape[1] == X_tilde.shape[1]
+        n = X.shape[0]
+        m = Z_tilde.shape[0]
 
         lambda_, lambda_loss, xi, xi_loss = \
                 self.find_and_set_best_regularization_weights(
-                    X, Z, Y, Z_tilde, Y_tilde,
+                    X, Z, Y, X_tilde, Z_tilde, Y_tilde,
                 )
         logger.debug(f"Best lambda: {lambda_}")
         logger.debug(f"With loss: {lambda_loss:1.2e}")
@@ -308,7 +291,8 @@ class KIV(BaseEstimator):
         logger.debug(f"With loss: {xi_loss:1.2e}")
 
         self.find_and_set_best_lengthscales(
-            X, np.concatenate([Z, Z_tilde], axis=0)
+            np.concatenate([X, X_tilde], axis=0),
+            np.concatenate([Z, Z_tilde], axis=0)
         )
 
         self.W = self.kernel_x(X, X) @ np.linalg.solve(

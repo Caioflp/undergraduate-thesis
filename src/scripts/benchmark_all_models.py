@@ -4,6 +4,7 @@ Author: @Caioflp
 
 """
 import logging
+import os
 from pathlib import Path
 from typing import Tuple, Dict
 
@@ -216,27 +217,22 @@ def train_eval_store_kiv(
 ):
     """ KIV evaluation function.
 
-        KIV needs one dataset of (X, Y, Z) and one of (Z, Y).
-        We make each dataset have the same amount of tuple samples, that is,
-        letting N denote that number, one dataset is comprised of N samples from the triplet
-        (X, Y, Z) and the other is comprised of N samples from the pair (Z, Y).
-        
-        So we must have
-            n_rv_samples = 3*N + 2*N = 5*N
-        and N = n_rv_samples // 5
+        KIV needs two datasets of (X, Z, Y) samples for training and validation.
+        We make each dataset have the same amount of samples.
 
     """
-    n_samples = n_rv_samples // 5
+    n_samples = n_rv_samples // 3 // 2
     train_x = data["X_fit"][:n_samples] 
     train_z = data["Z_fit"][:n_samples] 
     train_y = data["Y_fit"][:n_samples] 
+    train_x_tilde = data["X_fit"][n_samples:2*n_samples]
     train_z_tilde = data["Z_fit"][n_samples:2*n_samples]
     train_y_tilde = data["Y_fit"][n_samples:2*n_samples]
 
     test_x = data["X_test"]
 
     model = KIV()
-    model.fit(KIVDataset(train_x, train_z, train_y, train_z_tilde, train_y_tilde))
+    model.fit(KIVDataset(train_x, train_z, train_y, train_x_tilde, train_z_tilde, train_y_tilde))
     h_hat_test = model.predict(test_x)
     np.savez(model_file, h_hat_test=h_hat_test)
     return h_hat_test
@@ -258,7 +254,8 @@ def eval_models_accross_scenarios(
     n_runs: int = 20,
     n_triplet_samples: int = 5000,
     n_rv_samples_for_fit: int = 3000,
-    n_test_samples: int = 1000
+    n_test_samples: int = 1000,
+    strong_instrument: bool = False,
 ):
     """ Evaluates each model `n_runs` times in each scenario.
 
@@ -283,6 +280,9 @@ def eval_models_accross_scenarios(
         Amount of random variable samples each model is allowed to use during the fitting process.
     n_test_samples: int
         Number of X samples in which the models will be evaluated.
+    strong_instrument: bool
+        Determines if X = Z_1 or X = Z_1 + Z_2, with the second option resulting in a stronger
+        instrumental variable.
 
 
     Experiment structure:
@@ -310,6 +310,7 @@ def eval_models_accross_scenarios(
                 n_triplet_samples,
                 n_test_samples,
                 scenario,
+                strong_instrument=strong_instrument,
             )
             logger.info(f"Generated {scenario.upper()} scenario benchmark data.")
             np.savez(run_dir / "data.npz", **data)
@@ -332,13 +333,17 @@ def plot_MSEs(
     scenarios: list = ["step", "sin", "abs", "linear"],
     model_name_list: list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"],
 ):
+    flierprops = dict(
+        marker='o', markersize=3,
+        linestyle='none', markeredgecolor='k',
+    )
     n_scenarios = len(scenarios)
     fig, axs = plt.subplots(1, n_scenarios, sharey=True)
     for i, scenario in enumerate(scenarios):
         scenario_dir = Path(scenario)
         mse_arrays = np.load(scenario_dir / "mse_arrays.npz")
         mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays}
-        plot = axs[i].boxplot(mse_arrays.values(), labels=mse_arrays.keys(), patch_artist=True)
+        plot = axs[i].boxplot(mse_arrays.values(), labels=mse_arrays.keys(), patch_artist=True, flierprops=flierprops)
         for patch, model_name in zip(plot['boxes'], model_name_list):
             patch.set(facecolor=COLOR_PER_MODEL[model_name])
         for line, model_name in zip(plot['medians'], model_name_list):
@@ -355,12 +360,15 @@ def plot_graphs(
     n_runs: int = 20,
     scenarios: list = ["step", "sin", "abs", "linear"],
     model_name_list: list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"],
+    linewidth: int = 1,
+    fraction_of_data_to_plot: float = 0.3,
 ):
     n_scenarios = len(scenarios)
     n_models = len(model_name_list)
     # Choose a random run
-    random_run = np.random.choice(n_runs)
-    # random_run = 5
+    # random_run = np.random.choice(n_runs)
+    random_run = 3
+    # good runs: 2
 
     fig, axs = plt.subplots(
         n_scenarios,
@@ -374,20 +382,22 @@ def plot_graphs(
         run_dir = Path(scenario + "/" + f"run_{random_run}")
         data_file = run_dir / "data.npz"
         data = np.load(data_file)
-        X = data["X_fit"].flatten()
-        Y = data["Y_fit"]
+        n_samples_plot = int(len(data["X_fit"])*fraction_of_data_to_plot)
+        X = data["X_fit"][:n_samples_plot].flatten()
+        Y = data["Y_fit"][:n_samples_plot]
         # Plot the data
         axs[i, 0].scatter(
-            X, Y, c="green", s=1.5, alpha=0.8,
+            X, Y, c="g", s=.5, alpha=0.5,
         )
         # Sorting is necessary to make line plots
         sort_idx = np.argsort(X)
         sorted_x = X[sort_idx]
-        sorted_h_star = data["h_star_fit"][sort_idx]
+        sorted_h_star = data["h_star_fit"][:n_samples_plot][sort_idx]
         axs[i, 0].plot(
             sorted_x,
             sorted_h_star,
             c="k",
+            linewidth=linewidth,
         )
         for j, model_name in enumerate(model_name_list, start=1):
             # Plot model estimates
@@ -395,6 +405,7 @@ def plot_graphs(
                 sorted_x,
                 sorted_h_star,
                 c="k",
+                linewidth=linewidth,
             )
             X_test = data["X_test"].flatten()
             sorted_idx = np.argsort(X_test)
@@ -406,6 +417,7 @@ def plot_graphs(
                 sorted_x_test,
                 sorted_h_hat,
                 c="b",
+                linewidth=linewidth,
             )
     cols = ["Data"] + model_name_list
     rows = [scenario.title() for scenario in scenarios]
@@ -415,19 +427,60 @@ def plot_graphs(
         ax.set_ylabel(row)#, rotation=0)#, size='large')
     fig.savefig("graph_plots.pdf")
 
-@experiment("benchmarks-helping-deep-methods", benchmark=True)
-def main():
+
+@experiment("benchmark-on-deepgmm-dgp", benchmark=True)
+def benchmark_on_deepgmm_dgp():
     n_runs = 20
-    eval_models_accross_scenarios(
-        scenarios=["step", "abs", "linear", "sin"],
+    model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"]
+    scenarios = ["step", "abs", "linear", "sin"]
+    eval_models_accross_scenarios( 
+        scenarios=scenarios,
+        model_name_list=model_name_list,
         n_runs=n_runs,
         n_triplet_samples=5000,
         n_rv_samples_for_fit=3000,
         n_test_samples=1000,
     )
-    plot_MSEs()
-    plot_graphs(n_runs=n_runs)
+    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
+    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
+
+
+@experiment("benchmark-with-strong-instrument", benchmark=True)
+def benchmark_with_strong_instrument():
+    n_runs = 20
+    model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"]
+    scenarios = ["step", "abs", "linear", "sin"]
+    eval_models_accross_scenarios( 
+        scenarios=scenarios,
+        model_name_list=model_name_list,
+        n_runs=n_runs,
+        n_triplet_samples=5000,
+        n_rv_samples_for_fit=3000,
+        n_test_samples=1000,
+        strong_instrument=True,
+    )
+    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
+    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
+
+
+@experiment("benchmark-deep-with-more-data", benchmark=True)
+def benchmark_deep_with_more_data():
+    n_runs = 20
+    model_name_list = ["DeepGMM", "DeepIV"]
+    scenarios = ["step", "abs", "linear", "sin"]
+    eval_models_accross_scenarios( 
+        scenarios=scenarios,
+        model_name_list=model_name_list,
+        n_runs=n_runs,
+        n_triplet_samples=15000,
+        n_rv_samples_for_fit=30000,
+        n_test_samples=1000,
+    )
+    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
+    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
 
 
 if __name__ == "__main__":
-    main()
+    benchmark_on_deepgmm_dgp()
+    benchmark_with_strong_instrument()
+    benchmark_deep_with_more_data()

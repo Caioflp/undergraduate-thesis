@@ -42,7 +42,7 @@ def experiment(path: str = None, benchmark=False) -> Callable:
     Creates a separate directory for it to be run.
 
     """
-    output_dir = Path("./outputs")
+    output_dir = Path("./outputs").resolve()
     now = datetime.now()
     if path is None:
         inner_output_dir = output_dir / now.strftime("%Y-%m-%d")
@@ -60,7 +60,9 @@ def experiment(path: str = None, benchmark=False) -> Callable:
         def wrapper(*args, **kwargs):
             os.chdir(run_dir)
             setup_logger()
-            return func(*args, **kwargs)
+            result = func(*args, **kwargs)
+            os.chdir(output_dir)
+            return result
         return wrapper
     return decorator
 

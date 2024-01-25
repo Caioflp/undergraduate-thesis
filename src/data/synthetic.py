@@ -221,7 +221,7 @@ def make_benchmark_dataset(
     n_fit_samples: int = 500, 
     n_test_samples: int = 500,
     scenario: Literal["sin", "step", "abs", "linear"] = "sin",
-    # seed: int = 42,
+    strong_instrument: bool = False,
 ):
     scenario_h_star_dict = {
         "sin": np.sin,
@@ -238,15 +238,26 @@ def make_benchmark_dataset(
     eps = rng.normal(loc=0, scale=1, size=n_fit_samples)
     gamma = rng.normal(loc=0, scale=np.sqrt(0.1), size=n_fit_samples)
     delta = rng.normal(loc=0, scale=np.sqrt(0.1), size=n_fit_samples)
-    X_fit = Z_fit[:, 0] + eps + gamma
+    if strong_instrument:
+        X_fit = Z_fit[:, 0] + Z_fit[:, 1] + eps + gamma
+    else:
+        X_fit = Z_fit[:, 0] + eps + gamma
     h_star_fit = h_star(X_fit)
     Y_fit = h_star_fit + eps + delta
 
-    X_test = (
-        rng.uniform(low=-3, high=3, size=n_test_samples)
-        + rng.normal(loc=0, scale=1, size=n_test_samples)
-        + rng.normal(loc=0, scale=np.sqrt(0.1), size=n_test_samples)
-    )
+    if strong_instrument:
+        X_test = (
+            rng.uniform(low=-3, high=3, size=n_test_samples)
+            + rng.uniform(low=-3, high=3, size=n_test_samples)
+            + rng.normal(loc=0, scale=1, size=n_test_samples)
+            + rng.normal(loc=0, scale=np.sqrt(0.1), size=n_test_samples)
+        )
+    else:
+        X_test = (
+            rng.uniform(low=-3, high=3, size=n_test_samples)
+            + rng.normal(loc=0, scale=1, size=n_test_samples)
+            + rng.normal(loc=0, scale=np.sqrt(0.1), size=n_test_samples)
+        )
     h_star_test = h_star(X_test)
 
     X_fit = X_fit.reshape(-1, 1)
