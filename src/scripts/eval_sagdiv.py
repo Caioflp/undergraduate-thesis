@@ -119,7 +119,15 @@ def main():
     # response = "case_2"
     # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
     #                               response=response)
-    model = SAGDIV(lr=lr, warm_up_duration=warm_up_duration, bound=bound, mean_regressor_yz=OperatorRegressionYZ())
+    mean_regressor_yz = DeepRegressionYZ(
+        inner_layers_sizes=[128, 64, 32],
+        activation="swish",
+        batch_size=256,
+        n_epochs=1000,
+        learning_rate=0.01,
+        weight_decay=0.01,
+    )
+    model = SAGDIV(lr=lr, warm_up_duration=warm_up_duration, bound=bound, mean_regressor_yz=mean_regressor_yz)
     model.fit(dataset)
     
     # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))

@@ -110,6 +110,8 @@ class DeepRegressionYZ(MeanRegressionYZ):
         batch_size: int = 128,
         n_epochs: int = 100,
         val_split: float = 0.1,
+        learning_rate: float = 0.001,
+        weight_decay: float = 0.001,
     ):
         self.model = MLP(
             inner_layers_sizes=inner_layers_sizes,
@@ -122,7 +124,7 @@ class DeepRegressionYZ(MeanRegressionYZ):
         else:
             self.device = torch.device("cpu")
         self.model.to(self.device)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate, weight_decay=weight_decay)
         self.batch_size = batch_size
         self.n_epochs = n_epochs
         self.val_split = val_split
@@ -151,7 +153,9 @@ class DeepRegressionYZ(MeanRegressionYZ):
         loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=self.batch_size, shuffle=True)
         loader_val = torch.utils.data.DataLoader(dataset_val, batch_size=n_val_samples, shuffle=False)
 
-        early_stopper = EarlyStopper(patience=3, min_delta=0.1)
+        early_stopper = EarlyStopper(patience=10, min_delta=0.3)
+        best_val_loss = 1E6
+        best_val_loss_weights = {}
         for epoch_index in range(self.n_epochs):
 
             # Training
@@ -168,7 +172,8 @@ class DeepRegressionYZ(MeanRegressionYZ):
                 self.optimizer.step()
 
                 running_loss += loss.item()
-                logger.info(f" Epoch {epoch_index+1},  batch {i+1}, current batch loss: {loss.item()}")
+                if (i == 0) or ((i+1) % n_batches//4) == 0:
+                    logger.info(f" Epoch {epoch_index+1},  batch {i+1}, current batch loss: {loss.item()}")
             avg_loss = running_loss / (i + 1)
 
             # Validation
@@ -180,11 +185,15 @@ class DeepRegressionYZ(MeanRegressionYZ):
                 loss = self.loss_func(outputs, labels)
                 running_loss += loss
             val_loss = running_loss / (i + 1)
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                best_val_loss_weights = self.model.state_dict()
             logger.info(f"Val loss {val_loss:1.2e}, train loss {avg_loss:1.2e}")
 
             if early_stopper.early_stop(val_loss):
                 logger.info("Stopping early.")
                 break
+        self.model.load_state_dict(best_val_loss_weights)
 
     def predict(
         self,
