@@ -4,7 +4,7 @@ from .mean_regression_yz import (
     OperatorRegressionYZ,
     LogisticRegressionYZ,
 )
-from .density_ratio import DensityRatio
+from .density_ratio import DensityRatio, KernelDensityRatio
 from .sagdiv import SAGDIV
 from .kiv import KIV
 from .utils import (

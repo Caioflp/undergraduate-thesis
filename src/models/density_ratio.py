@@ -5,6 +5,9 @@ Sugiyama et al. The basis functions are gaussian kernels.
 author: @Caioflp
 
 """
+import abc
+import logging
+
 import numpy as np
 
 from scipy.spatial import distance_matrix
@@ -12,13 +15,32 @@ from sklearn.base import BaseEstimator
 from sklearn.model_selection import KFold
 
 
+logger = logging.getLogger("src.models.density_ratio")
+
+
 class DensityRatio(BaseEstimator):
+    def __init__(self):
+        pass
+    
+    @abc.abstractmethod
+    def fit(
+        self,
+        numerator_samples: np.ndarray,
+        denominator_samples: np.ndarray,
+    ):
+        pass
+
+
+class KernelDensityRatio(DensityRatio):
     def __init__(
         self,
-        regularization: str,
+        regularization: str = "rkhs",
+        max_support_points: int = 1000,
     ):
+        super().__init__()
         self.regularization = regularization
         self.regularization_weight = 1
+        self.max_support_points = max_support_points
         self.dim = None
         self.theta = None
         self.support_points = None
@@ -68,7 +90,7 @@ class DensityRatio(BaseEstimator):
         self,
         numerator_samples: np.ndarray,
         denominator_samples: np.ndarray,
-        max_support_points: int = 500,
+        find_regularization_weight = True,
     ):
         """Fits estimator to provided samples.
 
@@ -112,6 +134,19 @@ class DensityRatio(BaseEstimator):
 
         assert self.regularization in ["l2", "rkhs"], "Unknown regularization"
 
+        if find_regularization_weight:
+            best_weight_density_ratio, best_loss_density_ratio = \
+                    self.find_best_regularization_weight(
+                        numerator_samples,
+                        denominator_samples,
+                        weights=[10**k for k in range(-3, 3)],
+                        max_iter=3,
+                    )
+            logger.debug(
+                f"Best density ratio loss: {best_loss_density_ratio}, " +
+                f"with weight {best_weight_density_ratio}"
+            )
+
         median = np.quantile(
             np.ravel(distance_matrix(numerator_samples, numerator_samples)),
             .5
@@ -119,8 +154,8 @@ class DensityRatio(BaseEstimator):
         self.lengthscale = 1 / median**2
 
         n_samples, self.dim = numerator_samples.shape
-        if max_support_points <= n_samples:
-            self.support_points = numerator_samples[:max_support_points]
+        if self.max_support_points <= n_samples:
+            self.support_points = numerator_samples[:self.max_support_points]
         else:
             self.support_points = numerator_samples
         n_support_points = self.support_points.shape[0]
@@ -179,7 +214,7 @@ class DensityRatio(BaseEstimator):
                 numerator_test = numerator_samples[test_idx]
                 denominator_test = denominator_samples[test_idx]
                 self.regularization_weight = weight
-                self.fit(numerator_train, denominator_train)
+                self.fit(numerator_train, denominator_train, find_regularization_weight=False)
                 loss = self.compute_loss(numerator_test, denominator_test)
                 fold_losses_by_weight[weight][fold] = loss
         cv_loss_by_weight = {
@@ -216,5 +251,11 @@ class DensityRatio(BaseEstimator):
                 current_iter+1,
                 max_iter,
             )
+
+class DeepDensityRatio(DensityRatio):
+    def __init__(
+        self,
+    ):
+        super().__init__()
 
 

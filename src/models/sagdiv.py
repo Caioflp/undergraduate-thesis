@@ -15,6 +15,7 @@ from tqdm import tqdm
 from src.data.utils import SAGDIVDataset
 from src.models import (
     DensityRatio,
+    KernelDensityRatio,
     ConditionalMeanOperator,
     MeanRegressionYZ,
     OperatorRegressionYZ,
@@ -39,6 +40,7 @@ class SAGDIV(BaseEstimator):
         lr: Union[Literal["inv_sqrt", "inv_n_samples"], float] = "inv_n_samples",
         loss: Loss = QuadraticLoss(),
         mean_regressor_yz: MeanRegressionYZ = OperatorRegressionYZ(),
+        density_ratio_model: DensityRatio = KernelDensityRatio(regularization="rkhs"),
         initial_value: float = 0,
         warm_up_duration: int = 100,
         bound: float = 10,
@@ -47,6 +49,7 @@ class SAGDIV(BaseEstimator):
         self.lr = lr
         self.loss = loss
         self.mean_regressor_yz = mean_regressor_yz
+        self.density_ratio_model = density_ratio_model
         self.initial_value = initial_value
         self.warm_up_duration = warm_up_duration
         self.bound = bound
@@ -54,9 +57,7 @@ class SAGDIV(BaseEstimator):
         self.is_fitted = False
         self.fit_dataset_name = None
         self.lr_func = None
-        self.density_ratio_model = None
         self.conditional_mean_model_xz = None
-        # self.conditional_mean_model_yz = None
         self.loss_derivative_array = None
         self.sequence_of_estimates = None
         self.Z_loop = None
@@ -70,25 +71,9 @@ class SAGDIV(BaseEstimator):
 
         """
         start = time()
-        self.density_ratio_model = DensityRatio(regularization="rkhs")
         joint_samples = np.concatenate([X, Z], axis=1)
         independent_samples = np.concatenate([X, np.roll(Z, 2, axis=0)], axis=1)
-        best_weight_density_ratio, best_loss_density_ratio = \
-                self.density_ratio_model.find_best_regularization_weight(
-                    joint_samples,
-                    independent_samples,
-                    weights=[10**k for k in range(-3, 3)],
-                    max_iter=3,
-                )
-        logger.debug(
-            f"Best density ratio loss: {best_loss_density_ratio}, " +
-            f"with weight {best_weight_density_ratio}"
-        )
-        self.density_ratio_model.fit(
-            joint_samples,
-            independent_samples,
-            max_support_points=1000,
-            )
+        self.density_ratio_model.fit(joint_samples, independent_samples)
         end = time()
         logger.info("Density ratio model fitted.")
         logger.debug(f"Time to fit density ratio model: {end-start:1.2e}s")
@@ -292,9 +277,6 @@ class SAGDIV(BaseEstimator):
         # Save Z_loop values for predict method
         self.Z_loop = Z_loop
         self.is_fitted = True
-        logger.debug(f"Z_loop shape: {Z_loop.shape}")
-        logger.debug(f"self.Z_loop shape: {self.Z_loop.shape}")
-
         fit_end = time()
         logger.debug(f"Time spent fitting SAGD-IV model: {fit_end-fit_start:1.2e}s")
 

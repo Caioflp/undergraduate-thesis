@@ -260,6 +260,7 @@ def eval_models_accross_scenarios(
     n_rv_samples_for_fit: int = 3000,
     n_test_samples: int = 1000,
     strong_instrument: bool = False,
+    generate_new_data: bool = True,
 ):
     """ Evaluates each model `n_runs` times in each scenario.
 
@@ -310,14 +311,18 @@ def eval_models_accross_scenarios(
             logger.info(f"Starting run number {run_number}")
             run_dir = scenario_dir / ("run_" + str(run_number))
             run_dir.mkdir(exist_ok=True)
-            data = make_benchmark_dataset(
-                n_triplet_samples,
-                n_test_samples,
-                scenario,
-                strong_instrument=strong_instrument,
-            )
-            logger.info(f"Generated {scenario.upper()} scenario benchmark data.")
-            np.savez(run_dir / "data.npz", **data)
+            if generate_new_data:
+                data = make_benchmark_dataset(
+                    n_triplet_samples,
+                    n_test_samples,
+                    scenario,
+                    strong_instrument=strong_instrument,
+                )
+                logger.info(f"Generated {scenario.upper()} scenario benchmark data.")
+                np.savez(run_dir / "data.npz", **data)
+            else:
+                data = np.load(run_dir / "data.npz")
+                logger.info(f"Loaded {scenario.upper()} scenario existing benchmark data.")
             for model_name in model_name_list:
                 model_file = run_dir / (model_name.lower() + ".npz")
                 h_hat = train_eval_store(model_name, data, n_rv_samples_for_fit, model_file)
@@ -370,8 +375,8 @@ def plot_graphs(
     n_scenarios = len(scenarios)
     n_models = len(model_name_list)
     # Choose a random run
-    # random_run = np.random.choice(n_runs)
-    random_run = 3
+    random_run = np.random.choice(n_runs)
+    # random_run = 3
     # good runs: 2
 
     fig, axs = plt.subplots(
@@ -432,6 +437,23 @@ def plot_graphs(
     fig.savefig("graph_plots.pdf")
 
 
+@experiment("verify-sagdiv")
+def verify_sagdiv():
+    n_runs = 1
+    model_name_list = ["SAGD-IV"]
+    scenarios = ["step", "abs", "linear", "sin"]
+    eval_models_accross_scenarios( 
+        scenarios=scenarios,
+        model_name_list=model_name_list,
+        n_runs=n_runs,
+        n_triplet_samples=5000,
+        n_rv_samples_for_fit=3000,
+        n_test_samples=1000,
+    )
+    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
+    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
+
+
 @experiment("benchmark-on-deepgmm-dgp", benchmark=True)
 def benchmark_on_deepgmm_dgp():
     n_runs = 20
@@ -485,6 +507,7 @@ def benchmark_deep_with_more_data():
 
 
 if __name__ == "__main__":
-    benchmark_on_deepgmm_dgp()
-    benchmark_with_strong_instrument()
-    benchmark_deep_with_more_data()
+    # benchmark_on_deepgmm_dgp()
+    # benchmark_with_strong_instrument()
+    # benchmark_deep_with_more_data()
+    verify_sagdiv()
