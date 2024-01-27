@@ -15,7 +15,13 @@ from src.data.synthetic import (
     make_poster_dataset,
     make_deep_gmm_dataset,
 )
-from src.models import SAGDIV, DeepRegressionYZ, OperatorRegressionYZ
+from src.models import (
+    SAGDIV,
+    DeepRegressionYZ,
+    OperatorRegressionYZ,
+    DeepDensityRatio,
+    EarlyStopper
+)
 from src.scripts.utils import experiment, setup_logger
 
 
@@ -93,7 +99,7 @@ def plot_estimate(
 
 
 # @experiment("new_version/sandbox")
-@experiment("eval-deep-YZ")
+@experiment("eval-deep-density-ratio")
 def main():
     response = "abs"
     n_samples = 600
@@ -120,14 +126,32 @@ def main():
     # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
     #                               response=response)
     mean_regressor_yz = DeepRegressionYZ(
-        inner_layers_sizes=[128, 64, 32],
-        activation="swish",
-        batch_size=256,
-        n_epochs=1000,
+        inner_layers_sizes=[64, 32],
+        activation="relu",
+        batch_size=512,
+        n_epochs=int(1.5*1E5/n_samples),
         learning_rate=0.01,
-        weight_decay=0.01,
+        weight_decay=0.003,
+        dropout_rate=0,
+        early_stopper=EarlyStopper(patience=10, min_delta=0.3),
     )
-    model = SAGDIV(lr=lr, warm_up_duration=warm_up_duration, bound=bound, mean_regressor_yz=mean_regressor_yz)
+    density_ratio_model = DeepDensityRatio(
+        inner_layers_sizes=[64, 32],
+        activation="relu",
+        batch_size=512,
+        n_epochs=int(1E5/n_samples),
+        learning_rate=0.01,
+        weight_decay=0.005,
+        dropout_rate=0.01,
+        early_stopper=EarlyStopper(patience=10, min_delta=0.5),
+    )
+    model = SAGDIV(
+        lr=lr,
+        warm_up_duration=warm_up_duration,
+        bound=bound,
+        mean_regressor_yz=mean_regressor_yz,
+        density_ratio_model=density_ratio_model,
+    )
     model.fit(dataset)
     
     # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))

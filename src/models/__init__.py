@@ -6,7 +6,7 @@ from .mean_regression_yz import (
     LogisticRegressionYZ,
     DeepRegressionYZ,
 )
-from .density_ratio import DensityRatio, KernelDensityRatio
+from .density_ratio import DensityRatio, KernelDensityRatio, DeepDensityRatio
 from .sagdiv import SAGDIV
 from .kiv import KIV
 from .utils import (

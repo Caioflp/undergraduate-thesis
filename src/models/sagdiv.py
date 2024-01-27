@@ -130,6 +130,10 @@ class SAGDIV(BaseEstimator):
 
         """
         self.conditional_mean_model_xz = ConditionalMeanOperator()
+        n_samples = X.shape[0]
+        # maximum iteration for regularization scheme
+        log_10 = lambda x: np.log(x)/np.log(10)
+        max_iter = max(1, 4 - np.floor(log_10(n_samples)))
         best_weight_xz, best_loss_xz = \
                 self.conditional_mean_model_xz.find_best_regularization_weight(Z, X)
         logger.debug(

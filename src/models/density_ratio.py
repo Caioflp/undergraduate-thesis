@@ -7,12 +7,16 @@ author: @Caioflp
 """
 import abc
 import logging
+from typing import List
 
 import numpy as np
-
+import torch
 from scipy.spatial import distance_matrix
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import KFold
+
+from src.models import MLP
+from src.models.utils import ensure_two_dimensional, EarlyStopper
 
 
 logger = logging.getLogger("src.models.density_ratio")
@@ -255,7 +259,118 @@ class KernelDensityRatio(DensityRatio):
 class DeepDensityRatio(DensityRatio):
     def __init__(
         self,
+        inner_layers_sizes: List = [16],
+        activation: str = "tanh",
+        batch_size: int = 128,
+        n_epochs: int = 100,
+        val_split: float = 0.1,
+        learning_rate: float = 0.001,
+        weight_decay: float = 0.001,
+        dropout_rate: float = 0.2,
+        early_stopper: EarlyStopper = EarlyStopper()
     ):
         super().__init__()
+        self.model = MLP(
+            inner_layers_sizes=inner_layers_sizes,
+            activation=activation,
+            droput_rate=dropout_rate,
+        )
+        if torch.cuda.is_available():
+            self.device = torch.device("cuda")
+        elif torch.backends.mps.is_available():
+            self.device = torch.device("mps")
+        else:
+            self.device = torch.device("cpu")
+        self.model.to(self.device)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+        self.batch_size = batch_size
+        self.n_epochs = n_epochs
+        self.val_split = val_split
+        self.early_stopper = early_stopper
 
+    def compute_loss(
+        self,
+        output_on_numerator_samples: torch.Tensor,
+        output_on_denominator_samples: torch.Tensor,
+    ):
+        loss = (
+            0.5*output_on_denominator_samples.square().mean()
+            - output_on_numerator_samples.mean()
+        )
+        return loss
 
+    def fit(
+        self,
+        numerator_samples: np.ndarray,
+        denominator_samples: np.ndarray,
+    ):
+        numerator_samples = ensure_two_dimensional(numerator_samples)
+        denominator_samples = ensure_two_dimensional(denominator_samples)
+        numerator_samples = torch.from_numpy(numerator_samples).to(self.device, dtype=torch.float32)
+        denominator_samples = torch.from_numpy(denominator_samples).to(self.device, dtype=torch.float32)
+        n_samples = numerator_samples.shape[0]
+        n_val_samples = int(n_samples*self.val_split)
+        n_train_samples = n_samples - n_val_samples
+        n_batches = n_train_samples // self.batch_size
+        numerator_samples_val = numerator_samples[:n_val_samples]
+        denominator_samples_val = denominator_samples[:n_val_samples]
+        numerator_samples_train = numerator_samples[n_val_samples:]
+        denominator_samples_train = denominator_samples[n_val_samples:]
+        dataset_train = torch.utils.data.TensorDataset(numerator_samples_train, denominator_samples_train)
+        dataset_val = torch.utils.data.TensorDataset(numerator_samples_val, denominator_samples_val)
+        loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=self.batch_size, shuffle=True)
+        loader_val = torch.utils.data.DataLoader(dataset_val, batch_size=n_val_samples, shuffle=False)
+
+        best_val_loss = 1E6
+        best_val_loss_weights = {}
+        for epoch_index in range(self.n_epochs):
+
+            # Training
+            self.model.train(True)
+            running_loss = 0
+            for i, data in enumerate(loader_train):
+                batch_numerator_samples, batch_denominator_samples = data
+                self.optimizer.zero_grad()
+
+                outputs_numerator = self.model(batch_numerator_samples)
+                outputs_denominator = self.model(batch_denominator_samples)
+                loss = self.compute_loss(outputs_numerator, outputs_denominator)
+                loss.backward()
+
+                self.optimizer.step()
+
+                running_loss += loss.item()
+                if (i == 0) or ((i+1) % n_batches//4) == 0:
+                    logger.info(f" Epoch {epoch_index+1},  batch {i+1}, current batch loss: {loss.item()}")
+            avg_loss = running_loss / (i + 1)
+
+            # Validation
+            self.model.eval()
+            running_loss = 0
+            for i, data in enumerate(loader_val):
+                batch_numerator_samples, batch_denominator_samples = data
+                outputs_numerator = self.model(batch_numerator_samples)
+                outputs_denominator = self.model(batch_denominator_samples)
+                loss = self.compute_loss(outputs_numerator, outputs_denominator)
+                running_loss += loss
+            val_loss = running_loss / (i + 1)
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                best_val_loss_weights = self.model.state_dict()
+            logger.info(f"Val loss {val_loss:1.2e}, train loss {avg_loss:1.2e}")
+
+            if self.early_stopper.early_stop(val_loss):
+                logger.info("Stopping early.")
+                break
+        logger.info(f"Fitted density ratio model. Best val loss: {best_val_loss:1.2e}")
+        self.model.load_state_dict(best_val_loss_weights)
+
+    def predict(
+        self,
+        inputs: np.ndarray,
+    ) -> np.ndarray:
+        inputs = torch.from_numpy(inputs).to(self.device, dtype=torch.float32)
+        output = self.model(inputs).cpu().detach().numpy().ravel()
+        if inputs.ndim == 1:
+            output = output[0]
+        return output

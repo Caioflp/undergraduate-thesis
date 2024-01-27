@@ -112,10 +112,13 @@ class DeepRegressionYZ(MeanRegressionYZ):
         val_split: float = 0.1,
         learning_rate: float = 0.001,
         weight_decay: float = 0.001,
+        dropout_rate: float = 0.2,
+        early_stopper: EarlyStopper = EarlyStopper(),
     ):
         self.model = MLP(
             inner_layers_sizes=inner_layers_sizes,
             activation=activation,
+            droput_rate=dropout_rate,
         )
         if torch.cuda.is_available():
             self.device = torch.device("cuda")
@@ -129,6 +132,7 @@ class DeepRegressionYZ(MeanRegressionYZ):
         self.n_epochs = n_epochs
         self.val_split = val_split
         self.loss_func = nn.MSELoss()
+        self.early_stopper = early_stopper
 
 
     def fit(
@@ -153,7 +157,6 @@ class DeepRegressionYZ(MeanRegressionYZ):
         loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=self.batch_size, shuffle=True)
         loader_val = torch.utils.data.DataLoader(dataset_val, batch_size=n_val_samples, shuffle=False)
 
-        early_stopper = EarlyStopper(patience=10, min_delta=0.3)
         best_val_loss = 1E6
         best_val_loss_weights = {}
         for epoch_index in range(self.n_epochs):
@@ -190,9 +193,10 @@ class DeepRegressionYZ(MeanRegressionYZ):
                 best_val_loss_weights = self.model.state_dict()
             logger.info(f"Val loss {val_loss:1.2e}, train loss {avg_loss:1.2e}")
 
-            if early_stopper.early_stop(val_loss):
+            if self.early_stopper.early_stop(val_loss):
                 logger.info("Stopping early.")
                 break
+        logger.info(f"Fitted Y given Z regression. Best val loss: {best_val_loss:1.2e}")
         self.model.load_state_dict(best_val_loss_weights)
 
     def predict(
@@ -203,7 +207,7 @@ class DeepRegressionYZ(MeanRegressionYZ):
         for_loop: bool = False,
     ) -> np.ndarray:
         z = torch.from_numpy(z).to(self.device, dtype=torch.float32)
-        output = self.model(z).cpu().detach().numpy()
+        output = self.model(z).cpu().detach().numpy().ravel()
         if z.ndim == 1:
             output = output[0]
         return output
