@@ -3,6 +3,7 @@
 Author: @Caioflp
 
 """
+import logging
 import abc
 from dataclasses import dataclass
 
@@ -11,92 +12,95 @@ from sklearn.neighbors import KNeighborsRegressor as KNN
 from sklearn.neighbors import KernelDensity as KDE
 
 
-class Domain:
-    def __init__(
-        self,
-        observed_points: np.ndarray,
-        grid_points: np.ndarray
-    ) -> None:
-        assert len(observed_points.shape) == len(grid_points.shape) == 2
-        assert observed_points.shape[1] == grid_points.shape[1]
-        self.spliting_index = observed_points.shape[0]
-        self._all_points = np.concatenate(
-            (observed_points, grid_points),
-            axis=0
-        )
-
-    @property
-    def all_points(self):
-        return self._all_points
-
-    @property
-    def observed_points(self):
-        return self._all_points[:self.spliting_index]
-
-    @property
-    def grid_points(self):
-        return self._all_points[self.spliting_index:]
+logger = logging.getLogger("src.models.utils")
 
 
-class Estimates:
-    """Holds sequence of estimates evaluated on grid points and on observed
-    points.
-
-    """
-    def __init__(
-        self,
-        n_estimates: int,
-        n_observed_points: int,
-        n_grid_points: int,
-    ) -> None:
-        self.n_estimates = n_estimates
-        self.n_observed_points = n_observed_points
-        self.n_grid_points = n_grid_points
-
-        # Observed points come first!
-        self.spliting_index = self.n_observed_points
-        self._estimates = np.empty(
-            (n_estimates, n_observed_points + n_grid_points),
-            dtype=np.float64
-        )
-
-    @property
-    def on_all_points(self) -> np.ndarray:
-        return self._estimates
-
-    @property
-    def on_observed_points(self) -> np.ndarray:
-        return self._estimates[:, :self.spliting_index]
-
-    @property
-    def on_grid_points(self) -> np.ndarray:
-        return self._estimates[:, self.spliting_index:]
-
-
-class FinalEstimate:
-    def __init__(
-        self,
-        on_observed_points: np.ndarray,
-        on_grid_points: np.ndarray,
-    ) -> None:
-        assert len(on_observed_points.shape) == len(on_grid_points.shape) == 1
-        self.spliting_index = on_observed_points.shape[0]
-        self._estimate = np.concatenate(
-            (on_observed_points, on_grid_points),
-        )
-
-    @property
-    def on_observed_points(self):
-        return self._estimate[:self.spliting_index]
-    
-    @property
-    def on_grid_points(self):
-        return self._estimate[self.spliting_index:]
-    
-    @property
-    def on_all_points(self):
-        return self._estimate
-
+# class Domain:
+#     def __init__(
+#         self,
+#         observed_points: np.ndarray,
+#         grid_points: np.ndarray
+#     ) -> None:
+#         assert len(observed_points.shape) == len(grid_points.shape) == 2
+#         assert observed_points.shape[1] == grid_points.shape[1]
+#         self.spliting_index = observed_points.shape[0]
+#         self._all_points = np.concatenate(
+#             (observed_points, grid_points),
+#             axis=0
+#         )
+# 
+#     @property
+#     def all_points(self):
+#         return self._all_points
+# 
+#     @property
+#     def observed_points(self):
+#         return self._all_points[:self.spliting_index]
+# 
+#     @property
+#     def grid_points(self):
+#         return self._all_points[self.spliting_index:]
+# 
+# 
+# class Estimates:
+#     """Holds sequence of estimates evaluated on grid points and on observed
+#     points.
+# 
+#     """
+#     def __init__(
+#         self,
+#         n_estimates: int,
+#         n_observed_points: int,
+#         n_grid_points: int,
+#     ) -> None:
+#         self.n_estimates = n_estimates
+#         self.n_observed_points = n_observed_points
+#         self.n_grid_points = n_grid_points
+# 
+#         # Observed points come first!
+#         self.spliting_index = self.n_observed_points
+#         self._estimates = np.empty(
+#             (n_estimates, n_observed_points + n_grid_points),
+#             dtype=np.float64
+#         )
+# 
+#     @property
+#     def on_all_points(self) -> np.ndarray:
+#         return self._estimates
+# 
+#     @property
+#     def on_observed_points(self) -> np.ndarray:
+#         return self._estimates[:, :self.spliting_index]
+# 
+#     @property
+#     def on_grid_points(self) -> np.ndarray:
+#         return self._estimates[:, self.spliting_index:]
+# 
+# 
+# class FinalEstimate:
+#     def __init__(
+#         self,
+#         on_observed_points: np.ndarray,
+#         on_grid_points: np.ndarray,
+#     ) -> None:
+#         assert len(on_observed_points.shape) == len(on_grid_points.shape) == 1
+#         self.spliting_index = on_observed_points.shape[0]
+#         self._estimate = np.concatenate(
+#             (on_observed_points, on_grid_points),
+#         )
+# 
+#     @property
+#     def on_observed_points(self):
+#         return self._estimate[:self.spliting_index]
+#     
+#     @property
+#     def on_grid_points(self):
+#         return self._estimate[self.spliting_index:]
+#     
+#     @property
+#     def on_all_points(self):
+#         return self._estimate
+# 
 
 class Loss(abc.ABC):
     """ Base class for pointwise loss function.
@@ -278,6 +282,23 @@ def distance_squared_matrix(X: np.ndarray, Y: np.ndarray):
     X_i_dot_Y_j = X@Y.T
     return (X_i_squared + Y_j_squared) - 2*X_i_dot_Y_j
 
+
+class EarlyStopper:
+    def __init__(self, patience=1, min_delta=0):
+        self.patience = patience
+        self.min_delta = min_delta
+        self.counter = 0
+        self.min_validation_loss = float('inf')
+
+    def early_stop(self, validation_loss):
+        if validation_loss < self.min_validation_loss:
+            self.min_validation_loss = validation_loss
+            self.counter = 0
+        elif validation_loss > (self.min_validation_loss + self.min_delta):
+            self.counter += 1
+            if self.counter >= self.patience:
+                return True
+        return False
 
 
 if __name__ == "__main__":

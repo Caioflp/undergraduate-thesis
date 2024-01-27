@@ -132,7 +132,8 @@ class ConditionalMeanOperator(BaseEstimator):
         """
         assert len(f_samples.shape) == 1
         assert f_samples.size == self.n_samples
-        return self.loop_weights[:, it] @ f_samples
+        output = self.loop_weights[:, it] @ f_samples
+        return output
 
     def predict(self, f_samples: np.ndarray, z: np.ndarray):
         assert len(z.shape) == 2

@@ -15,7 +15,7 @@ from src.data.synthetic import (
     make_poster_dataset,
     make_deep_gmm_dataset,
 )
-from src.models import SAGDIV
+from src.models import SAGDIV, DeepRegressionYZ, OperatorRegressionYZ
 from src.scripts.utils import experiment, setup_logger
 
 
@@ -93,7 +93,7 @@ def plot_estimate(
 
 
 # @experiment("new_version/sandbox")
-@experiment("eval")
+@experiment("eval-deep-YZ")
 def main():
     response = "abs"
     n_samples = 600
@@ -119,7 +119,7 @@ def main():
     # response = "case_2"
     # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
     #                               response=response)
-    model = SAGDIV(lr=lr, warm_up_duration=warm_up_duration, bound=bound)
+    model = SAGDIV(lr=lr, warm_up_duration=warm_up_duration, bound=bound, mean_regressor_yz=OperatorRegressionYZ())
     model.fit(dataset)
     
     # plt.hist(np.max(model.sequence_of_estimates.on_all_points, axis=0))
