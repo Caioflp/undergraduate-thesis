@@ -2,7 +2,7 @@
 """
 import abc
 import logging
-from typing import List
+from typing import List, Callable
 
 import numpy as np
 import torch
@@ -113,12 +113,15 @@ class DeepRegressionYZ(MeanRegressionYZ):
         learning_rate: float = 0.001,
         weight_decay: float = 0.001,
         dropout_rate: float = 0.2,
+        activate_last_layer: bool = False,
         early_stopper: EarlyStopper = EarlyStopper(),
+        loss_func: Callable = nn.MSELoss(),
     ):
         self.model = MLP(
             inner_layers_sizes=inner_layers_sizes,
             activation=activation,
             droput_rate=dropout_rate,
+            activate_last_layer=activate_last_layer,
         )
         if torch.cuda.is_available():
             self.device = torch.device("cuda")

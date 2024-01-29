@@ -9,12 +9,13 @@ from typing import Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+import torch
 
 from src.data import SAGDIVDataset
 from src.data.synthetic import make_binary_response_dataset
-from src.models import LogisticRegressionYZ
+from src.models import LogisticRegressionYZ, DeepRegressionYZ, DeepDensityRatio
 from src.models import SAGDIV
-from src.models.utils import BCELogisticLoss, QuadraticLoss
+from src.models.utils import BCELogisticLoss, QuadraticLoss, EarlyStopper
 from src.scripts.utils import experiment, setup_logger
 
 
@@ -94,11 +95,11 @@ def plot_estimate(
 # @experiment("new_version/sandbox")
 @experiment("binary_response")
 def main():
-    response = "linear"
+    response = "sin"
     scale = np.sqrt(0.1)
     n_samples = 600
     n_samples_only_z = 1200
-    lr = 0.1
+    lr = "inv_n_samples"
     initial_value = 0
     warm_up_duration = 100
     bound = 10
@@ -123,10 +124,33 @@ def main():
     # response = "case_2"
     # dataset = make_poster_dataset(n_samples=600, n_samples_only_z=2000,
     #                               response=response)
+    mean_regressor_yz = DeepRegressionYZ(
+        inner_layers_sizes=[64, 32],
+        activation="sigmoid",
+        batch_size=128,
+        n_epochs=int(1.5*1E5/n_samples),
+        learning_rate=0.01,
+        weight_decay=0.001,
+        dropout_rate=0,
+        early_stopper=EarlyStopper(patience=10, min_delta=0.3),
+        loss_func=torch.nn.BCELoss(),
+        activate_last_layer=True,
+    )
+    density_ratio_model = DeepDensityRatio(
+        inner_layers_sizes=[64, 32],
+        activation="relu",
+        batch_size=128,
+        n_epochs=int(1E5/n_samples),
+        learning_rate=0.01,
+        weight_decay=0.001,
+        dropout_rate=0.01,
+        early_stopper=EarlyStopper(patience=10, min_delta=0.5),
+    )
     model = SAGDIV(
         lr=lr,
         loss=BCELogisticLoss(scale=scale),
-        mean_regressor_yz=LogisticRegressionYZ(),
+        mean_regressor_yz=mean_regressor_yz,
+        # density_ratio_model=density_ratio_model,
         initial_value=initial_value,
         warm_up_duration=warm_up_duration,
         bound=bound,

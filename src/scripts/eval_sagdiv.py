@@ -102,8 +102,8 @@ def plot_estimate(
 @experiment("eval-deep-density-ratio")
 def main():
     response = "abs"
-    n_samples = 600
-    n_samples_only_z = 1200
+    n_samples = 6000
+    n_samples_only_z = 12000
     lr = "inv_n_samples"
     warm_up_duration = 100
     bound = 10

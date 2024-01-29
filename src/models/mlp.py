@@ -15,13 +15,15 @@ class MLP(nn.Module):
         inner_layers_sizes: List,
         activation: str = "tanh",
         droput_rate: float = 0.17,
+        activate_last_layer: bool = False,
     ):
         super().__init__()
-        assert activation in ["tanh", "relu", "swish"]
+        assert activation in ["tanh", "relu", "swish", "sigmoid"]
         activation_dict = {
             "tanh": nn.Tanh,
             "relu": nn.ReLU,
             "swish": nn.SiLU,
+            "sigmoid": nn.Sigmoid,
         }
         self.activation_factory = activation_dict[activation]
         self.dropout_rate = droput_rate
@@ -31,6 +33,8 @@ class MLP(nn.Module):
             self.layers.append(self.activation_factory())
             self.layers.append(nn.Dropout(self.dropout_rate))
         self.layers.append(nn.LazyLinear(1))
+        if activate_last_layer:
+            self.layers.append(self.activation_factory())
 
     def forward(self, x: torch.Tensor):
         for layer in self.layers:

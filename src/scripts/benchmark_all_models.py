@@ -21,7 +21,9 @@ from src.data.synthetic import make_benchmark_dataset
 from src.data.utils import SAGDIVDataset, KIVDataset
 from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
 from src.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod as DeepGMM
-from src.models import SAGDIV, KIV
+from src.models import (
+    SAGDIV, KIV, DeepDensityRatio, DeepRegressionYZ, EarlyStopper
+)
 from src.scripts.utils import experiment
 
 
@@ -30,7 +32,9 @@ COLOR_PER_MODEL = {
     "DeepGMM": "pink",
     "KIV": "orange",
     "DeepIV": "violet",
-    "SAGD-IV": "lightblue",
+    # "SAGD-IV": "lightblue",
+    "Kernel SAGD-IV": "darkcyan",
+    "Deep SAGD-IV": "dodgerblue",
 }
 
 
@@ -84,12 +88,12 @@ def train_eval_store_deep_gmm(
     return h_hat_test
 
 
-def train_eval_store_sagd_iv(
+def train_eval_store_kernel_sagd_iv(
         data: Dict,
         n_rv_samples: int,
         model_file: Path,
 ):
-    """ SAGD-IV evaluation function.
+    """ SAGD-IV using kernel algorithms for \hat{Phi} and \hat{r} evaluation function.
 
         Let N denote the number of triplets (X, Y, Z) that will be used to fit r, Phi and P.
         We want the number of Z samples used in the loop to be 2*N.
@@ -108,6 +112,62 @@ def train_eval_store_sagd_iv(
     train_loop_z = data["Z_fit"][n_samples:n_samples + 2*n_samples]
 
     model = SAGDIV(lr="inv_n_samples", warm_up_duration=100, bound=10)
+    model.fit(SAGDIVDataset(train_x, train_z, train_loop_z, train_y))
+    h_hat_test = model.predict(test_x)
+    np.savez(model_file, h_hat_test=h_hat_test)
+    return h_hat_test
+
+
+def train_eval_store_deep_sagd_iv(
+        data: Dict,
+        n_rv_samples: int,
+        model_file: Path,
+):
+    """ SAGD-IV using deep learning algorithms for \hat{Phi} and \hat{r} evaluation function.
+
+        Let N denote the number of triplets (X, Y, Z) that will be used to fit r, Phi and P.
+        We want the number of Z samples used in the loop to be 2*N.
+        Hence, we have
+            n_rv_samples = 3*N + 2*N = 5*N
+        and N = n_rv_samples // 5
+
+    """
+
+    n_samples = n_rv_samples // 5
+    train_x = data["X_fit"][:n_samples] 
+    train_z = data["Z_fit"][:n_samples] 
+    train_y = data["Y_fit"][:n_samples] 
+    test_x = data["X_test"]
+
+    train_loop_z = data["Z_fit"][n_samples:n_samples + 2*n_samples]
+    mean_regressor_yz = DeepRegressionYZ(
+        inner_layers_sizes=[64, 32],
+        activation="relu",
+        batch_size=512,
+        n_epochs=int(1.5*1E5/n_samples),
+        learning_rate=0.01,
+        weight_decay=0.003,
+        dropout_rate=0,
+        early_stopper=EarlyStopper(patience=10, min_delta=0.3),
+    )
+    density_ratio_model = DeepDensityRatio(
+        inner_layers_sizes=[64, 32],
+        activation="relu",
+        batch_size=512,
+        n_epochs=int(1.5*1E5/n_samples),
+        learning_rate=0.01,
+        weight_decay=0.005,
+        dropout_rate=0.01,
+        early_stopper=EarlyStopper(patience=10, min_delta=0.5),
+    )
+    model = SAGDIV(
+        lr="inv_n_samples",
+        warm_up_duration=100,
+        bound=10,
+        mean_regressor_yz=mean_regressor_yz,
+        density_ratio_model=density_ratio_model,
+    )
+
     model.fit(SAGDIVDataset(train_x, train_z, train_loop_z, train_y))
     h_hat_test = model.predict(test_x)
     np.savez(model_file, h_hat_test=h_hat_test)
@@ -245,9 +305,11 @@ def train_eval_store_kiv(
 def train_eval_store(model_name: str, *args):
     model_eval_function_dict = {
         "DeepGMM": train_eval_store_deep_gmm,
-        "SAGD-IV": train_eval_store_sagd_iv,
+        # "SAGD-IV": train_eval_store_sagd_iv,
         "KIV": train_eval_store_kiv,
         "DeepIV": train_eval_store_deep_iv,
+        "Kernel SAGD-IV": train_eval_store_kernel_sagd_iv,
+        "Deep SAGD-IV": train_eval_store_deep_sagd_iv,
     }
     return model_eval_function_dict[model_name](*args)
 
@@ -324,7 +386,7 @@ def eval_models_accross_scenarios(
                 data = np.load(run_dir / "data.npz")
                 logger.info(f"Loaded {scenario.upper()} scenario existing benchmark data.")
             for model_name in model_name_list:
-                model_file = run_dir / (model_name.lower() + ".npz")
+                model_file = run_dir / (model_name.lower().replace(" ", "_") + ".npz")
                 h_hat = train_eval_store(model_name, data, n_rv_samples_for_fit, model_file)
                 mse = np.mean(np.square(data["h_star_test"] - h_hat))
                 model_mse_dict[model_name][run_number] = mse
@@ -419,7 +481,7 @@ def plot_graphs(
             X_test = data["X_test"].flatten()
             sorted_idx = np.argsort(X_test)
             sorted_x_test = X_test[sorted_idx]
-            model_file = run_dir / (model_name.lower() + ".npz")
+            model_file = run_dir / (model_name.lower().replace(" ", "_") + ".npz")
             h_hat_test = np.load(model_file)["h_hat_test"]
             sorted_h_hat = h_hat_test[sorted_idx]
             axs[i, j].plot(
@@ -457,7 +519,7 @@ def verify_sagdiv():
 @experiment("benchmark-on-deepgmm-dgp", benchmark=True)
 def benchmark_on_deepgmm_dgp():
     n_runs = 20
-    model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"]
+    model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV", "Kernel SAGD-IV", "Deep SAGD-IV"]
     scenarios = ["step", "abs", "linear", "sin"]
     eval_models_accross_scenarios( 
         scenarios=scenarios,
@@ -474,7 +536,7 @@ def benchmark_on_deepgmm_dgp():
 @experiment("benchmark-with-strong-instrument", benchmark=True)
 def benchmark_with_strong_instrument():
     n_runs = 20
-    model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"]
+    model_name_list = ["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"]
     scenarios = ["step", "abs", "linear", "sin"]
     eval_models_accross_scenarios( 
         scenarios=scenarios,
