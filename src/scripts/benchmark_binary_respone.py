@@ -36,7 +36,7 @@ COLOR_PER_MODEL = {
     # "SAGD-IV": "lightblue",
     "Kernel SAGD-IV": "darkcyan",
     "Deep SAGD-IV": "dodgerblue",
-    "Binary SAGD-IV": "seagreen"
+    "Binary SAGD-IV": "seagreen",
 }
 
 
@@ -44,7 +44,7 @@ cm = 1/2.54
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
-    "font.size": 12,
+    "font.size": 10,
     "figure.figsize": (22*cm, 10*cm),
 })
 
@@ -302,14 +302,14 @@ def plot_MSEs(
     )
     n_scenarios = len(scenarios)
     fig, axs = plt.subplots(
-        2, 2, sharey=True, sharex=True,
-        figsize=(20*cm, 20*cm),
+        1, 2, sharey=True, sharex=True,
+        figsize=(15*cm, 7.5*cm),
     )
     axs = axs.flatten()
     for i, scenario in enumerate(scenarios):
         scenario_dir = Path(scenario)
         mse_arrays = np.load(scenario_dir / "mse_arrays.npz")
-        mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays}
+        mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays if k in model_name_list}
         plot = axs[i].boxplot(mse_arrays.values(), labels=mse_arrays.keys(), patch_artist=True, flierprops=flierprops)
         for patch, model_name in zip(plot['boxes'], model_name_list):
             patch.set(facecolor=COLOR_PER_MODEL[model_name])
@@ -317,9 +317,9 @@ def plot_MSEs(
             line.set(color="black")
         axs[i].set_title(scenario.title())
     # fig.tight_layout()
-    fig.text(0.5, 0.02, "Model", ha="center")
-    fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
-    fig.autofmt_xdate()
+    fig.text(0.5, 0, "Model", ha="center")
+    fig.text(0.01, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
+    # fig.autofmt_xdate()
     fig.savefig("mse.pdf", bbox_inches="tight")
 
 
@@ -340,7 +340,7 @@ def plot_graphs(
         n_models+1,
         sharey="row",
         sharex=True,
-        figsize=(20*cm, 13*cm)
+        figsize=(16*cm, 10*cm)
         )
     # fig.tight_layout()
     for i, scenario in enumerate(scenarios):
@@ -418,4 +418,4 @@ def benchmark_binary_response(
 
 
 if __name__ == "__main__":
-    benchmark_binary_response(run_eval=False, generate_new_data=False, plot=True)
+    benchmark_binary_response(model_name_list=["Kernel SAGD-IV", "Deep SAGD-IV"], run_eval=False, generate_new_data=False, plot=True)

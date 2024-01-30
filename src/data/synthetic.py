@@ -352,8 +352,6 @@ def make_binary_response_dataset(
 
     response_dict = {
         "sin": np.sin,
-        "step": lambda x: x >= 0,
-        "abs": np.abs,
         "linear": lambda x: x,
     }
     # Computes the conditional expectation of response_func(X) given Z = z

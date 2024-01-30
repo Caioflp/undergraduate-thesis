@@ -427,7 +427,7 @@ def plot_MSEs(
             line.set(color="black")
         axs[i].set_title(scenario.title())
     # fig.tight_layout()
-    fig.text(0.5, 0.02, "Model", ha="center")
+    fig.text(0.5, 0.07, "Model", ha="center")
     fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
     fig.autofmt_xdate()
     fig.savefig("mse.pdf", bbox_inches="tight")
@@ -623,5 +623,5 @@ def benchmark_on_deepgmm_dgp_with_small_noise(
 
 
 if __name__ == "__main__":
-    benchmark_on_deepgmm_dgp(run_eval=False, generate_new_data=False, plot=True)
-    # benchmark_with_strong_instrument(run_eval=False, generate_new_data=False, plot=True)
+    # benchmark_on_deepgmm_dgp(run_eval=False, generate_new_data=False, plot=True)
+    benchmark_with_strong_instrument(run_eval=False, generate_new_data=False, plot=True)
