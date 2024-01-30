@@ -138,7 +138,7 @@ def main():
     )
     density_ratio_model = DeepDensityRatio(
         inner_layers_sizes=[64, 32],
-        activation="relu",
+        activation="sigmoid",
         batch_size=128,
         n_epochs=int(1E5/n_samples),
         learning_rate=0.01,
@@ -150,7 +150,7 @@ def main():
         lr=lr,
         loss=BCELogisticLoss(scale=scale),
         mean_regressor_yz=mean_regressor_yz,
-        # density_ratio_model=density_ratio_model,
+        density_ratio_model=density_ratio_model,
         initial_value=initial_value,
         warm_up_duration=warm_up_duration,
         bound=bound,

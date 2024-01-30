@@ -42,8 +42,8 @@ cm = 1/2.54
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
-    "font.size": 10,
-    "figure.figsize": (20*cm, 10*cm)
+    "font.size": 8,
+    "figure.figsize": (22*cm, 10*cm),
 })
 
 
@@ -208,7 +208,7 @@ def train_eval_store_deep_iv(
         "batch_size": 100,
         "epochs": int(1.5E6/n_samples),
         "validation_split": 0.2,
-        "callbacks": [keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True)],
+        "callbacks": [keras.callbacks.EarlyStopping(patience=3, restore_best_weights=True)],
     }
 
     treatment_model = keras.Sequential([
@@ -322,6 +322,7 @@ def eval_models_accross_scenarios(
     n_rv_samples_for_fit: int = 3000,
     n_test_samples: int = 1000,
     strong_instrument: bool = False,
+    small_noise: bool = False,
     generate_new_data: bool = True,
 ):
     """ Evaluates each model `n_runs` times in each scenario.
@@ -379,6 +380,7 @@ def eval_models_accross_scenarios(
                     n_test_samples,
                     scenario,
                     strong_instrument=strong_instrument,
+                    small_noise=small_noise,
                 )
                 logger.info(f"Generated {scenario.upper()} scenario benchmark data.")
                 np.savez(run_dir / "data.npz", **data)
@@ -409,7 +411,11 @@ def plot_MSEs(
         linestyle='none', markeredgecolor='k',
     )
     n_scenarios = len(scenarios)
-    fig, axs = plt.subplots(1, n_scenarios, sharey=True)
+    fig, axs = plt.subplots(
+        2, 2, sharey=True, sharex=True,
+        figsize=(20*cm, 20*cm),
+    )
+    axs = axs.flatten()
     for i, scenario in enumerate(scenarios):
         scenario_dir = Path(scenario)
         mse_arrays = np.load(scenario_dir / "mse_arrays.npz")
@@ -424,7 +430,7 @@ def plot_MSEs(
     fig.text(0.5, 0.02, "Model", ha="center")
     fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
     fig.autofmt_xdate()
-    fig.savefig("mse.pdf")
+    fig.savefig("mse.pdf", bbox_inches="tight")
 
 
 def plot_graphs(
@@ -438,15 +444,13 @@ def plot_graphs(
     n_models = len(model_name_list)
     # Choose a random run
     random_run = np.random.choice(n_runs)
-    # random_run = 3
-    # good runs: 2
 
     fig, axs = plt.subplots(
         n_scenarios,
         n_models+1,
         sharey="row",
         sharex=True,
-        figsize=(20*cm, 13*cm)
+        figsize=(20*cm, 15*cm)
         )
     # fig.tight_layout()
     for i, scenario in enumerate(scenarios):
@@ -496,7 +500,7 @@ def plot_graphs(
         ax.set_title(col)
     for ax, row in zip(axs[:,0], rows):
         ax.set_ylabel(row)#, rotation=0)#, size='large')
-    fig.savefig("graph_plots.pdf")
+    fig.savefig("graph_plots.pdf", bbox_inches="tight")
 
 
 @experiment("verify-sagdiv")
@@ -517,59 +521,107 @@ def verify_sagdiv():
 
 
 @experiment("benchmark-on-deepgmm-dgp", benchmark=True)
-def benchmark_on_deepgmm_dgp():
-    n_runs = 20
-    model_name_list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV", "Kernel SAGD-IV", "Deep SAGD-IV"]
-    scenarios = ["step", "abs", "linear", "sin"]
-    eval_models_accross_scenarios( 
-        scenarios=scenarios,
-        model_name_list=model_name_list,
-        n_runs=n_runs,
-        n_triplet_samples=5000,
-        n_rv_samples_for_fit=3000,
-        n_test_samples=1000,
-    )
-    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
-    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
+def benchmark_on_deepgmm_dgp(
+    n_runs=20,
+    model_name_list=["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"],
+    scenarios=["step", "abs", "linear", "sin"],
+    generate_new_data=True,
+    small_noise=False,
+    plot=True,
+    run_eval=True
+):
+    if run_eval:
+        eval_models_accross_scenarios( 
+            scenarios=scenarios,
+            model_name_list=model_name_list,
+            n_runs=n_runs,
+            n_triplet_samples=5000,
+            n_rv_samples_for_fit=3000,
+            n_test_samples=1000,
+            generate_new_data=generate_new_data,
+            small_noise=small_noise,
+        )
+    if plot:
+        plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
+        plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
 
 
 @experiment("benchmark-with-strong-instrument", benchmark=True)
-def benchmark_with_strong_instrument():
-    n_runs = 20
-    model_name_list = ["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"]
-    scenarios = ["step", "abs", "linear", "sin"]
-    eval_models_accross_scenarios( 
-        scenarios=scenarios,
-        model_name_list=model_name_list,
-        n_runs=n_runs,
-        n_triplet_samples=5000,
-        n_rv_samples_for_fit=3000,
-        n_test_samples=1000,
-        strong_instrument=True,
-    )
-    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
-    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
+def benchmark_with_strong_instrument(
+    n_runs=20,
+    model_name_list=["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"],
+    scenarios=["step", "abs", "linear", "sin"],
+    generate_new_data=True,
+    small_noise=False,
+    run_eval=True,
+    plot=True,
+):
+    if run_eval:
+        eval_models_accross_scenarios( 
+            scenarios=scenarios,
+            model_name_list=model_name_list,
+            n_runs=n_runs,
+            n_triplet_samples=5000,
+            n_rv_samples_for_fit=3000,
+            n_test_samples=1000,
+            generate_new_data=generate_new_data,
+            strong_instrument=True,
+        )
+    if plot:
+        plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
+        plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
 
 
 @experiment("benchmark-deep-with-more-data", benchmark=True)
-def benchmark_deep_with_more_data():
-    n_runs = 20
-    model_name_list = ["DeepGMM", "DeepIV"]
-    scenarios = ["step", "abs", "linear", "sin"]
-    eval_models_accross_scenarios( 
-        scenarios=scenarios,
-        model_name_list=model_name_list,
-        n_runs=n_runs,
-        n_triplet_samples=15000,
-        n_rv_samples_for_fit=30000,
-        n_test_samples=1000,
-    )
-    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
-    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
+def benchmark_deep_with_more_data(
+    n_runs=20,
+    model_name_list=["DeepGMM", "DeepIV", "Deep SAGD-IV"],
+    scenarios=["step", "abs", "linear", "sin"],
+    generate_new_data=True,
+    small_noise=False,
+    run_eval=True,
+    plot=True,
+):
+    if run_eval:
+        eval_models_accross_scenarios( 
+            scenarios=scenarios,
+            model_name_list=model_name_list,
+            n_runs=n_runs,
+            n_triplet_samples=15000,
+            n_rv_samples_for_fit=30000,
+            generate_new_data=generate_new_data,
+            n_test_samples=1000,
+        )
+    if plot:
+        plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
+        plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
+
+
+@experiment("benchmark-on-deepgmm-dgp-with-small-noise", benchmark=True)
+def benchmark_on_deepgmm_dgp_with_small_noise(
+    n_runs=20,
+    model_name_list=["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"],
+    scenarios=["step", "abs", "linear", "sin"],
+    generate_new_data=True,
+    run_eval=True,
+    plot=True,
+):
+    if run_eval:
+        eval_models_accross_scenarios( 
+            scenarios=scenarios,
+            model_name_list=model_name_list,
+            n_runs=n_runs,
+            n_triplet_samples=5000,
+            n_rv_samples_for_fit=3000,
+            n_test_samples=1000,
+            generate_new_data=generate_new_data,
+            small_noise=True,
+        )
+    if plot:
+        plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
+        plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
 
 
 if __name__ == "__main__":
-    # benchmark_on_deepgmm_dgp()
-    # benchmark_with_strong_instrument()
-    # benchmark_deep_with_more_data()
-    verify_sagdiv()
+    benchmark_on_deepgmm_dgp(run_eval=False, generate_new_data=False, plot=True)
+    # benchmark_with_strong_instrument(run_eval=False, generate_new_data=False, plot=True)
