@@ -1,7 +1,5 @@
 """General purpose utilities.
 
-Author: Caioflp
-
 """
 import logging
 import os
@@ -14,11 +12,6 @@ from typing import Callable
 def setup_logger() -> None:
     """ Performs basic logging configuration.
     """
-    # logging.basicConfig(
-    #     filename="run.log",
-    #     format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s",
-    #     level=logging.DEBUG,
-    # )
     logging.getLogger("src").setLevel(logging.DEBUG)
 
     file = logging.FileHandler(filename="run.log", mode="w")

@@ -1,7 +1,5 @@
 """Data related utilities.
 
-Author: Caioflp.
-
 """
 from dataclasses import dataclass
 

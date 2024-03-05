@@ -1,7 +1,5 @@
 """Implements the algorithm 'Stochastic Approximate Gradient Descent IV'.
 
-Author: @Caioflp
-
 """
 import logging
 from time import time

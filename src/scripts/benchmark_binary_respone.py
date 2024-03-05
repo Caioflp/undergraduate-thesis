@@ -1,7 +1,5 @@
 """Script to compare SAGDIV with KIV, DeepGMM and DeepIV
 
-Author: @Caioflp
-
 """
 import logging
 import os

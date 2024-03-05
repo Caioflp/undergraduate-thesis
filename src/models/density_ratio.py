@@ -2,8 +2,6 @@
 chapter 6 of the book 'Density Ratio Estimation in Machine Learning', by
 Sugiyama et al. The basis functions are gaussian kernels.
 
-author: @Caioflp
-
 """
 import abc
 import logging

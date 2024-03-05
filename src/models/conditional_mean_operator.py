@@ -2,8 +2,6 @@
 operator from L2(X) to L2(Z). The implementation is based on the first stage of
 the Kernel Instrumental Variable algorithm, and relies on kernel methods.
 
-Author: @Caioflp
-
 """
 import logging
 
