@@ -20,20 +20,25 @@ from src.data.utils import SAGDIVDataset, KIVDataset
 from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
 from src.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod as DeepGMM
 from src.models import (
-    SAGDIV, KIV, DeepDensityRatio, DeepRegressionYZ, EarlyStopper
+    SAGDIV, KIV, DeepDensityRatio, DeepRegressionYZ, EarlyStopper,
+    TSLS,
 )
 from src.scripts.utils import experiment
 
 
 logger = logging.getLogger("src.scripts.benchmarks")
+
+
+MODEL_NAMES = ["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV", "TSLS"]
 COLOR_PER_MODEL = {
     "DeepGMM": "pink",
     "KIV": "orange",
     "DeepIV": "violet",
-    # "SAGD-IV": "lightblue",
     "Kernel SAGD-IV": "darkcyan",
     "Deep SAGD-IV": "dodgerblue",
+    "TSLS": "olivedrab"
 }
+
 
 
 cm = 1/2.54
@@ -43,6 +48,26 @@ plt.rcParams.update({
     "font.size": 8,
     "figure.figsize": (22*cm, 10*cm),
 })
+
+
+def train_eval_store_tsls(
+    data: Dict,
+    n_rv_samples: int,
+    model_file: Path,
+):
+    n_samples = n_rv_samples // 3
+
+    train_x = data["X_fit"][:n_samples]
+    train_z = data["Z_fit"][:n_samples]
+    train_y = data["Y_fit"][:n_samples]
+
+    test_x = data["X_test"]
+
+    model = TSLS()
+    model.fit(train_x, train_z, train_y)
+    h_hat_test = model.predict(test_x)
+    np.savez(model_file, h_hat_test=h_hat_test)
+    return h_hat_test
 
 
 def train_eval_store_deep_gmm(
@@ -303,18 +328,18 @@ def train_eval_store_kiv(
 def train_eval_store(model_name: str, *args):
     model_eval_function_dict = {
         "DeepGMM": train_eval_store_deep_gmm,
-        # "SAGD-IV": train_eval_store_sagd_iv,
         "KIV": train_eval_store_kiv,
         "DeepIV": train_eval_store_deep_iv,
         "Kernel SAGD-IV": train_eval_store_kernel_sagd_iv,
         "Deep SAGD-IV": train_eval_store_deep_sagd_iv,
+        "TSLS": train_eval_store_tsls,
     }
     return model_eval_function_dict[model_name](*args)
 
 
 def eval_models_accross_scenarios(
     scenarios: list = ["step", "sin", "abs", "linear"],
-    model_name_list: list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"],
+    model_name_list: list = MODEL_NAMES,
     n_runs: int = 20,
     n_triplet_samples: int = 5000,
     n_rv_samples_for_fit: int = 3000,
@@ -322,6 +347,7 @@ def eval_models_accross_scenarios(
     strong_instrument: bool = False,
     small_noise: bool = False,
     generate_new_data: bool = True,
+    retrain: bool = False,
 ):
     """ Evaluates each model `n_runs` times in each scenario.
 
@@ -387,7 +413,10 @@ def eval_models_accross_scenarios(
                 logger.info(f"Loaded {scenario.upper()} scenario existing benchmark data.")
             for model_name in model_name_list:
                 model_file = run_dir / (model_name.lower().replace(" ", "_") + ".npz")
-                h_hat = train_eval_store(model_name, data, n_rv_samples_for_fit, model_file)
+                if retrain:
+                    h_hat = train_eval_store(model_name, data, n_rv_samples_for_fit, model_file)
+                else:
+                    h_hat = np.load(model_file)["h_hat_test"]
                 mse = np.mean(np.square(data["h_star_test"] - h_hat))
                 model_mse_dict[model_name][run_number] = mse
             logger.info("Evaluated all models")
@@ -402,7 +431,7 @@ def eval_models_accross_scenarios(
 
 def plot_MSEs(
     scenarios: list = ["step", "sin", "abs", "linear"],
-    model_name_list: list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"],
+    model_name_list: list = MODEL_NAMES,
 ):
     flierprops = dict(
         marker='o', markersize=3,
@@ -434,7 +463,7 @@ def plot_MSEs(
 def plot_graphs(
     n_runs: int = 20,
     scenarios: list = ["step", "sin", "abs", "linear"],
-    model_name_list: list = ["DeepGMM", "KIV", "DeepIV", "SAGD-IV"],
+    model_name_list: list = MODEL_NAMES,
     linewidth: int = 1,
     fraction_of_data_to_plot: float = 0.3,
 ):
@@ -526,7 +555,8 @@ def benchmark_on_deepgmm_dgp(
     generate_new_data=True,
     small_noise=False,
     plot=True,
-    run_eval=True
+    run_eval=True,
+    retrain=False
 ):
     if run_eval:
         eval_models_accross_scenarios( 
@@ -538,6 +568,7 @@ def benchmark_on_deepgmm_dgp(
             n_test_samples=1000,
             generate_new_data=generate_new_data,
             small_noise=small_noise,
+            retrain=retrain,
         )
     if plot:
         plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
@@ -621,5 +652,5 @@ def benchmark_on_deepgmm_dgp_with_small_noise(
 
 
 if __name__ == "__main__":
-    # benchmark_on_deepgmm_dgp(run_eval=False, generate_new_data=False, plot=True)
-    benchmark_with_strong_instrument(run_eval=False, generate_new_data=False, plot=True)
+    benchmark_on_deepgmm_dgp(run_eval=True, model_name_list=MODEL_NAMES, generate_new_data=False, retrain=False, plot=True)
+    # benchmark_with_strong_instrument(run_eval=False, generate_new_data=False, plot=True)

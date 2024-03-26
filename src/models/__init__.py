@@ -9,6 +9,7 @@ from .mean_regression_yz import (
 from .density_ratio import DensityRatio, KernelDensityRatio, DeepDensityRatio
 from .sagdiv import SAGDIV
 from .kiv import KIV
+from .tsls import TSLS
 from .utils import (
     ensure_two_dimensional,
     EarlyStopper,
