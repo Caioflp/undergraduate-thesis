@@ -21,7 +21,7 @@ from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
 from src.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod as DeepGMM
 from src.models import (
     SAGDIV, KIV, DeepDensityRatio, DeepRegressionYZ, EarlyStopper,
-    TSLS,
+    AnalyticalDensityRatio, TSLS,
 )
 from src.scripts.utils import experiment
 
@@ -35,8 +35,10 @@ COLOR_PER_MODEL = {
     "KIV": "orange",
     "DeepIV": "violet",
     "Kernel SAGD-IV": "darkcyan",
+    "Kernel SAGD-IV true Phi": "fuchsia",
     "Deep SAGD-IV": "dodgerblue",
-    "TSLS": "olivedrab"
+    "Deep SAGD-IV true Phi": "crimson",
+    "TSLS": "olivedrab",
 }
 
 
@@ -46,8 +48,82 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
     "font.size": 8,
-    "figure.figsize": (22*cm, 10*cm),
+    "figure.figsize": (32*cm, 10*cm),
 })
+
+
+def train_eval_store_deep_sagd_iv_true_Phi(
+        data: Dict,
+        n_rv_samples: int,
+        model_file: Path,
+):
+    """ SAGD-IV using deep learning algorithms for \hat{Phi} and \hat{r} evaluation function.
+
+        Let N denote the number of triplets (X, Y, Z) that will be used to fit r, Phi and P.
+        We want the number of Z samples used in the loop to be 2*N.
+        Hence, we have
+            n_rv_samples = 3*N + 2*N = 5*N
+        and N = n_rv_samples // 5
+
+    """
+
+    n_samples = n_rv_samples // 5
+    train_x = data["X_fit"][:n_samples] 
+    train_z = data["Z_fit"][:n_samples] 
+    train_y = data["Y_fit"][:n_samples] 
+    test_x = data["X_test"]
+
+    train_loop_z = data["Z_fit"][n_samples:n_samples + 2*n_samples]
+    mean_regressor_yz = DeepRegressionYZ(
+        inner_layers_sizes=[64, 32],
+        activation="relu",
+        batch_size=512,
+        n_epochs=int(1.5*1E5/n_samples),
+        learning_rate=0.01,
+        weight_decay=0.003,
+        dropout_rate=0,
+        early_stopper=EarlyStopper(patience=10, min_delta=0.3),
+    )
+    density_ratio_model = AnalyticalDensityRatio()
+    model = SAGDIV(
+        lr="inv_n_samples",
+        warm_up_duration=100,
+        bound=10,
+        mean_regressor_yz=mean_regressor_yz,
+        density_ratio_model=density_ratio_model,
+    )
+
+    model.fit(SAGDIVDataset(train_x, train_z, train_loop_z, train_y))
+    h_hat_test = model.predict(test_x)
+    np.savez(model_file, h_hat_test=h_hat_test)
+    return h_hat_test
+
+
+def train_eval_store_kernel_sagd_iv_true_Phi(
+    data: Dict,
+    n_rv_samples: int,
+    model_file: Path,
+):
+    n_samples = n_rv_samples // 5
+    train_x = data["X_fit"][:n_samples] 
+    train_z = data["Z_fit"][:n_samples] 
+    train_y = data["Y_fit"][:n_samples] 
+    test_x = data["X_test"]
+
+    train_loop_z = data["Z_fit"][n_samples:n_samples + 2*n_samples]
+
+    density_ratio_model = AnalyticalDensityRatio()
+
+    model = SAGDIV(
+        lr="inv_n_samples",
+        warm_up_duration=100,
+        bound=10,
+        density_ratio_model=density_ratio_model,
+    )
+    model.fit(SAGDIVDataset(train_x, train_z, train_loop_z, train_y))
+    h_hat_test = model.predict(test_x)
+    np.savez(model_file, h_hat_test=h_hat_test)
+    return h_hat_test
 
 
 def train_eval_store_tsls(
@@ -331,7 +407,10 @@ def train_eval_store(model_name: str, *args):
         "KIV": train_eval_store_kiv,
         "DeepIV": train_eval_store_deep_iv,
         "Kernel SAGD-IV": train_eval_store_kernel_sagd_iv,
+        "Kernel SAGD-IV true Phi": train_eval_store_kernel_sagd_iv_true_Phi,
+        "Kernel SAGD-IV true Phi": train_eval_store_kernel_sagd_iv_true_Phi,
         "Deep SAGD-IV": train_eval_store_deep_sagd_iv,
+        "Deep SAGD-IV true Phi": train_eval_store_deep_sagd_iv_true_Phi,
         "TSLS": train_eval_store_tsls,
     }
     return model_eval_function_dict[model_name](*args)
@@ -368,7 +447,7 @@ def eval_models_accross_scenarios(
     n_triplet_samples: int
         Amount of (X, Y, Z) triplet samples to draw. It might be the case that not all of them
         will be actually used. We just want to make sure every algorithm gets what it needs.
-    n_rv_samples_for_fitting: int
+    n_rv_samples_for_fit: int
         Amount of random variable samples each model is allowed to use during the fitting process.
     n_test_samples: int
         Number of X samples in which the models will be evaluated.
@@ -439,7 +518,10 @@ def plot_MSEs(
     )
     n_scenarios = len(scenarios)
     fig, axs = plt.subplots(
-        2, 2, sharey=True, sharex=True,
+        2, 2,
+        # sharey=True,
+        sharey=False,
+        sharex=True,
         figsize=(20*cm, 20*cm),
     )
     axs = axs.flatten()
@@ -457,7 +539,7 @@ def plot_MSEs(
     fig.text(0.5, 0.07, "Model", ha="center")
     fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
     fig.autofmt_xdate()
-    fig.savefig("mse.pdf", bbox_inches="tight")
+    fig.savefig("mse.png", bbox_inches="tight", dpi=600)
 
 
 def plot_graphs(
@@ -477,7 +559,7 @@ def plot_graphs(
         n_models+1,
         sharey="row",
         sharex=True,
-        figsize=(20*cm, 15*cm)
+        figsize=(40*cm, 15*cm)
         )
     # fig.tight_layout()
     for i, scenario in enumerate(scenarios):
@@ -527,7 +609,7 @@ def plot_graphs(
         ax.set_title(col)
     for ax, row in zip(axs[:,0], rows):
         ax.set_ylabel(row)#, rotation=0)#, size='large')
-    fig.savefig("graph_plots.pdf", bbox_inches="tight")
+    fig.savefig("graph_plots.png", bbox_inches="tight", dpi=600)
 
 
 @experiment("verify-sagdiv")
@@ -652,5 +734,14 @@ def benchmark_on_deepgmm_dgp_with_small_noise(
 
 
 if __name__ == "__main__":
-    benchmark_on_deepgmm_dgp(run_eval=True, model_name_list=MODEL_NAMES, generate_new_data=False, retrain=False, plot=True)
-    # benchmark_with_strong_instrument(run_eval=False, generate_new_data=False, plot=True)
+    model_names = [
+        "Kernel SAGD-IV",
+        "Kernel SAGD-IV true Phi",
+        # "Deep SAGD-IV",
+        # "Deep SAGD-IV true Phi",
+        "KIV",
+        "DeepGMM",
+        "DeepIV",
+        "TSLS",
+    ]
+    benchmark_on_deepgmm_dgp(run_eval=False, model_name_list=model_names, generate_new_data=False, retrain=False, plot=True)

@@ -10,6 +10,7 @@ from typing import List
 import numpy as np
 import torch
 from scipy.spatial import distance_matrix
+from scipy.special import erf
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import KFold
 
@@ -30,6 +31,33 @@ class DensityRatio(BaseEstimator):
         numerator_samples: np.ndarray,
         denominator_samples: np.ndarray,
     ):
+        pass
+
+
+class AnalyticalDensityRatio(DensityRatio):
+    """ Analytical expression for density ratio used in continuous response experiments.
+    """
+    def __init__(self):
+        super().__init__()
+
+    def __call__(self, w):
+        return self.predict(w)
+
+    def predict(self, w):
+        x = w[:, 0]
+        z = w[:, 1:]
+        sigma = np.sqrt(1.1)
+        numerator = 3*np.sqrt(2)/sigma * np.exp(
+            -1/(2*sigma**2) * (x - z[:, 0])**2
+        )
+        b = (x + 3)/(sigma * np.sqrt(2))
+        a = (x - 3)/(sigma * np.sqrt(2))
+        denominator = np.sqrt(np.pi)/2 * (
+            erf(b) - erf(a)
+        )
+        return numerator / denominator
+
+    def fit(self, numerator_samples, denominator_samples):
         pass
 
 
