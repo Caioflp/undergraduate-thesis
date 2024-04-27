@@ -59,6 +59,8 @@ def train_eval_store_deep_sagd_iv_true_Phi(
 ):
     """ SAGD-IV using deep learning algorithms for \hat{Phi} and \hat{r} evaluation function.
 
+        This version uses the analytical ratio of densities (Phi) from the DGP.
+
         Let N denote the number of triplets (X, Y, Z) that will be used to fit r, Phi and P.
         We want the number of Z samples used in the loop to be 2*N.
         Hence, we have
@@ -104,6 +106,17 @@ def train_eval_store_kernel_sagd_iv_true_Phi(
     n_rv_samples: int,
     model_file: Path,
 ):
+    """ SAGD-IV using kernel algorithms for \hat{Phi} and \hat{r} evaluation function.
+
+        This version uses the analytical ratio of densities (Phi) from the DGP.
+
+        Let N denote the number of triplets (X, Y, Z) that will be used to fit r, Phi and P.
+        We want the number of Z samples used in the loop to be 2*N.
+        Hence, we have
+            n_rv_samples = 3*N + 2*N = 5*N
+        and N = n_rv_samples // 5
+
+    """
     n_samples = n_rv_samples // 5
     train_x = data["X_fit"][:n_samples] 
     train_z = data["Z_fit"][:n_samples] 
@@ -468,6 +481,21 @@ def eval_models_accross_scenarios(
         store test mse data accross runs for each model
 
     """
+
+    message = f"""
+    This function was called with:
+    \tgenerate_new_data = {generate_new_data}
+    \tretrain = {retrain}
+    """
+    if generate_new_data:
+        message += "\nThis will DELETE all stored synthetic data."
+    if retrain:
+        message += "\nThis will RETRAIN all models and RECOMPUTE their predictions."
+    message += "\nContinue? (y/n) "
+    permission = input(message)
+    if permission != "y":
+        raise Exception("Experiment terminated.")
+
     model_mse_dict = {name: np.empty(n_runs, dtype=float) for name in model_name_list}
     for scenario in scenarios:
         scenario_dir = Path(scenario)
@@ -504,8 +532,8 @@ def eval_models_accross_scenarios(
             mse_array = model_mse_dict[model_name]
             mean, std = np.mean(mse_array), np.std(mse_array)
             report += f"{model_name}: {mean:1.2e} ± {std:1.2e}\n" 
+            np.save(scenario_dir / (model_name.lower().replace(" ", "_") + "_mse_array" + ".npy"), mse_array)
         logger.info(report)
-        np.savez(scenario_dir / "mse_arrays.npz", **model_mse_dict)
 
 
 def plot_MSEs(
@@ -527,7 +555,10 @@ def plot_MSEs(
     axs = axs.flatten()
     for i, scenario in enumerate(scenarios):
         scenario_dir = Path(scenario)
-        mse_arrays = np.load(scenario_dir / "mse_arrays.npz")
+        mse_arrays = {}
+        for model_name in model_name_list:
+            file_name = model_name.lower().replace(" ", "_") + "_mse_array" + ".npy"
+            mse_arrays[model_name] = np.load(scenario_dir / file_name)
         mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays}
         plot = axs[i].boxplot(mse_arrays.values(), labels=mse_arrays.keys(), patch_artist=True, flierprops=flierprops)
         for patch, model_name in zip(plot['boxes'], model_name_list):
@@ -539,7 +570,7 @@ def plot_MSEs(
     fig.text(0.5, 0.07, "Model", ha="center")
     fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
     fig.autofmt_xdate()
-    fig.savefig("mse.png", bbox_inches="tight", dpi=600)
+    fig.savefig("mse.pdf", bbox_inches="tight", dpi=600)
 
 
 def plot_graphs(
@@ -609,24 +640,7 @@ def plot_graphs(
         ax.set_title(col)
     for ax, row in zip(axs[:,0], rows):
         ax.set_ylabel(row)#, rotation=0)#, size='large')
-    fig.savefig("graph_plots.png", bbox_inches="tight", dpi=600)
-
-
-@experiment("verify-sagdiv")
-def verify_sagdiv():
-    n_runs = 1
-    model_name_list = ["SAGD-IV"]
-    scenarios = ["step", "abs", "linear", "sin"]
-    eval_models_accross_scenarios( 
-        scenarios=scenarios,
-        model_name_list=model_name_list,
-        n_runs=n_runs,
-        n_triplet_samples=5000,
-        n_rv_samples_for_fit=3000,
-        n_test_samples=1000,
-    )
-    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
-    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
+    fig.savefig("graph_plots.pdf", bbox_inches="tight", dpi=600)
 
 
 @experiment("benchmark-on-deepgmm-dgp", benchmark=True)
@@ -636,9 +650,9 @@ def benchmark_on_deepgmm_dgp(
     scenarios=["step", "abs", "linear", "sin"],
     generate_new_data=True,
     small_noise=False,
-    plot=True,
-    run_eval=True,
-    retrain=False
+    plot=False,
+    run_eval=False,
+    retrain=False,
 ):
     if run_eval:
         eval_models_accross_scenarios( 
@@ -713,9 +727,9 @@ def benchmark_on_deepgmm_dgp_with_small_noise(
     n_runs=20,
     model_name_list=["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"],
     scenarios=["step", "abs", "linear", "sin"],
-    generate_new_data=True,
-    run_eval=True,
-    plot=True,
+    generate_new_data=False,
+    run_eval=False,
+    plot=False,
 ):
     if run_eval:
         eval_models_accross_scenarios( 
@@ -733,15 +747,32 @@ def benchmark_on_deepgmm_dgp_with_small_noise(
         plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
 
 
+@experiment("verify-sagdiv")
+def verify_sagdiv():
+    n_runs = 1
+    model_name_list = ["SAGD-IV"]
+    scenarios = ["step", "abs", "linear", "sin"]
+    eval_models_accross_scenarios( 
+        scenarios=scenarios,
+        model_name_list=model_name_list,
+        n_runs=n_runs,
+        n_triplet_samples=5000,
+        n_rv_samples_for_fit=3000,
+        n_test_samples=1000,
+    )
+    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
+    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
+
+
+
+
 if __name__ == "__main__":
     model_names = [
         "Kernel SAGD-IV",
-        "Kernel SAGD-IV true Phi",
-        # "Deep SAGD-IV",
-        # "Deep SAGD-IV true Phi",
+        "Deep SAGD-IV",
         "KIV",
         "DeepGMM",
         "DeepIV",
         "TSLS",
     ]
-    benchmark_on_deepgmm_dgp(run_eval=False, model_name_list=model_names, generate_new_data=False, retrain=False, plot=True)
+    benchmark_on_deepgmm_dgp(run_eval=True, model_name_list=model_names, generate_new_data=False, retrain=False, plot=True)
