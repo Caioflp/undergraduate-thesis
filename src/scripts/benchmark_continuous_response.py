@@ -522,13 +522,14 @@ def plot_MSEs(
         # sharey=True,
         sharey=False,
         sharex=True,
-        figsize=(20*cm, 20*cm),
+        figsize=(20/1.5*cm, 20/1.5*cm),
     )
     axs = axs.flatten()
     for i, scenario in enumerate(scenarios):
         scenario_dir = Path(scenario)
         mse_arrays = np.load(scenario_dir / "mse_arrays.npz")
         mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays}
+        mse_arrays["SAGD-IV"] = mse_arrays.pop("Kernel SAGD-IV")
         plot = axs[i].boxplot(mse_arrays.values(), labels=mse_arrays.keys(), patch_artist=True, flierprops=flierprops)
         for patch, model_name in zip(plot['boxes'], model_name_list):
             patch.set(facecolor=COLOR_PER_MODEL[model_name])
@@ -539,7 +540,7 @@ def plot_MSEs(
     fig.text(0.5, 0.07, "Model", ha="center")
     fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
     fig.autofmt_xdate()
-    fig.savefig("mse.png", bbox_inches="tight", dpi=600)
+    fig.savefig("mse.pdf", bbox_inches="tight", dpi=600)
 
 
 def plot_graphs(
@@ -559,7 +560,7 @@ def plot_graphs(
         n_models+1,
         sharey="row",
         sharex=True,
-        figsize=(40*cm, 15*cm)
+        figsize=(25/1.5*cm, 15/1.5*cm)
         )
     # fig.tight_layout()
     for i, scenario in enumerate(scenarios):
@@ -603,13 +604,14 @@ def plot_graphs(
                 c="b",
                 linewidth=linewidth,
             )
+    model_name_list = list(map(lambda s: "SAGD-IV" if s == "Kernel SAGD-IV" else s, model_name_list))
     cols = ["Data"] + model_name_list
     rows = [scenario.title() for scenario in scenarios]
     for ax, col in zip(axs[0], cols):
         ax.set_title(col)
     for ax, row in zip(axs[:,0], rows):
         ax.set_ylabel(row)#, rotation=0)#, size='large')
-    fig.savefig("graph_plots.png", bbox_inches="tight", dpi=600)
+    fig.savefig("graph_plots.pdf", bbox_inches="tight", dpi=600)
 
 
 @experiment("verify-sagdiv")
@@ -736,7 +738,7 @@ def benchmark_on_deepgmm_dgp_with_small_noise(
 if __name__ == "__main__":
     model_names = [
         "Kernel SAGD-IV",
-        "Kernel SAGD-IV true Phi",
+        # "Kernel SAGD-IV true Phi",
         # "Deep SAGD-IV",
         # "Deep SAGD-IV true Phi",
         "KIV",

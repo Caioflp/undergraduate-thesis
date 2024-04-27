@@ -252,7 +252,7 @@ Our main result is the following:
     \label{thm: main theorem}
     Let $ \hat{ h }_{ 0 }, \dots, \hat{ h }_{ M-1 } $ be generated according to Algorithm \ref{algo: sagdiv}.
     Assume that $ \ell $ satisfies Assumption \ref{assumption loss}, $ \searchset $ satisfies Assumption \ref{assumption on H}, $ \Phi $ satisfies Assumption \ref{assumption Phi} and $ \hat{ \Phi }, \hat{ r }, \hat{ \meanop } $ satisfy Assumption \ref{assumption estimators}.
-    Then, if we let $ \hat{ h } = \sum_{ m=1 }^{ M } \hat{ h }_{ m-1 } $, the following bound holds:
+    Then, if we let $ \hat{ h } = \frac{ 1 }{ M } \sum_{ m=1 }^{ M } \hat{ h }_{ m-1 } $, the following bound holds:
     \begin{align}
             \mean_{ \bz_{ 1:M } } \left[
                 \risk ( \hat{ h } ) - \risk ( \hstar )
