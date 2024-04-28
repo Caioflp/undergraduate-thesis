@@ -10,6 +10,8 @@ from .density_ratio import DensityRatio, KernelDensityRatio, DeepDensityRatio, A
 from .sagdiv import SAGDIV
 from .kiv import KIV
 from .tsls import TSLS
+from .dual_iv import DualIV
+from .modified_dual_iv import ModifiedDualIV
 from .utils import (
     ensure_two_dimensional,
     EarlyStopper,

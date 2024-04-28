@@ -21,7 +21,7 @@ from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
 from src.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod as DeepGMM
 from src.models import (
     SAGDIV, KIV, DeepDensityRatio, DeepRegressionYZ, EarlyStopper,
-    AnalyticalDensityRatio, TSLS,
+    AnalyticalDensityRatio, TSLS, DualIV, ModifiedDualIV
 )
 from src.scripts.utils import experiment
 
@@ -33,6 +33,8 @@ MODEL_NAMES = ["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV", "TS
 COLOR_PER_MODEL = {
     "DeepGMM": "pink",
     "KIV": "orange",
+    "Dual IV": "firebrick",
+    "Modified Dual IV": "saddlebrown",
     "DeepIV": "violet",
     "Kernel SAGD-IV": "darkcyan",
     "Kernel SAGD-IV true Phi": "fuchsia",
@@ -52,10 +54,62 @@ plt.rcParams.update({
 })
 
 
+def train_eval_store_modified_dual_iv(
+    data: Dict,
+    n_rv_samples: int,
+    model_file: Path,
+):
+    """ DualIV splits the training data in half for validation.
+
+    """
+    n_samples = n_rv_samples // 3 // 2
+    x_train = data["X_fit"][:n_samples]
+    z_train = data["Z_fit"][:n_samples]
+    y_train = data["Y_fit"][:n_samples]
+
+    x_val = data["X_fit"][n_samples:2*n_samples]
+    z_val = data["Z_fit"][n_samples:2*n_samples]
+    y_val = data["Y_fit"][n_samples:2*n_samples]
+
+    x_test = data["X_test"]
+
+    model = ModifiedDualIV()
+    model.fit(x_train, z_train, y_train, x_val, z_val, y_val)
+    h_hat_test = model.predict(x_test)
+    np.savez(model_file, h_hat_test=h_hat_test)
+    return h_hat_test
+
+
+def train_eval_store_dual_iv(
+    data: Dict,
+    n_rv_samples: int,
+    model_file: Path,
+):
+    """ DualIV splits the training data in half for validation.
+
+    """
+    n_samples = n_rv_samples // 3 // 2
+    x_train = data["X_fit"][:n_samples]
+    z_train = data["Z_fit"][:n_samples]
+    y_train = data["Y_fit"][:n_samples]
+
+    x_val = data["X_fit"][n_samples:2*n_samples]
+    z_val = data["Z_fit"][n_samples:2*n_samples]
+    y_val = data["Y_fit"][n_samples:2*n_samples]
+
+    x_test = data["X_test"]
+
+    model = DualIV()
+    model.fit(x_train, z_train, y_train, x_val, z_val, y_val)
+    h_hat_test = model.predict(x_test)
+    np.savez(model_file, h_hat_test=h_hat_test)
+    return h_hat_test
+
+
 def train_eval_store_deep_sagd_iv_true_Phi(
-        data: Dict,
-        n_rv_samples: int,
-        model_file: Path,
+    data: Dict,
+    n_rv_samples: int,
+    model_file: Path,
 ):
     """ SAGD-IV using deep learning algorithms for \hat{Phi} and \hat{r} evaluation function.
 
@@ -418,6 +472,8 @@ def train_eval_store(model_name: str, *args):
     model_eval_function_dict = {
         "DeepGMM": train_eval_store_deep_gmm,
         "KIV": train_eval_store_kiv,
+        "Dual IV": train_eval_store_dual_iv,
+        "Modified Dual IV": train_eval_store_modified_dual_iv,
         "DeepIV": train_eval_store_deep_iv,
         "Kernel SAGD-IV": train_eval_store_kernel_sagd_iv,
         "Kernel SAGD-IV true Phi": train_eval_store_kernel_sagd_iv_true_Phi,
@@ -486,11 +542,13 @@ def eval_models_accross_scenarios(
     This function was called with:
     \tgenerate_new_data = {generate_new_data}
     \tretrain = {retrain}
+    \tmodel_name_list = {model_name_list}
+    \tscenarios = {scenarios}
     """
     if generate_new_data:
         message += "\nThis will DELETE all stored synthetic data."
     if retrain:
-        message += "\nThis will RETRAIN all models and RECOMPUTE their predictions."
+        message += f"\nThis will RETRAIN the selected models and RECOMPUTE their predictions."
     message += "\nContinue? (y/n) "
     permission = input(message)
     if permission != "y":
@@ -774,5 +832,7 @@ if __name__ == "__main__":
         "DeepGMM",
         "DeepIV",
         "TSLS",
+        "Dual IV",
+        "Modified Dual IV",
     ]
     benchmark_on_deepgmm_dgp(run_eval=True, model_name_list=model_names, generate_new_data=False, retrain=False, plot=True)
