@@ -207,7 +207,7 @@ class SAGDIV(BaseEstimator):
             projected_current_estimate = \
                     self.conditional_mean_model_xz.loop_predict(estimates[i], i)
             # Project Y on current Z
-            # This looks weird, but it is necessary to pass those three arguments because there are two possible
+            # This looks weird, but it is necessary to pass those four arguments because there are two possible
             # options for the E[Y|Z] regressor. The logistic regression one only needs Z_loop[i], but the operator
             # regression one only needs Y, i and the for_loop boolean.
             # So we pass all of them and each one uses what it needs.
