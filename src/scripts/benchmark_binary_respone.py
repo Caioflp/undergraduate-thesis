@@ -213,7 +213,8 @@ def eval_models_accross_scenarios(
     n_triplet_samples: int = 5000,
     n_rv_samples_for_fit: int = 3000,
     n_test_samples: int = 1000,
-    generate_new_data: bool = True,
+    generate_new_data: bool = False,
+    retrain: bool = False,
 ):
     """ Evaluates each model `n_runs` times in each scenario.
 
@@ -255,6 +256,22 @@ def eval_models_accross_scenarios(
         store test mse data accross runs for each model
 
     """
+
+    message = f"""
+    This function was called with:
+    \tgenerate_new_data = {generate_new_data}
+    \tretrain = {retrain}
+    \tmodel_name_list = {model_name_list}
+    \tscenarios = {scenarios}
+    """
+    if generate_new_data:
+        message += "\nThis will DELETE all stored synthetic data."
+    if retrain:
+        message += f"\nThis will RETRAIN the selected models and RECOMPUTE their predictions."
+    message += "\nContinue? (y/n) "
+    permission = input(message)
+    if permission != "y":
+        raise Exception("Experiment terminated.")
     model_mse_dict = {name: np.empty(n_runs, dtype=float) for name in model_name_list}
     for scenario in scenarios:
         scenario_dir = Path(scenario)
@@ -269,6 +286,7 @@ def eval_models_accross_scenarios(
                     n_triplet_samples,
                     n_test_samples,
                     scenario,
+                    scale,
                 )
                 logger.info(f"Generated {scenario.upper()} scenario benchmark data.")
                 np.savez(run_dir / "data.npz", **data)
@@ -277,7 +295,10 @@ def eval_models_accross_scenarios(
                 logger.info(f"Loaded {scenario.upper()} scenario existing benchmark data.")
             for model_name in model_name_list:
                 model_file = run_dir / (model_name.lower().replace(" ", "_") + ".npz")
-                h_hat = train_eval_store(model_name, data, n_rv_samples_for_fit, model_file, scale)
+                if retrain:
+                    h_hat = train_eval_store(model_name, data, n_rv_samples_for_fit, model_file, scale)
+                else:
+                    h_hat = np.load(model_file)["h_hat_test"]
                 mse = np.mean(np.square(data["h_star_test"] - h_hat))
                 model_mse_dict[model_name][run_number] = mse
             logger.info("Evaluated all models")
@@ -286,8 +307,8 @@ def eval_models_accross_scenarios(
             mse_array = model_mse_dict[model_name]
             mean, std = np.mean(mse_array), np.std(mse_array)
             report += f"{model_name}: {mean:1.2e} ± {std:1.2e}\n" 
+            np.save(scenario_dir / (model_name.lower().replace(" ", "_") + "_mse_array" + ".npy"), mse_array)
         logger.info(report)
-        np.savez(scenario_dir / "mse_arrays.npz", **model_mse_dict)
 
 
 def plot_MSEs(
@@ -301,12 +322,15 @@ def plot_MSEs(
     n_scenarios = len(scenarios)
     fig, axs = plt.subplots(
         1, 2, sharey=True, sharex=True,
-        figsize=(15*cm, 7.5*cm),
+        figsize=(15*cm, 5*cm),
     )
     axs = axs.flatten()
     for i, scenario in enumerate(scenarios):
         scenario_dir = Path(scenario)
-        mse_arrays = np.load(scenario_dir / "mse_arrays.npz")
+        mse_arrays = {}
+        for model_name in model_name_list:
+            file_name = model_name.lower().replace(" ", "_") + "_mse_array" + ".npy"
+            mse_arrays[model_name] = np.load(scenario_dir / file_name)
         mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays if k in model_name_list}
         plot = axs[i].boxplot(mse_arrays.values(), labels=mse_arrays.keys(), patch_artist=True, flierprops=flierprops)
         for patch, model_name in zip(plot['boxes'], model_name_list):
@@ -338,7 +362,7 @@ def plot_graphs(
         n_models+1,
         sharey="row",
         sharex=True,
-        figsize=(16*cm, 10*cm)
+        figsize=(16*cm, 6*cm)
         )
     # fig.tight_layout()
     for i, scenario in enumerate(scenarios):
@@ -396,9 +420,10 @@ def benchmark_binary_response(
     n_runs=20,
     model_name_list=["Deep SAGD-IV", "Kernel SAGD-IV", "Binary SAGD-IV"],
     scenarios=["linear", "sin"],
-    generate_new_data=True,
-    plot=True,
-    run_eval=True
+    generate_new_data=False,
+    plot=False,
+    run_eval=False,
+    retrain=False,
 ):
     if run_eval:
         eval_models_accross_scenarios( 
@@ -409,6 +434,7 @@ def benchmark_binary_response(
             n_rv_samples_for_fit=3000,
             n_test_samples=1000,
             generate_new_data=generate_new_data,
+            retrain=retrain,
         )
     if plot:
         plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
@@ -416,4 +442,8 @@ def benchmark_binary_response(
 
 
 if __name__ == "__main__":
-    benchmark_binary_response(model_name_list=["Kernel SAGD-IV", "Deep SAGD-IV"], run_eval=False, generate_new_data=False, plot=True)
+    model_names = [
+        "Kernel SAGD-IV",
+        "Deep SAGD-IV",
+    ]
+    benchmark_binary_response(run_eval=True, model_name_list=model_names, generate_new_data=False, retrain=False, plot=True)

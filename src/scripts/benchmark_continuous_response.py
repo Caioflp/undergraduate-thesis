@@ -608,7 +608,7 @@ def plot_MSEs(
         # sharey=True,
         sharey=False,
         sharex=True,
-        figsize=(20*cm, 20*cm),
+        figsize=(15*cm, 13*cm),
     )
     axs = axs.flatten()
     for i, scenario in enumerate(scenarios):
@@ -641,14 +641,18 @@ def plot_graphs(
     n_scenarios = len(scenarios)
     n_models = len(model_name_list)
     # Choose a random run
-    random_run = np.random.choice(n_runs)
+    # random_run = np.random.choice(n_runs)
+    random_run = 18
+    # print(f"Chosen run: {random_run}")
+    # bad: 2, 13
+    # good: 18
 
     fig, axs = plt.subplots(
         n_scenarios,
         n_models+1,
         sharey="row",
         sharex=True,
-        figsize=(40*cm, 15*cm)
+        figsize=(27*cm, 13*cm)
         )
     # fig.tight_layout()
     for i, scenario in enumerate(scenarios):
@@ -833,6 +837,6 @@ if __name__ == "__main__":
         "DeepIV",
         "TSLS",
         "Dual IV",
-        "Modified Dual IV",
+        # "Modified Dual IV",
     ]
     benchmark_on_deepgmm_dgp(run_eval=True, model_name_list=model_names, generate_new_data=False, retrain=False, plot=True)
