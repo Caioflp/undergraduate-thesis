@@ -598,6 +598,7 @@ def plot_MSEs(
     scenarios: list = ["step", "sin", "abs", "linear"],
     model_name_list: list = MODEL_NAMES,
 ):
+    size = 12
     flierprops = dict(
         marker='o', markersize=3,
         linestyle='none', markeredgecolor='k',
@@ -619,14 +620,16 @@ def plot_MSEs(
             mse_arrays[model_name] = np.load(scenario_dir / file_name)
         mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays}
         plot = axs[i].boxplot(mse_arrays.values(), labels=mse_arrays.keys(), patch_artist=True, flierprops=flierprops)
+        # plot = axs[i].boxplot(mse_arrays.values(), patch_artist=True, flierprops=flierprops)
+        axs[i].set_xticklabels(labels=mse_arrays.keys(), fontsize=size)
         for patch, model_name in zip(plot['boxes'], model_name_list):
             patch.set(facecolor=COLOR_PER_MODEL[model_name])
         for line, model_name in zip(plot['medians'], model_name_list):
             line.set(color="black")
-        axs[i].set_title(scenario.title())
+        axs[i].set_title(scenario.title(), size=size)
     # fig.tight_layout()
-    fig.text(0.5, 0.07, "Model", ha="center")
-    fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
+    # fig.text(0.5, 0.07, "Model", ha="center")
+    fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical", size=size)
     fig.autofmt_xdate()
     fig.savefig("mse.pdf", bbox_inches="tight", dpi=600)
 
