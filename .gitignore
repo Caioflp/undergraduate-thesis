@@ -3,3 +3,4 @@
 *multirun
 *.DS_Store
 *.out
+*src/data/mnist
