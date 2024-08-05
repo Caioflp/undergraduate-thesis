@@ -12,7 +12,7 @@ from typing import Callable
 def setup_logger() -> None:
     """ Performs basic logging configuration.
     """
-    logging.getLogger("src").setLevel(logging.DEBUG)
+    logging.getLogger("src").setLevel(logging.INFO)
 
     file = logging.FileHandler(filename="run.log", mode="w")
     file.setLevel(logging.DEBUG)

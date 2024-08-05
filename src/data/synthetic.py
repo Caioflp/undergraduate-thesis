@@ -1,17 +1,46 @@
 """ Synthetic data generation.
 
 """
-from dataclasses import dataclass
 import logging
+import random
+from dataclasses import dataclass
 from typing import Literal
 from src.data.utils import SAGDIVDataset, KIVDataset
 
 import numpy as np
 import scipy
+import torch
+from torchvision import datasets, transforms
 
 
 logger = logging.getLogger(__name__)
 
+def get_mnist_data_by_digit():
+    train_loader = torch.utils.data.DataLoader(
+        datasets.MNIST("data/mnist", train=True, download=True,
+                        transform=transforms.Compose([
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.1307,), (0.3081,))
+                        ])), batch_size=60000)
+    test_loader = torch.utils.data.DataLoader(
+        datasets.MNIST("data/mnist", train=True, download=True,
+                        transform=transforms.Compose([
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.1307,), (0.3081,))
+                        ])), batch_size=10000)
+    train_data, test_data = list(train_loader), list(test_loader)
+    images_list = np.concatenate([train_data[0][0].numpy(), test_data[0][0].numpy()])
+    labels_list = np.concatenate([train_data[0][1].numpy(), test_data[0][1].numpy()])
+    images_per_label = {digit:[] for digit in range(10)}
+    for image, label in zip(images_list, labels_list):
+        images_per_label[int(label)].append(image[0].flatten())
+    return images_per_label
+
+MNIST_DATA_BY_DIGIT = get_mnist_data_by_digit()
+
+
+def make_digit(signal):
+    return np.round(np.clip(5 + 1.5*signal, 0, 9))
 
 def make_benchmark_dataset(
     n_fit_samples: int = 500, 
@@ -19,6 +48,7 @@ def make_benchmark_dataset(
     scenario: Literal["sin", "step", "abs", "linear"] = "sin",
     strong_instrument: bool = False,
     small_noise: bool = False,
+    high_dimensional_Z: bool = False,
 ):
     scenario_h_star_dict = {
         "sin": np.sin,
@@ -64,6 +94,13 @@ def make_benchmark_dataset(
 
     X_fit = X_fit.reshape(-1, 1)
     X_test = X_test.reshape(-1, 1)
+
+    if high_dimensional_Z:
+        digits_Z = make_digit(Z_fit[:, 0])
+        Z_fit = np.stack(
+            [random.choice(MNIST_DATA_BY_DIGIT[int(d)]) for d in digits_Z],
+            axis=0
+        )
 
     dataset = {
         "X_fit": X_fit, "Z_fit": Z_fit, "Y_fit": Y_fit,
@@ -115,3 +152,7 @@ def make_binary_benchmark_dataset(
         "h_star_test": h_star_test
     }
     return dataset
+
+
+if __name__ == "__main__":
+    print(make_benchmark_dataset(high_dimensional_Z=True)["Z_fit"].shape)

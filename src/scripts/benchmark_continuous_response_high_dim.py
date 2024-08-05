@@ -19,10 +19,11 @@ from tensorflow import keras
 from src.data.synthetic import make_benchmark_dataset
 from src.data.utils import SAGDIVDataset, KIVDataset
 from src.DeepGMM.scenarios.abstract_scenario import AbstractScenario
-from src.DeepGMM.methods.toy_model_selection_method import ToyModelSelectionMethod as DeepGMM
+from src.DeepGMM.methods.mnist_z_model_selection_method import MNISTZModelSelectionMethod as DeepGMM
 from src.models import (
     SAGDIV, KIV, DeepDensityRatio, DeepRegressionYZ, EarlyStopper,
-    AnalyticalDensityRatio, TSLS, DualIV, ModifiedDualIV
+    AnalyticalDensityRatio, TSLS, DualIV, ModifiedDualIV, DeepRegressionYZHighDim,
+    DeepDensityRatioHighDim,
 )
 from src.scripts.utils import experiment
 
@@ -236,6 +237,9 @@ def train_eval_store_deep_gmm(
     val_z = torch.as_tensor(data["Z_fit"][8*n_samples:10*n_samples]).double()
     val_y = torch.as_tensor(data["Y_fit"][8*n_samples:10*n_samples]).double()
 
+    # convert Z back to image shape
+    train_z = train_z.reshape((-1, 1, 28, 28))
+
     if enable_cuda:
         train_x = train_x.cuda()
         train_z = train_z.cuda()
@@ -307,25 +311,19 @@ def train_eval_store_deep_sagd_iv(
     test_x = data["X_test"]
 
     train_loop_z = data["Z_fit"][n_samples:n_samples + 2*n_samples]
-    mean_regressor_yz = DeepRegressionYZ(
-        inner_layers_sizes=[64, 32],
-        activation="relu",
-        batch_size=512//4,
+    mean_regressor_yz = DeepRegressionYZHighDim(
+        batch_size=512,
         n_epochs=int(1.5*1E5/n_samples),
         learning_rate=0.01,
         weight_decay=0.003,
-        dropout_rate=0.00,
-        early_stopper=EarlyStopper(patience=6, min_delta=0.3),
+        early_stopper=EarlyStopper(patience=10, min_delta=0.3),
     )
-    density_ratio_model = DeepDensityRatio(
-        inner_layers_sizes=[64, 32],
-        activation="relu",
-        batch_size=512//4,
+    density_ratio_model = DeepDensityRatioHighDim(
+        batch_size=512,
         n_epochs=int(1.5*1E5/n_samples),
         learning_rate=0.01,
         weight_decay=0.005,
-        dropout_rate=0.01,
-        early_stopper=EarlyStopper(patience=15, min_delta=0.5),
+        early_stopper=EarlyStopper(patience=10, min_delta=0.5),
     )
     model = SAGDIV(
         lr="inv_n_samples",
@@ -494,6 +492,7 @@ def eval_models_accross_scenarios(
     n_rv_samples_for_fit: int = 3000,
     n_test_samples: int = 1000,
     strong_instrument: bool = False,
+    high_dimensional_Z: bool = False,
     small_noise: bool = False,
     generate_new_data: bool = True,
     retrain: bool = False,
@@ -571,6 +570,7 @@ def eval_models_accross_scenarios(
                     scenario,
                     strong_instrument=strong_instrument,
                     small_noise=small_noise,
+                    high_dimensional_Z=high_dimensional_Z,
                 )
                 logger.info(f"Generated {scenario.upper()} scenario benchmark data.")
                 np.savez(run_dir / "data.npz", **data)
@@ -707,41 +707,14 @@ def plot_graphs(
     fig.savefig("graph_plots.pdf", bbox_inches="tight", dpi=600)
 
 
-@experiment("benchmark-on-deepgmm-dgp-less-data", benchmark=True)
-def benchmark_on_deepgmm_dgp_with_less_data(
+
+@experiment("benchmark-on-deepgmm-dgp-high-dim", benchmark=True)
+def benchmark_on_deepgmm_dgp_high_dim(
     n_runs=20,
     model_name_list=["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"],
     scenarios=["step", "abs", "linear", "sin"],
     generate_new_data=True,
-    small_noise=False,
-    plot=False,
-    run_eval=False,
-    retrain=False,
-):
-    if run_eval:
-        eval_models_accross_scenarios( 
-            scenarios=scenarios,
-            model_name_list=model_name_list,
-            n_runs=n_runs,
-            n_triplet_samples=5000//2,
-            n_rv_samples_for_fit=3000//2,
-            n_test_samples=1000//2,
-            generate_new_data=generate_new_data,
-            small_noise=small_noise,
-            retrain=retrain,
-        )
-    if plot:
-        plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
-        plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
-
-
-
-@experiment("benchmark-on-deepgmm-dgp", benchmark=True)
-def benchmark_on_deepgmm_dgp(
-    n_runs=20,
-    model_name_list=["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"],
-    scenarios=["step", "abs", "linear", "sin"],
-    generate_new_data=True,
+    high_dimensional_Z=False,
     small_noise=False,
     plot=False,
     run_eval=False,
@@ -758,124 +731,31 @@ def benchmark_on_deepgmm_dgp(
             generate_new_data=generate_new_data,
             small_noise=small_noise,
             retrain=retrain,
+            high_dimensional_Z=high_dimensional_Z,
         )
     if plot:
         plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
         plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
-
-
-@experiment("benchmark-with-strong-instrument", benchmark=True)
-def benchmark_with_strong_instrument(
-    n_runs=20,
-    model_name_list=["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"],
-    scenarios=["step", "abs", "linear", "sin"],
-    generate_new_data=True,
-    small_noise=False,
-    run_eval=True,
-    plot=True,
-):
-    if run_eval:
-        eval_models_accross_scenarios( 
-            scenarios=scenarios,
-            model_name_list=model_name_list,
-            n_runs=n_runs,
-            n_triplet_samples=5000,
-            n_rv_samples_for_fit=3000,
-            n_test_samples=1000,
-            generate_new_data=generate_new_data,
-            strong_instrument=True,
-        )
-    if plot:
-        plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
-        plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
-
-
-@experiment("benchmark-deep-with-more-data", benchmark=True)
-def benchmark_deep_with_more_data(
-    n_runs=20,
-    model_name_list=["DeepGMM", "DeepIV", "Deep SAGD-IV"],
-    scenarios=["step", "abs", "linear", "sin"],
-    generate_new_data=True,
-    small_noise=False,
-    run_eval=True,
-    plot=True,
-):
-    if run_eval:
-        eval_models_accross_scenarios( 
-            scenarios=scenarios,
-            model_name_list=model_name_list,
-            n_runs=n_runs,
-            n_triplet_samples=15000,
-            n_rv_samples_for_fit=30000,
-            generate_new_data=generate_new_data,
-            n_test_samples=1000,
-        )
-    if plot:
-        plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
-        plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
-
-
-@experiment("benchmark-on-deepgmm-dgp-with-small-noise", benchmark=True)
-def benchmark_on_deepgmm_dgp_with_small_noise(
-    n_runs=20,
-    model_name_list=["DeepGMM", "KIV", "DeepIV", "Kernel SAGD-IV", "Deep SAGD-IV"],
-    scenarios=["step", "abs", "linear", "sin"],
-    generate_new_data=False,
-    run_eval=False,
-    plot=False,
-):
-    if run_eval:
-        eval_models_accross_scenarios( 
-            scenarios=scenarios,
-            model_name_list=model_name_list,
-            n_runs=n_runs,
-            n_triplet_samples=5000,
-            n_rv_samples_for_fit=3000,
-            n_test_samples=1000,
-            generate_new_data=generate_new_data,
-            small_noise=True,
-        )
-    if plot:
-        plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
-        plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
-
-
-@experiment("verify-sagdiv")
-def verify_sagdiv():
-    n_runs = 1
-    model_name_list = ["SAGD-IV"]
-    scenarios = ["step", "abs", "linear", "sin"]
-    eval_models_accross_scenarios( 
-        scenarios=scenarios,
-        model_name_list=model_name_list,
-        n_runs=n_runs,
-        n_triplet_samples=5000,
-        n_rv_samples_for_fit=3000,
-        n_test_samples=1000,
-    )
-    plot_MSEs(scenarios=scenarios, model_name_list=model_name_list)
-    plot_graphs(n_runs=n_runs, scenarios=scenarios, model_name_list=model_name_list)
-
 
 
 
 if __name__ == "__main__":
     model_names = [
         "Kernel SAGD-IV",
-        "Deep SAGD-IV",
-        "KIV",
-        "DeepGMM",
-        "DeepIV",
-        "TSLS",
-        "Dual IV",
+        # "Deep SAGD-IV",
+        # "KIV",
+        # "DeepGMM",
+        # "DeepIV",
+        # "TSLS",
+        # "Dual IV",
         # "Modified Dual IV",
     ]
-    benchmark_on_deepgmm_dgp_with_less_data(
-        # scenarios=["step", "abs", "linear"],
-        # n_runs=20,
+    benchmark_on_deepgmm_dgp_high_dim(
+        n_runs=2,
         run_eval=True,
         model_name_list=model_names,
-        generate_new_data=False,
-        retrain=False,
-        plot=True,
+        high_dimensional_Z=True,
+        generate_new_data=True,
+        retrain=True,
+        plot=False
     )
