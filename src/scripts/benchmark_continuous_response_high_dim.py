@@ -316,14 +316,14 @@ def train_eval_store_deep_sagd_iv(
         n_epochs=int(1.5*1E5/n_samples),
         learning_rate=0.01,
         weight_decay=0.003,
-        early_stopper=EarlyStopper(patience=10, min_delta=0.3),
+        early_stopper=EarlyStopper(patience=10, min_delta=10E6),
     )
     density_ratio_model = DeepDensityRatioHighDim(
         batch_size=512,
         n_epochs=int(1.5*1E5/n_samples),
         learning_rate=0.01,
         weight_decay=0.005,
-        early_stopper=EarlyStopper(patience=10, min_delta=0.5),
+        early_stopper=EarlyStopper(patience=10, min_delta=10E6),
     )
     model = SAGDIV(
         lr="inv_n_samples",
@@ -550,9 +550,9 @@ def eval_models_accross_scenarios(
     if retrain:
         message += f"\nThis will RETRAIN the selected models and RECOMPUTE their predictions."
     message += "\nContinue? (y/n) "
-    permission = input(message)
-    if permission != "y":
-        raise Exception("Experiment terminated.")
+    # permission = input(message)
+    # if permission != "y":
+    #     raise Exception("Experiment terminated.")
 
     model_mse_dict = {name: np.empty(n_runs, dtype=float) for name in model_name_list}
     for scenario in scenarios:
@@ -725,9 +725,9 @@ def benchmark_on_deepgmm_dgp_high_dim(
             scenarios=scenarios,
             model_name_list=model_name_list,
             n_runs=n_runs,
-            n_triplet_samples=5000,
-            n_rv_samples_for_fit=3000,
-            n_test_samples=1000,
+            n_triplet_samples=5000*2,
+            n_rv_samples_for_fit=3000*2,
+            n_test_samples=1000*2,
             generate_new_data=generate_new_data,
             small_noise=small_noise,
             retrain=retrain,
@@ -741,21 +741,21 @@ def benchmark_on_deepgmm_dgp_high_dim(
 
 if __name__ == "__main__":
     model_names = [
-        "Kernel SAGD-IV",
-        # "Deep SAGD-IV",
+        # "Kernel SAGD-IV",
+        "Deep SAGD-IV",
         # "KIV",
-        # "DeepGMM",
-        # "DeepIV",
+        "DeepGMM",
+        "DeepIV",
         # "TSLS",
         # "Dual IV",
         # "Modified Dual IV",
     ]
     benchmark_on_deepgmm_dgp_high_dim(
-        n_runs=2,
+        n_runs=10,
         run_eval=True,
         model_name_list=model_names,
         high_dimensional_Z=True,
         generate_new_data=True,
         retrain=True,
-        plot=False
+        plot=True,
     )

@@ -173,6 +173,7 @@ class ConditionalMeanOperator(BaseEstimator):
         n_splits: int = 5,
         weights: list = [10**(-i) for i in range(-2, 3)],
         base_offset = None,
+        offset_range = list(range(-2, 3)),
         current_iter = 0,
         max_iter = 2,
     ) -> float:
@@ -208,7 +209,7 @@ class ConditionalMeanOperator(BaseEstimator):
             # based on that
             log_10 = lambda x: np.log(x)/np.log(10)
             base_offset = np.power(10, np.floor(log_10(best_weight)) - 1)
-            new_weights = [best_weight + k*base_offset for k in range(-5, 6)]
+            new_weights = [best_weight + k*base_offset for k in offset_range]
             return self.find_best_regularization_weight(
                 z_samples,
                 x_samples,
@@ -220,7 +221,7 @@ class ConditionalMeanOperator(BaseEstimator):
             )
         else:
             new_base_offset = base_offset / 10
-            new_weights = [best_weight + k*new_base_offset for k in range(-5, 6)]
+            new_weights = [best_weight + k*new_base_offset for k in offset_range]
             return self.find_best_regularization_weight(
                 z_samples,
                 x_samples,
