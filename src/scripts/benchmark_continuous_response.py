@@ -630,7 +630,8 @@ def plot_MSEs(
     # fig.text(0.5, 0.07, "Model", ha="center")
     fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical", size=size)
     fig.autofmt_xdate()
-    fig.savefig("mse.pdf", bbox_inches="tight", dpi=600)
+    # fig.savefig("mse.pdf", bbox_inches="tight", dpi=600)
+    fig.savefig("mse.png", bbox_inches="tight", dpi=600)
 
 
 def plot_graphs(

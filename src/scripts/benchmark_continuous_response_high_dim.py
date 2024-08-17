@@ -642,12 +642,7 @@ def plot_graphs(
 ):
     n_scenarios = len(scenarios)
     n_models = len(model_name_list)
-    # Choose a random run
-    # random_run = np.random.choice(n_runs)
-    random_run = 18
-    # print(f"Chosen run: {random_run}")
-    # bad: 2, 13
-    # good: 18
+    random_run = np.random.choice(n_runs)
 
     fig, axs = plt.subplots(
         n_scenarios,
@@ -755,7 +750,7 @@ if __name__ == "__main__":
         run_eval=True,
         model_name_list=model_names,
         high_dimensional_Z=True,
-        generate_new_data=True,
-        retrain=True,
+        generate_new_data=False,
+        retrain=False,
         plot=True,
     )
