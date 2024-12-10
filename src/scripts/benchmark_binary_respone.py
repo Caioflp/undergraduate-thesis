@@ -34,6 +34,8 @@ COLOR_PER_MODEL = {
     # "SAGD-IV": "lightblue",
     "Kernel SAGD-IV": "darkcyan",
     "Deep SAGD-IV": "dodgerblue",
+    "Kernel": "darkcyan",
+    "Deep": "dodgerblue",
     "Binary SAGD-IV": "seagreen",
 }
 
@@ -322,7 +324,7 @@ def plot_MSEs(
     n_scenarios = len(scenarios)
     fig, axs = plt.subplots(
         1, 2, sharey=True, sharex=True,
-        figsize=(15*cm, 5*cm),
+        figsize=(9*cm, 5*cm),
     )
     axs = axs.flatten()
     for i, scenario in enumerate(scenarios):
@@ -330,8 +332,8 @@ def plot_MSEs(
         mse_arrays = {}
         for model_name in model_name_list:
             file_name = model_name.lower().replace(" ", "_") + "_mse_array" + ".npy"
-            mse_arrays[model_name] = np.load(scenario_dir / file_name)
-        mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays if k in model_name_list}
+            mse_arrays[model_name.split(" ")[0]] = np.load(scenario_dir / file_name)
+        mse_arrays = {k: np.log(mse_arrays[k])/np.log(10) for k in mse_arrays}# if k in model_name_list}
         plot = axs[i].boxplot(mse_arrays.values(), labels=mse_arrays.keys(), patch_artist=True, flierprops=flierprops)
         for patch, model_name in zip(plot['boxes'], model_name_list):
             patch.set(facecolor=COLOR_PER_MODEL[model_name])
@@ -339,10 +341,11 @@ def plot_MSEs(
             line.set(color="black")
         axs[i].set_title(scenario.title())
     # fig.tight_layout()
-    fig.text(0.5, 0, "Model", ha="center")
-    fig.text(0.01, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
+    fig.text(0.5, -0.1, "Model", ha="center")
+    fig.text(-0.05, 0.5, "Out of sample log-MSE", va="center", rotation="vertical")
     # fig.autofmt_xdate()
-    fig.savefig("mse.pdf", bbox_inches="tight")
+    fig.savefig("mse_binary.pdf", bbox_inches="tight", dpi=300)
+    fig.savefig("mse_binary.png", bbox_inches="tight", dpi=300)
 
 
 def plot_graphs(
@@ -412,7 +415,8 @@ def plot_graphs(
         ax.set_title(col)
     for ax, row in zip(axs[:,0], rows):
         ax.set_ylabel(row)#, rotation=0)#, size='large')
-    fig.savefig("graph_plots.pdf")
+    fig.savefig("graph_plots_binary.pdf", dpi=300)
+    fig.savefig("graph_plots_binary.png", dpi=300)
 
 
 @experiment("benchmark-binary-response", benchmark=True)

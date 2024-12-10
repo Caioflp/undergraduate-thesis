@@ -52,6 +52,8 @@ plt.rcParams.update({
     "font.family": "serif",
     "font.size": 8,
     "figure.figsize": (32*cm, 10*cm),
+    # "figure.facecolor": "#F6FBFD",
+    # "axes.facecolor": "#F6FBFD",
 })
 
 
@@ -610,7 +612,7 @@ def plot_MSEs(
         # sharey=True,
         sharey=False,
         sharex=True,
-        figsize=(15*cm, 13*cm),
+        figsize=(15*cm, 10*cm),
     )
     axs = axs.flatten()
     for i, scenario in enumerate(scenarios):
@@ -630,8 +632,8 @@ def plot_MSEs(
     # fig.text(0.5, 0.07, "Model", ha="center")
     fig.text(0.03, 0.5, "Out of sample log-MSE", va="center", rotation="vertical", size=size)
     fig.autofmt_xdate()
-    # fig.savefig("mse.pdf", bbox_inches="tight", dpi=600)
-    fig.savefig("mse.png", bbox_inches="tight", dpi=600)
+    fig.savefig("mse.pdf", bbox_inches="tight", dpi=300)
+    fig.savefig("mse.png", bbox_inches="tight", dpi=300)
 
 
 def plot_graphs(
@@ -655,7 +657,7 @@ def plot_graphs(
         n_models+1,
         sharey="row",
         sharex=True,
-        figsize=(27*cm, 13*cm)
+        figsize=(27*cm, 11*cm)
         )
     # fig.tight_layout()
     for i, scenario in enumerate(scenarios):
@@ -705,7 +707,8 @@ def plot_graphs(
         ax.set_title(col)
     for ax, row in zip(axs[:,0], rows):
         ax.set_ylabel(row)#, rotation=0)#, size='large')
-    fig.savefig("graph_plots.pdf", bbox_inches="tight", dpi=600)
+    fig.savefig("graph_plots.pdf", bbox_inches="tight", dpi=300)
+    fig.savefig("graph_plots.png", bbox_inches="tight", dpi=300)
 
 
 @experiment("benchmark-on-deepgmm-dgp-less-data", benchmark=True)
@@ -871,7 +874,7 @@ if __name__ == "__main__":
         "Dual IV",
         # "Modified Dual IV",
     ]
-    benchmark_on_deepgmm_dgp_with_less_data(
+    benchmark_on_deepgmm_dgp(
         # scenarios=["step", "abs", "linear"],
         # n_runs=20,
         run_eval=True,
