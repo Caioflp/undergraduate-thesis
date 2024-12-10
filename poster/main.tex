@@ -130,19 +130,19 @@
  %Sans Serif
 {
     \vspace{1.3em}
-    {\huge \sffamily Nonparametric Instrumental Variable Regression \\ through Stochastic Approximate  Gradient Descent}
+    {\huge \sffamily Nonparametric Instrumental Variable Regression \\ through Stochastic Approximate  Gradients}
     \vspace{.1em}
 }
 }
 % {\vspace{0.2em} Add Author Name, Add another author name\\ 
 % {\small \vspace{0.7em} Department of Computing, TU Dublin, Tallaght, 
 {
-        \small{Caio F. L. Peixoto$^1$, Yuri F. Saporito$^1$, Yuri R. Fonseca$^2$}
+        \small{{\bfseries Caio Peixoto}$^1$, Yuri F. Saporito$^1$, Yuri R. Fonseca$^2$}
     {
         \vspace{0.1em} \\
-        \small{$1.$ School of Applied Mathematics, FGV}
+        \small{$1.$ School of Applied Mathematics -- FGV}
         \vspace{.1em} \\
-        \small{$2.$ Columbia University}
+        \small{$2.$ Department of Decision, Risk and Operations -- Columbia University}
         \vspace{.5em}
     }
 }
@@ -153,11 +153,11 @@
 
 % this states the box starts at column 0 (edge of page), row 0 (top of page) for a span of 2 (columns wide)
 \headerbox{1. Abstract}{name=abstract,column=0,row=0, span=1}{
-    We propose SAGD-IV, an algorithm which performs \highlight{\textbf{instrumental variable regression}} through iterative \highlight{SGD-like updates in a\\ functional space}:
+    We propose SAGD-IV, an algorithm which performs \highlight{\textbf{instrumental variable regression}} through iterative \highlight{SGD updates in a\\ functional space}:
     \begin{itemize}[noitemsep]
         \item IV regression is formulated as a statistical inverse problem;
         \item A suitable risk functional is introduced;
-        \item This risk is minimized directly using a first order procedure.
+        \item This risk is minimized directly using SGD.
     \end{itemize}
     Convergence guarantees are obtained using \highlight{minimal assumptions} when compared to other NPIV models.
 }
@@ -237,7 +237,17 @@
 }
 
 \headerbox{4. Convergence Rate}{name=theorem,column=1, span=1, below=algorithm}{
-    \vspace{6pt}
+    \vspace{3pt}
+    Under suitable assumptions on $ \loss, \searchset, \meanop $ and the estimators $ \hat{ \Phi }, \hat{ r }, \hat{ \meanop } $, we have
+    \begin{align*}
+        \mean_{ \bz_{ 1:M } } \left[
+            \risk ( \hat{ h } ) - \risk ( \hstar )
+        \right]
+        \leq \frac{ D^2 }{ 2 M \alpha_{ M } }
+        + \frac{ \xi }{ M } \sum_{ m=1 }^{ M } \alpha_{ m }
+        + \tau \sqrt{ {\color{orange}\zeta} },
+    \end{align*}
+    where
     \begin{align*}
         &{\color{orange}\zeta = \norm{ \Phi - \hat{ \Phi } }_{ L^{ 2 } ( \prob_{ X } \otimes \prob_{ Z } ) }^2 + \norm{ r - \hat{ r } }_{ L^2 ( Z ) }^2 + \norm{ \meanop - \hat{ \meanop } }_{ \op }^2}, \\
         &\xi = \frac{ 3 }{ 2 } \norm{ \hat{ \Phi } }_{ \infty }^2 \left(
@@ -249,16 +259,7 @@
             2L^2 D^2 \norm{ \hat{ \Phi } }_{ \infty }^2
         \right\}
     .\end{align*}
-    Then, under suitable assumptions on $ \loss, \searchset, \meanop $ and the estimators $ \hat{ \Phi }, \hat{ r }, \hat{ \meanop } $, we have
-    \begin{align*}
-        \mean_{ \bz_{ 1:M } } \left[
-            \risk ( \hat{ h } ) - \risk ( \hstar )
-        \right]
-        \leq \frac{ D^2 }{ 2 M \alpha_{ M } }
-        + \frac{ \xi }{ M } \sum_{ m=1 }^{ M } \alpha_{ m }
-        + \tau \sqrt{ {\color{orange}\zeta} }.
-    \end{align*}
-    \vspace{7pt}
+    \vspace{2pt}
 
     This suggests that the learning rate should satisfy the usual conditions:
     \begin{equation*}
@@ -266,29 +267,41 @@
     .\end{equation*}
 }
 
-\headerbox{5. Numerical Experiment}{name=experiment,column=0,span=2,below=npiv}{
+\headerbox{5. Numerical Experiments}{name=experiment,column=0,span=2,below=npiv}{
 
     {
-        We compare our method with Kernel Instrumental Variable Regression (KIV) \cite{singh2019}.
-        \begin{center}
-            \includegraphics[width=\textwidth]{sagdiv_kiv_comparison.pdf}
-        \end{center}
+        % We compared our method with the most relevant ones in the literature:
+        % \begin{center}
+        %     \includegraphics[width=.72\textwidth]{graph_plots.pdf}
+        %     \includegraphics[width=.26\textwidth]{mse.pdf}
+        % \end{center}
+        \centering
+        \begin{minipage}{.65\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{graph_plots.pdf}
+        \end{minipage}%
+        \begin{minipage}{.35\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{mse.pdf}
+        \end{minipage}
     }
 
 }
 
-\headerbox{6. Next Steps}{name=next-steps,column=0,below=experiment, above=bottom,span=1}
+\headerbox{6. Binary Outcomes}{name=next-steps,column=0,below=experiment, above=bottom,span=1}
 {
-    \vspace{1em}
     \begin{itemize}[noitemsep]
-        \item More thorough benchmarks;
-        \item Application to discrete outcomes: $ Y = \ind \left\{ \hstar ( X ) + \varepsilon > 0 \right\} $;
-        % \item Explore more options for $ \hat{ \Phi }, \hat{ r } $ and $ \hat{ \meanop } $.
+        \item In binary outcomes settings, we have $ Y = \ind \left\{ \hstar ( X ) + \varepsilon > 0 \right\} $.
+        \item We then take the loss function to be
+        \vspace{-5pt}
+        $$ \ell ( r(Z), \meanop [ h ] ( Z ) ) = \BCE ( r(Z), \sigma ( \meanop [ h ] ( Z ) ) ), $$
+        where $ \BCE ( p, q ) = - [ p \log q + ( 1 - p ) \log ( 1 - q ) ] $ and \\ $ \sigma ( x ) = e^{ x } / ( 1 + e^{ x } ) $.
+
     \end{itemize}
 }
 
 \headerbox{7. References}{name=references,column=1,below=experiment,above=bottom,span=1}{
-    \nocite{sagd, yuri2022}
+    \nocite{sagd,yuri2022,wooldridge2001,newey2003,darolles2011}
     \printbibliography[heading=none]
 }
 
