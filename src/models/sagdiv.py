@@ -76,47 +76,6 @@ class SAGDIV(BaseEstimator):
         logger.info("Density ratio model fitted.")
         logger.debug(f"Time to fit density ratio model: {end-start:1.2e}s")
 
-    # def compute_density_ratios(
-    #     self,
-    #     X: np.ndarray,
-    #     Z_loop: np.ndarray,
-    # ) -> np.ndarray:
-    #     """ Computes all necessary density ratio evaluations for
-    #     evaluating/fitting the SAGD-IV estimator on some `X` and `Z_loop` samples.
-
-    #     """
-    #     start = time()
-    #     n_samples = X.shape[0]
-    #     n_iter = Z_loop.shape[0]
-    #     dim_z = Z_loop.shape[1]
-    #     dim_x = X.shape[1]
-    #     repeated_z_samples = np.full(
-    #         (n_samples, *Z_loop.shape),
-    #         Z_loop,
-    #     )
-    #     repeated_z_samples = repeated_z_samples \
-    #                          .transpose((1, 0, 2)) \
-    #                          .reshape(
-    #                              (n_iter*n_samples, dim_z)
-    #                          )
-    #     repeated_x_points = np.full(
-    #         (n_iter, *X.shape),
-    #         X,
-    #     )
-    #     repeated_x_points = repeated_x_points.reshape(
-    #         (n_iter*n_samples, dim_x)
-    #     )
-    #     joint_x_and_all_z = np.concatenate(
-    #         (repeated_x_points, repeated_z_samples),
-    #         axis=1
-    #     )
-    #     density_ratios = self.density_ratio_model.predict(joint_x_and_all_z)
-    #     density_ratios = density_ratios.reshape((n_iter, n_samples))
-    #     end = time()
-    #     logger.debug(f"Time to pre-compute density ratios: {end-start:1.2e}s")
-    #     logger.info("Density ratios pre-computed.")
-    #     return density_ratios
-
     def fit_conditional_mean_xz(
         self,
         Z: np.ndarray,
@@ -277,9 +236,6 @@ class SAGDIV(BaseEstimator):
         n_samples = X.shape[0]
         n_iter = self.Z_loop.shape[0]
         dim_z = self.Z_loop.shape[1]
-        # density_ratios = self.compute_density_ratios(X, self.Z_loop)
-        # stochastic_approximate_gradients = \
-        #         density_ratios * self.loss_derivative_array.reshape(-1, 1)
         estimates = np.zeros((n_iter+1, X.shape[0]), dtype=np.float64)
         estimates[0] = self.initial_value
         if self.update_scheme == "nesterov":
@@ -296,8 +252,6 @@ class SAGDIV(BaseEstimator):
                     estimates[i]
                     - self.lr_func(i+1)*stochastic_approximate_gradient
             )
-            # sagd_update = \
-            #         estimates[i] - self.lr_func(i+1)*grad
             if self.update_scheme == "nesterov":
                 phi_next = sagd_update
                 estimates[i+1] = truncate(

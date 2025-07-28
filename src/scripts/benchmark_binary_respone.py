@@ -450,4 +450,4 @@ if __name__ == "__main__":
         "Kernel SAGD-IV",
         "Deep SAGD-IV",
     ]
-    benchmark_binary_response(run_eval=True, model_name_list=model_names, generate_new_data=False, retrain=False, plot=True)
+    benchmark_binary_response(run_eval=True, model_name_list=model_names, generate_new_data=True, retrain=True, plot=True)
